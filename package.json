@@ -1,0 +1,59 @@
+{
+  "name": "crucible-search",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.js"
+    },
+    "./dist/styles.css": "./dist/style.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "scripts": {
+    "prepare": "husky install",
+    "test": "vitest tests/*.test.ts",
+    "test:ui": "vitest --ui tests/**/*.test.ts",
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint --ext .ts,.vue src tests --fix",
+    "serve:test": "vite --mode test --port 5174",
+    "build:lib": "BUILDASLIBRARY=true yarn build"
+  },
+  "engines": {
+    "node": "20.11.x"
+  },
+  "lint-staged": {
+    "**/*.{ts,vue}": "eslint --cache --fix"
+  },
+  "dependencies": {
+    "vue": "^3.3.11"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.10.2",
+    "@types/node": "^20.12.7",
+    "@typescript-eslint/eslint-plugin": "^7.6.0",
+    "@typescript-eslint/parser": "^7.6.0",
+    "@vitejs/plugin-vue": "^5.0.3",
+    "@vitest/ui": "^1.5.0",
+    "@vue/eslint-config-prettier": "^9.0.0",
+    "@vue/eslint-config-typescript": "^13.0.0",
+    "@vue/test-utils": "^2.4.4",
+    "eslint": "8.57.0",
+    "eslint-plugin-vue": "^9.24.1",
+    "husky": "^9.0.10",
+    "jsdom": "^24.0.0",
+    "lint-staged": "^15.2.2",
+    "prettier": "^3.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.8",
+    "vitest": "^1.5.0",
+    "vue-tsc": "^2.0.12"
+  }
+}
