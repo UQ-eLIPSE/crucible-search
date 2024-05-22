@@ -1,23 +1,23 @@
-# Crucible Components
+# Crucible Search
 
-This is a project for creating crucible components that will be used as part of the Crucible Repository.
+This is a project for creating crucible search that will be used as part of the Crucible Repository.
 
 Node version requirement: 20.11
 
 ## Install Project as a package
 
-- `yarn add https://github.com/UQ-eLIPSE/crucible-components.git#release-package`
+- `yarn add https://github.com/UQ-eLIPSE/crucible-search.git#main`
 
 - Import plugin:
 
   1. find `main.ts` in plugin host project and add:
-     `import { createViewerPlugin } from "crucible-components"`,
-     `import "crucible-components/dist/styles.css"`,
+     `import { createSearchPlugin } from "crucible-search"`,
+     `import "crucible-search/dist/styles.css"`,
 
-     `createViewerPlugin(app, {dataLink: await Api.Resource.getQuestions() });`
+     `createSearchPlugin(app, {dataLink: await Api.Resource.getQuestions() });`
 
   2. in the component, implement the following directly:
-     <CrucibleComponent />
+     <CrucibleSearch />
 
 ### Build Project as a package
 
