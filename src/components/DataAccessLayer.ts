@@ -8,7 +8,7 @@ export const findData = async (inputValue: string): Promise<string[]> => {
     }
     const data = await response.json(); //await response.data.json();
 
-    return data;
+    return [data.name];
   } catch (err) {
     console.log(err);
     return [];

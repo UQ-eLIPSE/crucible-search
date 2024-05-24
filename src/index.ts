@@ -1,1 +1,1 @@
-export { default as CrucibleSearch } from "./components/CrucibleSearch.vue";
+export { default as Search } from "./components/DisplaySearch.vue";
