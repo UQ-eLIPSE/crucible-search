@@ -13,22 +13,38 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { findData } from "./DataAccessLayer";
 
 const route = useRoute();
-const searchResults = ref([""]);
+const searchResults = ref<string[]>([]);
 
+// Define a method to fetch data based on the current route's tag parameter
 const fetchData = async () => {
-  const tag = route.query.tag;
+  const tag = route.query.tag || "1";
+  console.log("Fetching data for tag:", tag);
   if (tag) {
     const results = await findData(tag as string);
     searchResults.value = results;
+    console.log("Search results:", results);
+  } else {
+    searchResults.value = []; // Clear results if no tag is provided
   }
 };
 
+// Call fetchData on component mount
 onMounted(fetchData);
+
+// React to changes in the route's query parameter 'tag'
+watch(
+  () => route.query.tag,
+  (newTag, oldTag) => {
+    if (newTag !== oldTag) {
+      fetchData();
+    }
+  },
+);
 </script>
 
 <style scoped>
