@@ -17,17 +17,16 @@ import { findData } from "./DataAccessLayer";
 
 const searchResults = ref<string[]>([]);
 
-// React to changes in the route's query parameter 'tag'
-
 import { ref, onMounted, watch } from "vue";
-// import { useRoute } from "vue-router";
 import { useRouter } from "@/router/injectRoute";
+import { inject } from "vue";
+
+const getApiFromHost = inject("$getApi") || "undefined";
 const route = useRouter();
 const tag = ref("");
 
-// Define a method to fetch data based on the current route's tag parameter
-
 onMounted(() => {
+  console.log("getApiFromHost", getApiFromHost); // remove after integration API
   if (route) {
     tag.value = route.currentRoute.value.params.tag as string;
     fetchData(tag.value);
@@ -36,21 +35,16 @@ onMounted(() => {
   }
 });
 const fetchData = async (tag: string) => {
-  // const tag = route.query?.tag || "1";
-  console.log("Fetching data for tag:", tag);
   if (tag) {
     const results = await findData(tag as string);
     searchResults.value = results;
-    console.log("Search results:", results);
   } else {
-    console.log("no tag provided");
-    searchResults.value = []; // Clear results if no tag is provided
+    searchResults.value = [];
   }
 };
 watch(route.currentRoute, (newRoute, oldRoute) => {
   const newTag = (newRoute.params.tag as string) || "";
   const oldTag = (oldRoute.params.tag as string) || "";
-  console.log("tag changed", newTag, oldTag);
   if (newTag !== oldTag) {
     fetchData(newTag);
   }
