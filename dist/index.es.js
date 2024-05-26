@@ -1,30 +1,35 @@
-import { defineComponent as l, inject as u, onMounted as i, openBlock as p, createElementBlock as h, createElementVNode as n, withKeys as d, ref as _, createTextVNode as g, toDisplayString as v, pushScopeId as y, popScopeId as f } from "vue";
-const m = { class: "search-container" }, S = /* @__PURE__ */ n("h1", null, "Crucible Resource Search", -1), R = { class: "search-box" }, b = /* @__PURE__ */ n("p", null, "Try it - enter a Pokémon type (number):", -1), w = /* @__PURE__ */ l({
+import { inject as v, defineComponent as _, openBlock as c, createElementBlock as u, createElementVNode as l, withKeys as f, ref as d, onMounted as m, watch as y, Fragment as w, renderList as R, toDisplayString as S, pushScopeId as b, popScopeId as k } from "vue";
+function g() {
+  const t = v("$router");
+  if (!t)
+    throw new Error("Router instance is not provided");
+  return t;
+}
+const $ = { class: "search-container" }, T = /* @__PURE__ */ l("h1", null, "Crucible Resource Search", -1), x = { class: "search-box" }, D = /* @__PURE__ */ l("p", null, "Tags Input", -1), I = /* @__PURE__ */ _({
   __name: "CrucibleSearch",
   setup(t) {
-    const e = u("router");
-    i(() => {
-      console.log("CrucibleSearch mounted"), console.log("router", e);
-    });
-    const o = (s) => {
-      console.log("0", s), e.push({ path: "/result-tag-search", query: { tag: s || "1" } }), console.log("2", s, e);
+    const e = g(), o = (n) => {
+      e.push({ path: `/search-in-tag/${n || "1"}` });
+    }, a = (n) => {
+      n || e.back();
     };
-    return (s, r) => (p(), h("div", m, [
-      S,
-      n("div", R, [
-        b,
-        n("input", {
+    return (n, s) => (c(), u("div", $, [
+      T,
+      l("div", x, [
+        D,
+        l("input", {
           type: "text",
-          placeholder: "Enter a Tag",
-          onKeyup: r[0] || (r[0] = d((c) => o(c.target.value), ["enter"]))
+          placeholder: "Enter a Tag (try ditto)",
+          onKeyup: s[0] || (s[0] = f((r) => o(r.target.value), ["enter"])),
+          onInput: s[1] || (s[1] = (r) => a(r.target.value))
         }, null, 32)
       ])
     ]));
   }
-}), x = async (t) => {
+}), C = async (t) => {
   try {
     const e = await fetch(
-      `https://pokeapi.co/api/v2/type/${t.toString()}`
+      `https://pokeapi.co/api/v2/pokemon/${t.toString()}`
     );
     if (!e.ok)
       throw new Error(`HTTP error! status: ${e.status}`);
@@ -32,38 +37,50 @@ const m = { class: "search-container" }, S = /* @__PURE__ */ n("h1", null, "Cruc
   } catch (e) {
     return console.log(e), [];
   }
-}, C = (t) => (y("data-v-232bde45"), t = t(), f(), t), k = { class: "search-results-container" }, D = /* @__PURE__ */ C(() => /* @__PURE__ */ n("h2", null, "Search Results", -1)), T = /* @__PURE__ */ l({
+}, E = (t) => (b("data-v-cb55be66"), t = t(), k(), t), j = { class: "search-results-container" }, B = /* @__PURE__ */ E(() => /* @__PURE__ */ l("h2", null, "Search Results", -1)), F = {
+  key: 0,
+  class: "results"
+}, H = {
+  key: 1,
+  class: "no-results"
+}, K = /* @__PURE__ */ _({
   __name: "DisplayResult",
   setup(t) {
-    const e = u("router"), o = _("");
-    i(() => {
-      e ? (console.log("current route is ", e.currentRoute.value.query.tag), o.value = e.currentRoute.value.query.tag, s(o.value)) : o.value = "undefined";
+    const e = d([]), o = g(), a = d("");
+    m(() => {
+      o ? (a.value = o.currentRoute.value.params.tag, n(a.value)) : a.value = "undefined";
     });
-    const s = async (r) => {
-      if (console.log("Fetching data for tag:", r), r) {
-        const c = await x(r);
-        console.log("Search results:", c);
+    const n = async (s) => {
+      if (console.log("Fetching data for tag:", s), s) {
+        const r = await C(s);
+        e.value = r, console.log("Search results:", r);
       } else
-        console.log("no tag provided");
+        console.log("no tag provided"), e.value = [];
     };
-    return (r, c) => (p(), h("div", k, [
-      D,
-      g(" search Tag " + v(o.value), 1)
+    return y(o.currentRoute, (s, r) => {
+      const i = s.params.tag || "", p = r.params.tag || "";
+      console.log("tag changed", i, p), i !== p && n(i);
+    }), (s, r) => (c(), u("div", j, [
+      B,
+      e.value.length ? (c(), u("div", F, [
+        l("ul", null, [
+          (c(!0), u(w, null, R(e.value, (i, p) => (c(), u("li", { key: p }, S(i), 1))), 128))
+        ])
+      ])) : (c(), u("p", H, "No results found"))
     ]));
   }
-}), $ = (t, e) => {
+}), N = (t, e) => {
   const o = t.__vccOpts || t;
-  for (const [s, r] of e)
-    o[s] = r;
+  for (const [a, n] of e)
+    o[a] = n;
   return o;
-}, a = /* @__PURE__ */ $(T, [["__scopeId", "data-v-232bde45"]]);
-function I(t, e) {
-  console.log("Creating Search Plugin");
+}, h = /* @__PURE__ */ N(K, [["__scopeId", "data-v-cb55be66"]]);
+function L(t, e) {
   const { router: o } = e;
-  t.component("CrucibleSearch", w), t.component("DisplayResult", a), t.provide("router", o), o.addRoute({ path: "/result-tag-search", component: a }), console.log("Router", o);
+  t.component("CrucibleSearch", I), t.component("DisplayResult", h), t.provide("$router", o), o.addRoute({ path: "/search-in-tag/:tag", component: h });
 }
 export {
-  w as CrucibleSearch,
-  a as DisplayResult,
-  I as createSearchPlugin
+  I as CrucibleSearch,
+  h as DisplayResult,
+  L as createSearchPlugin
 };

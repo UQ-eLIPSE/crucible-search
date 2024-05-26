@@ -1,65 +1,35 @@
 <template>
   <div class="search-results-container">
     <h2>Search Results</h2>
-    search Tag {{ tag }}
-    <!-- <div v-if="searchResults.length" class="results">
+    <div v-if="searchResults.length" class="results">
       <ul>
         <li v-for="(result, index) in searchResults" :key="index">
           {{ result }}
         </li>
       </ul>
     </div>
-    <p v-else class="no-results">No results found</p> -->
+    <p v-else class="no-results">No results found</p>
   </div>
 </template>
 
 <script setup lang="ts">
-// import { onMounted, ref } from "vue";
 import { findData } from "./DataAccessLayer";
-// import { useRoute } from "vue-router";
-// import { inject } from "vue";
-// const routerFromHost = inject("router") as any;
-// const tag = useRoute().query.tag || routerFromHost.currentRoute.value.query.tag; //router.currentRoute.value; //useRoute() || {};
-// const searchResults = ref<string[]>([]);
 
-// // Define a method to fetch data based on the current route's tag parameter
-// const fetchData = async () => {
-//   // const tag = route.query?.tag || "1";
-//   console.log("Fetching data for tag:", tag);
-//   if (tag) {
-//     const results = await findData(tag as string);
-//     searchResults.value = results;
-//     console.log("Search results:", results);
-//   } else {
-//     searchResults.value = []; // Clear results if no tag is provided
-//   }
-// };
-
-// // Call fetchData on component mount
-// onMounted(fetchData);
+const searchResults = ref<string[]>([]);
 
 // React to changes in the route's query parameter 'tag'
-// watch(
-//   () => route.query.tag,
-//   (newTag, oldTag) => {
-//     if (newTag !== oldTag) {
-//       fetchData();
-//     }
-//   },
-// );
-import { ref, onMounted } from "vue";
+
+import { ref, onMounted, watch } from "vue";
 // import { useRoute } from "vue-router";
-import { inject } from "vue";
-const route = inject("router") as any;
-// const route = useRoute();
+import { useRouter } from "@/router/injectRoute";
+const route = useRouter();
 const tag = ref("");
 
 // Define a method to fetch data based on the current route's tag parameter
 
 onMounted(() => {
   if (route) {
-    console.log("current route is ", route.currentRoute.value.query.tag);
-    tag.value = route.currentRoute.value.query.tag;
+    tag.value = route.currentRoute.value.params.tag as string;
     fetchData(tag.value);
   } else {
     tag.value = "undefined";
@@ -70,13 +40,21 @@ const fetchData = async (tag: string) => {
   console.log("Fetching data for tag:", tag);
   if (tag) {
     const results = await findData(tag as string);
-    // searchResults.value = results;
+    searchResults.value = results;
     console.log("Search results:", results);
   } else {
     console.log("no tag provided");
-    // searchResults.value = []; // Clear results if no tag is provided
+    searchResults.value = []; // Clear results if no tag is provided
   }
 };
+watch(route.currentRoute, (newRoute, oldRoute) => {
+  const newTag = (newRoute.params.tag as string) || "";
+  const oldTag = (oldRoute.params.tag as string) || "";
+  console.log("tag changed", newTag, oldTag);
+  if (newTag !== oldTag) {
+    fetchData(newTag);
+  }
+});
 </script>
 
 <style scoped>

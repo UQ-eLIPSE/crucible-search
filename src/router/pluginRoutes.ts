@@ -1,17 +1,18 @@
-import { createRouter, createWebHistory, RouterHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import DisplayResult from "../components/DisplayResult.vue";
-
-const routes = [{ path: "/result-tag-search", component: DisplayResult }];
+// import { inject } from "vue";
+// export const routerFromHost = inject("router");
+const routes = [{ path: "/search-in-tag/:tag", component: DisplayResult }];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
 });
-export function createPluginRouter(history: RouterHistory) {
-  return createRouter({
-    history,
-    routes,
-  });
-}
+// export function createPluginRouter(history: RouterHistory) {
+//   return createRouter({
+//     history,
+//     routes,
+//   });
+// }
 
 export default router;

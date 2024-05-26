@@ -1,9 +1,10 @@
+import { Router } from "vue-router";
 export type PluginOptions = {
-  dataLink?: string;
+  router: Router;
 };
 
 declare module "@vue/runtime-core" {
   interface ComponentCustomProperties {
-    $dataLink: string;
+    $router: string;
   }
 }
