@@ -10,17 +10,16 @@
       />
     </div>
   </div>
-  <RouterLink to="/result-tag-search">Results</RouterLink>
-  <RouterView></RouterView>
 </template>
 
 <script setup lang="ts">
-// import { RouterView } from "vue-router";
-import router from "@/router/pluginRoutes";
 import { onMounted } from "vue";
+import { inject } from "vue";
+const router = inject("router") as any;
 
 onMounted(() => {
   console.log("CrucibleSearch mounted");
+  console.log("router", router);
 });
 const showResult = (term: string | undefined) => {
   console.log("0", term);

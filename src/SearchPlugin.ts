@@ -17,7 +17,7 @@ export function createSearchPlugin(app: App, options: PluginOptions) {
   // Register plugin components
   app.component("CrucibleSearch", CrucibleSearch);
   app.component("DisplayResult", DisplayResult);
-
+  app.provide("router", router);
   // Add plugin routes to the existing router
   router.addRoute({ path: "/result-tag-search", component: DisplayResult });
   console.log("Router", router);
