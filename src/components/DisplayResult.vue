@@ -14,15 +14,16 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+// import { useRoute } from "vue-router";
 import { findData } from "./DataAccessLayer";
+import router from "@/router/pluginRoutes";
 
-const route = useRoute();
+const route = router.currentRoute.value; //useRoute() || {};
 const searchResults = ref<string[]>([]);
 
 // Define a method to fetch data based on the current route's tag parameter
 const fetchData = async () => {
-  const tag = route.query.tag || "1";
+  const tag = route.query?.tag || "1";
   console.log("Fetching data for tag:", tag);
   if (tag) {
     const results = await findData(tag as string);

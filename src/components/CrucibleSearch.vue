@@ -22,9 +22,9 @@ import { onMounted } from "vue";
 onMounted(() => {
   console.log("CrucibleSearch mounted");
 });
-const showResult = (term: string) => {
+const showResult = (term: string | undefined) => {
   console.log("0", term);
-  router.push({ path: "/result-tag-search", query: { tag: term } });
+  router.push({ path: "/result-tag-search", query: { tag: term || "1" } });
   console.log("2", term, router);
 };
 </script>
