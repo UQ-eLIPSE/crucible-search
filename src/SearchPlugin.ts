@@ -1,25 +1,18 @@
 import { App } from "vue";
-
 import CrucibleSearch from "./components/CrucibleSearch.vue";
+import DisplayResult from "./components/DisplayResult.vue";
 import { PluginOptions } from "./types";
 
-export const defaultData = {
-  data: {
-    questions: [
-      {
-        _id: { $oid: "6625c7c8c8259deb8c3af39e" },
-        statement: "",
-        tags: [""],
-        optionsList: { optionValue: "", optionCorrect: false },
-        link: "",
-      },
-    ],
-  },
-};
+export function createSearchPlugin(app: App, options: PluginOptions) {
+  const { router, getApi } = options;
 
-export function createSearchPlugin(app: App, options: PluginOptions = {}) {
+  // Register plugin components
   app.component("CrucibleSearch", CrucibleSearch);
-  app.provide("$dataLink", options.dataLink || defaultData);
+  app.component("DisplayResult", DisplayResult);
+  app.provide("$router", router);
+  app.provide("$getApi", getApi);
+  // Add plugin routes to the existing router
+  router.addRoute({ path: "/search-in-tag/:tag", component: DisplayResult });
 }
 
-export { CrucibleSearch };
+export { CrucibleSearch, DisplayResult };

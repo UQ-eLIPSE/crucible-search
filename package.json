@@ -32,7 +32,8 @@
     "**/*.{ts,vue}": "eslint --cache --fix"
   },
   "dependencies": {
-    "vue": "^3.3.11"
+    "vue": "^3.3.11",
+    "vue-router": "4"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.10.2",

@@ -1,41 +1,49 @@
 <template>
-  <div>
-    <label>
-      <p>Try it - enter a pokeman type ( number)</p>
+  <div id="root" class="search-container">
+    <div class="search-box">
+      <button @click="() => $router.back()">back &crarr;</button>
+      <label for=""></label>
       <input
-        v-model="searchTerm"
         type="text"
-        placeholder="Enter a Tag"
-        @input="searchCrucibles"
+        placeholder="Enter a valid Tag (try ditto)"
+        @keyup.enter="showResult(($event.target as HTMLInputElement).value)"
       />
-    </label>
-    <button @click="clearSearch">Clear</button>
-    <DisplaySearch :search-results="searchResults" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { findData } from "./DataAccessLayer";
-import DisplaySearch from "./DisplaySearch.vue";
-const searchTerm = ref<string>("");
-const searchResults = ref<string[]>([]);
-const searchCrucibles = async () => {
-  searchResults.value = await findData(searchTerm.value);
-};
+import { useRouter } from "@/router/injectRoute";
 
-const clearSearch = () => {
-  searchTerm.value = "";
+const router = useRouter();
+const showResult = (term: string | undefined) => {
+  router.push({ path: `/search-in-tag/${term || "1"}` });
 };
 </script>
-
-<style>
-@font-face {
-  font-family: "icomoon";
-  src:
-    url("../public/fonts/icomoon.eot?tvt6dy#iefix") format("embedded-opentype"),
-    url("../public/fonts/icomoon.ttf?tvt6dy") format("truetype"),
-    url("../public/fonts/icomoon.woff?tvt6dy") format("woff"),
-    url("../public/fonts/icomoon.svg?tvt6dy#icomoon") format("svg");
+<style scoped>
+.search-container {
+  display: inline-flex;
+  padding: 0 1rem;
+  margin: 0 auto;
+}
+input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 1rem;
+  padding: 0;
+  font-size: 1rem;
+  width: fit-content;
+}
+button {
+  padding: 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #49075e;
+  margin-right: 1rem;
+  padding: 0;
+  font-size: 1rem;
+  width: fit-content;
 }
 </style>
