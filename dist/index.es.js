@@ -5,18 +5,18 @@ function S() {
     throw new Error("Router instance is not provided");
   return console.log(e), e;
 }
-const O = (e) => (E("data-v-3ccacdf2"), e = e(), G(), e), Q = { class: "search-container" }, I = { class: "search-box" }, k = /* @__PURE__ */ O(() => /* @__PURE__ */ g("label", { for: "" }, null, -1)), D = /* @__PURE__ */ m({
+const O = (e) => (E("data-v-adc0d429"), e = e(), G(), e), Q = { class: "search-container" }, I = { class: "search-box" }, k = /* @__PURE__ */ O(() => /* @__PURE__ */ g("label", { for: "" }, null, -1)), D = /* @__PURE__ */ m({
   __name: "CrucibleSearch",
   setup(e) {
     const a = S(), t = (l) => {
-      console.log("term", l), console.log(a), a.push({ path: `/search-in-tag/${l || "2011"}` });
+      a.push({ path: `/search-in-tag/${l || "2011"}` });
     };
     return (l, i) => (o(), s("div", Q, [
       g("div", I, [
         k,
         g("input", {
           type: "text",
-          placeholder: "Enter a valid Tag (try ditto)",
+          placeholder: "Enter a valid Tag (or try enter VETS)",
           onKeyup: i[0] || (i[0] = h((r) => t(r.target.value), ["enter"]))
         }, null, 32)
       ])
@@ -27,7 +27,7 @@ const O = (e) => (E("data-v-3ccacdf2"), e = e(), G(), e), Q = { class: "search-c
   for (const [l, i] of a)
     t[l] = i;
   return t;
-}, N = /* @__PURE__ */ V(D, [["__scopeId", "data-v-3ccacdf2"]]), M = [
+}, N = /* @__PURE__ */ V(D, [["__scopeId", "data-v-adc0d429"]]), M = [
   {
     tags: ["course:VETS2011"],
     label: "VETS2011 Physiology"
@@ -5652,7 +5652,7 @@ const O = (e) => (E("data-v-3ccacdf2"), e = e(), G(), e), Q = { class: "search-c
       ])) : (o(), s("p", _, "No results found"))
     ]));
   }
-}), p = /* @__PURE__ */ V(x, [["__scopeId", "data-v-a7a3a361"]]);
+}), p = /* @__PURE__ */ V(x, [["__scopeId", "data-v-5d18b0c9"]]);
 function W(e, a) {
   const { router: t, getApi: l } = a;
   console.log("search plugin created"), e.component("CrucibleSearch", N), e.component("DisplayResult", p), e.provide("$router", t), e.provide("$getApi", l), t.addRoute({ path: "/search-in-tag/:tag", component: p });
