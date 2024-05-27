@@ -1,10 +1,20 @@
 <template>
   <div class="search-results-container">
     <h2>Search Results</h2>
+    <button @click="() => $router.back()">back &crarr;</button>
+    <div class="badgesOfsearchData">
+      ({{ searchResults.length }} records in total)
+    </div>
     <div v-if="searchResults.length" class="results">
       <ul>
         <li v-for="(result, index) in searchResults" :key="index">
-          {{ result }}
+          {{ result.label }}
+          <span
+            v-for="(tag, index_tag) in result.tags"
+            :key="index_tag"
+            class="badgesOfsearchData"
+            >{{ tag }}</span
+          >
         </li>
       </ul>
     </div>
@@ -14,8 +24,9 @@
 
 <script setup lang="ts">
 import { findData } from "./DataAccessLayer";
+import { ResourceInSearch } from "@/types";
 
-const searchResults = ref<string[]>([]);
+const searchResults = ref<ResourceInSearch[]>([{ label: "", tags: [""] }]);
 
 import { ref, onMounted, watch } from "vue";
 import { useRouter } from "@/router/injectRoute";
@@ -35,12 +46,9 @@ onMounted(() => {
   }
 });
 const fetchData = async (tag: string) => {
-  if (tag) {
-    const results = await findData(tag as string);
-    searchResults.value = results;
-  } else {
-    searchResults.value = [];
-  }
+  const results = await findData(tag as string);
+  console.log("results", results);
+  if (results) searchResults.value = results;
 };
 watch(route.currentRoute, (newRoute, oldRoute) => {
   const newTag = (newRoute.params.tag as string) || "";
@@ -86,6 +94,17 @@ h2 {
 .no-results {
   text-align: center;
   color: #888;
+}
+
+.badgesOfsearchData {
+  background-color: #f3f4f6;
+  color: black;
+  padding: 0.25rem;
+  margin-left: 0.25rem;
+  border-radius: 5px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
 }
 
 @media screen and (max-width: 768px) {

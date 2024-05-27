@@ -5,7 +5,7 @@ import { PluginOptions } from "./types";
 
 export function createSearchPlugin(app: App, options: PluginOptions) {
   const { router, getApi } = options;
-
+  console.log("search plugin created");
   // Register plugin components
   app.component("CrucibleSearch", CrucibleSearch);
   app.component("DisplayResult", DisplayResult);

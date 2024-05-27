@@ -1,7 +1,6 @@
 <template>
   <div id="root" class="search-container">
     <div class="search-box">
-      <button @click="() => $router.back()">back &crarr;</button>
       <label for=""></label>
       <input
         type="text"
@@ -26,6 +25,7 @@ const showResult = (term: string | undefined) => {
   padding: 0 1rem;
   margin: 0 auto;
 }
+
 input {
   padding: 0.5rem;
   border: 1px solid #ccc;
@@ -35,6 +35,7 @@ input {
   font-size: 1rem;
   width: fit-content;
 }
+
 button {
   padding: 0;
   border: 1px solid #ccc;

@@ -4,6 +4,11 @@ export type PluginOptions = {
   getApi: string;
 };
 
+export type ResourceInSearch = {
+  label: string;
+  tags: string[];
+};
+
 declare module "@vue/runtime-core" {
   interface ComponentCustomProperties {
     $router: string;
