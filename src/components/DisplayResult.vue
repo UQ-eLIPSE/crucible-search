@@ -1,9 +1,10 @@
 <template>
   <div class="search-results-container">
-    <h2>Search Results</h2>
-    <button @click="() => $router.back()">back &crarr;</button>
-    <div class="badgesOfsearchData">
-      ({{ searchResults.length }} records in total)
+    <div class="container-description">
+      <button @click="() => $router.back()">&crarr;</button>
+      <div class="badgesOfsearchData">
+        ({{ searchResults.length }} records in total)
+      </div>
     </div>
     <div v-if="searchResults.length" class="results">
       <ul>
@@ -30,14 +31,11 @@ const searchResults = ref<ResourceInSearch[]>([{ label: "", tags: [""] }]);
 
 import { ref, onMounted, watch } from "vue";
 import { useRouter } from "@/router/injectRoute";
-import { inject } from "vue";
 
-const getApiFromHost = inject("$getApi") || "undefined";
 const route = useRouter();
 const tag = ref("");
 
 onMounted(() => {
-  console.log("getApiFromHost", getApiFromHost); // remove after integration API
   if (route) {
     tag.value = route.currentRoute.value.params.tag as string;
     fetchData(tag.value);
@@ -47,7 +45,7 @@ onMounted(() => {
 });
 const fetchData = async (tag: string) => {
   const results = await findData(tag as string);
-  console.log("results", results);
+
   if (results) searchResults.value = results;
 };
 watch(route.currentRoute, (newRoute, oldRoute) => {
@@ -66,6 +64,24 @@ watch(route.currentRoute, (newRoute, oldRoute) => {
   padding: 1rem;
   box-shadow: inset 0 0 10px #ccc;
   margin-top: 20px;
+}
+
+.container-description {
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+  color: #2a52be;
+}
+
+.container-description button {
+  background-color: #2a52be;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+  cursor: pointer;
+  font-weight: bolder;
 }
 
 h2 {
@@ -98,13 +114,14 @@ h2 {
 
 .badgesOfsearchData {
   background-color: #f3f4f6;
-  color: black;
+  color: #49075e;
   padding: 0.25rem;
   margin-left: 0.25rem;
   border-radius: 5px;
   text-align: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
+  font-weight: 500;
 }
 
 @media screen and (max-width: 768px) {

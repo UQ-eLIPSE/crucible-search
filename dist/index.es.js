@@ -1,36 +1,33 @@
-import { inject as b, defineComponent as S, openBlock as i, createElementBlock as r, createElementVNode as n, withKeys as P, pushScopeId as V, popScopeId as R, ref as y, onMounted as L, watch as f, toDisplayString as c, Fragment as p, renderList as T, createTextVNode as O } from "vue";
-function A() {
-  const e = b("$router");
+import { inject as T, defineComponent as m, openBlock as o, createElementBlock as s, createElementVNode as g, withKeys as h, pushScopeId as E, popScopeId as G, ref as c, onMounted as P, watch as L, toDisplayString as d, Fragment as b, renderList as y, createTextVNode as f } from "vue";
+function S() {
+  const e = T("$router");
   if (!e)
     throw new Error("Router instance is not provided");
-  return e;
+  return console.log(e), e;
 }
-const Q = (e) => (V("data-v-242b6825"), e = e(), R(), e), I = {
-  id: "root",
-  class: "search-container"
-}, k = { class: "search-box" }, D = /* @__PURE__ */ Q(() => /* @__PURE__ */ n("label", { for: "" }, null, -1)), N = /* @__PURE__ */ S({
+const O = (e) => (E("data-v-3ccacdf2"), e = e(), G(), e), Q = { class: "search-container" }, I = { class: "search-box" }, k = /* @__PURE__ */ O(() => /* @__PURE__ */ g("label", { for: "" }, null, -1)), D = /* @__PURE__ */ m({
   __name: "CrucibleSearch",
   setup(e) {
-    const a = A(), t = (l) => {
-      a.push({ path: `/search-in-tag/${l || "1"}` });
+    const a = S(), t = (l) => {
+      console.log("term", l), console.log(a), a.push({ path: `/search-in-tag/${l || "2011"}` });
     };
-    return (l, o) => (i(), r("div", I, [
-      n("div", k, [
-        D,
-        n("input", {
+    return (l, i) => (o(), s("div", Q, [
+      g("div", I, [
+        k,
+        g("input", {
           type: "text",
           placeholder: "Enter a valid Tag (try ditto)",
-          onKeyup: o[0] || (o[0] = P((C) => t(C.target.value), ["enter"]))
+          onKeyup: i[0] || (i[0] = h((r) => t(r.target.value), ["enter"]))
         }, null, 32)
       ])
     ]));
   }
-}), h = (e, a) => {
+}), V = (e, a) => {
   const t = e.__vccOpts || e;
-  for (const [l, o] of a)
-    t[l] = o;
+  for (const [l, i] of a)
+    t[l] = i;
   return t;
-}, M = /* @__PURE__ */ h(N, [["__scopeId", "data-v-242b6825"]]), F = [
+}, N = /* @__PURE__ */ V(D, [["__scopeId", "data-v-3ccacdf2"]]), M = [
   {
     tags: ["course:VETS2011"],
     label: "VETS2011 Physiology"
@@ -5606,61 +5603,62 @@ const Q = (e) => (V("data-v-242b6825"), e = e(), R(), e), I = {
     tags: ["VETS2008"],
     label: "Female"
   }
-], z = b("$getApi"), v = (e) => {
-  console.log("findData...called with ..", e, z);
+], F = T("$getApi"), z = (e) => {
+  console.log("findData...called with ..", e, F);
   try {
-    return F.filter(
+    return M.filter(
       (t) => t.tags.join(",").includes(e)
     ) || { label: "", tags: [] };
   } catch (a) {
     return console.log(a), [];
   }
-}, B = (e) => (V("data-v-1cee1e74"), e = e(), R(), e), H = { class: "search-results-container" }, w = /* @__PURE__ */ B(() => /* @__PURE__ */ n("h2", null, "Search Results", -1)), _ = { class: "badgesOfsearchData" }, x = {
+}, v = { class: "search-results-container" }, B = { class: "container-description" }, H = { class: "badgesOfsearchData" }, w = {
   key: 0,
   class: "results"
-}, K = {
+}, _ = {
   key: 1,
   class: "no-results"
-}, W = /* @__PURE__ */ S({
+}, x = /* @__PURE__ */ m({
   __name: "DisplayResult",
   setup(e) {
-    const a = y([{ label: "", tags: [""] }]), t = b("$getApi") || "undefined", l = A(), o = y("");
-    L(() => {
-      console.log("getApiFromHost", t), l ? (o.value = l.currentRoute.value.params.tag, C(o.value)) : o.value = "undefined";
+    const a = c([{ label: "", tags: [""] }]), t = S(), l = c("");
+    P(() => {
+      t ? (l.value = t.currentRoute.value.params.tag, i(l.value)) : l.value = "undefined";
     });
-    const C = async (g) => {
-      const s = await v(g);
-      console.log("results", s), s && (a.value = s);
+    const i = async (r) => {
+      const n = await z(r);
+      n && (a.value = n);
     };
-    return f(l.currentRoute, (g, s) => {
-      const u = g.params.tag || "", d = s.params.tag || "";
-      u !== d && C(u);
-    }), (g, s) => (i(), r("div", H, [
-      w,
-      n("button", {
-        onClick: s[0] || (s[0] = () => g.$router.back())
-      }, "back ↵"),
-      n("div", _, " (" + c(a.value.length) + " records in total) ", 1),
-      a.value.length ? (i(), r("div", x, [
-        n("ul", null, [
-          (i(!0), r(p, null, T(a.value, (u, d) => (i(), r("li", { key: d }, [
-            O(c(u.label) + " ", 1),
-            (i(!0), r(p, null, T(u.tags, (E, G) => (i(), r("span", {
-              key: G,
+    return L(t.currentRoute, (r, n) => {
+      const u = r.params.tag || "", C = n.params.tag || "";
+      u !== C && i(u);
+    }), (r, n) => (o(), s("div", v, [
+      g("div", B, [
+        g("button", {
+          onClick: n[0] || (n[0] = () => r.$router.back())
+        }, "↵"),
+        g("div", H, " (" + d(a.value.length) + " records in total) ", 1)
+      ]),
+      a.value.length ? (o(), s("div", w, [
+        g("ul", null, [
+          (o(!0), s(b, null, y(a.value, (u, C) => (o(), s("li", { key: C }, [
+            f(d(u.label) + " ", 1),
+            (o(!0), s(b, null, y(u.tags, (R, A) => (o(), s("span", {
+              key: A,
               class: "badgesOfsearchData"
-            }, c(E), 1))), 128))
+            }, d(R), 1))), 128))
           ]))), 128))
         ])
-      ])) : (i(), r("p", K, "No results found"))
+      ])) : (o(), s("p", _, "No results found"))
     ]));
   }
-}), m = /* @__PURE__ */ h(W, [["__scopeId", "data-v-1cee1e74"]]);
-function $(e, a) {
+}), p = /* @__PURE__ */ V(x, [["__scopeId", "data-v-a7a3a361"]]);
+function W(e, a) {
   const { router: t, getApi: l } = a;
-  console.log("search plugin created"), e.component("CrucibleSearch", M), e.component("DisplayResult", m), e.provide("$router", t), e.provide("$getApi", l), t.addRoute({ path: "/search-in-tag/:tag", component: m });
+  console.log("search plugin created"), e.component("CrucibleSearch", N), e.component("DisplayResult", p), e.provide("$router", t), e.provide("$getApi", l), t.addRoute({ path: "/search-in-tag/:tag", component: p });
 }
 export {
-  M as CrucibleSearch,
-  m as DisplayResult,
-  $ as createSearchPlugin
+  N as CrucibleSearch,
+  p as DisplayResult,
+  W as createSearchPlugin
 };

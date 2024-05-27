@@ -1,7 +1,11 @@
 import { createApp } from "vue";
-import router from "./router/projectRoutes";
-import CrucibleSearch from "./components/CrucibleSearch.vue";
+import App from "@/App.vue";
+import { createSearchPlugin } from "@/SearchPlugin.ts";
+import router from "@/router/projectRoutes";
 
-const app = createApp(CrucibleSearch);
+const app = createApp(App);
 app.use(router);
-app.mount("#root");
+
+createSearchPlugin(app, { router, getApi: "https://api.example.com" });
+
+app.mount("#app");

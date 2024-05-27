@@ -7,5 +7,6 @@ export function useRouter(): Router {
   if (!router) {
     throw new Error("Router instance is not provided");
   }
+  console.log(router);
   return router;
 }

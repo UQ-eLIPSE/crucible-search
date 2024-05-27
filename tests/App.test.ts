@@ -1,10 +1,10 @@
 import { describe, it, expect } from "vitest";
 import { mount } from "@vue/test-utils";
-import CrucibleSearch from "@components/CrucibleSearch.vue";
+import App from "@/App.vue";
 
-describe("CrucibleSearch.vue", () => {
+describe("App.vue", () => {
   it("renders App component", () => {
-    const wrapper = mount(CrucibleSearch);
+    const wrapper = mount(App);
     expect(wrapper.exists()).toBe(true);
   });
 });
