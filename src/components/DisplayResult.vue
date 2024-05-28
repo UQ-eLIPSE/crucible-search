@@ -2,7 +2,7 @@
   <div class="search-results-container">
     <div class="container-description">
       <button @click="() => $router.back()">&crarr;</button>
-      <div class="badgesOfsearchData">
+      <div class="label-badges">
         ({{ searchResults.length }} records in total)
       </div>
     </div>
@@ -13,10 +13,10 @@
             {{ result.label }}
           </a>
           <span
-            v-for="(tag, index_tag) in result.tags"
+            v-for="(item, index_tag) in result.tags"
             :key="index_tag"
-            class="badgesOfsearchData"
-            >{{ tag }}</span
+            class="tag-badges"
+            >{{ item }}</span
           >
         </li>
       </ul>
@@ -116,7 +116,8 @@ h2 {
   color: #888;
 }
 
-.badgesOfsearchData {
+.tag-badges,
+.label-badges {
   background-color: #f3f4f6;
   color: #49075e;
   padding: 0.25rem;
