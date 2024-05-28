@@ -41,7 +41,7 @@ const tag = ref("");
 
 onMounted(() => {
   if (route) {
-    tag.value = route.currentRoute.value.params.tag as string;
+    tag.value = route.currentRoute.value.query.tag as string;
     fetchData(tag.value);
   } else {
     tag.value = "undefined";
@@ -53,8 +53,8 @@ const fetchData = async (tag: string) => {
   if (results) searchResults.value = results;
 };
 watch(route.currentRoute, (newRoute, oldRoute) => {
-  const newTag = (newRoute.params.tag as string) || "";
-  const oldTag = (oldRoute.params.tag as string) || "";
+  const newTag = (newRoute.query.tag as string) || "";
+  const oldTag = (oldRoute.query.tag as string) || "";
   if (newTag !== oldTag) {
     fetchData(newTag);
   }

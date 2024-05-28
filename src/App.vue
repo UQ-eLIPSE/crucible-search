@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <CrucibleSearch />
+    <RouterView />
   </div>
-  <RouterView />
 </template>
 
 <script setup lang="ts"></script>
