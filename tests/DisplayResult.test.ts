@@ -23,7 +23,7 @@ describe("DisplayResult.vue", () => {
   }));
   it("displays the correct result", async () => {
     const mockRoute = {
-      params: {
+      query: {
         tag: "test_tag",
       },
     };
