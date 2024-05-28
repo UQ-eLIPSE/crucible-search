@@ -9,7 +9,9 @@
     <div v-if="searchResults.length" class="results">
       <ul>
         <li v-for="(result, index) in searchResults" :key="index">
-          {{ result.label }}
+          <a :href="result.url" target="_blank" class="linkToResource">
+            {{ result.label }}
+          </a>
           <span
             v-for="(tag, index_tag) in result.tags"
             :key="index_tag"
@@ -27,7 +29,9 @@
 import { findData } from "./DataAccessLayer";
 import { ResourceInSearch } from "@/types";
 
-const searchResults = ref<ResourceInSearch[]>([{ label: "", tags: [""] }]);
+const searchResults = ref<ResourceInSearch[]>([
+  { _id: "", label: "", tags: [""], url: "" },
+]);
 
 import { ref, onMounted, watch } from "vue";
 import { useRouter } from "@/router/injectRoute";

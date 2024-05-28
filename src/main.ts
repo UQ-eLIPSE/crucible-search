@@ -1,7 +1,7 @@
 import { createApp } from "vue";
 import App from "@/App.vue";
 import { createSearchPlugin } from "@/SearchPlugin.ts";
-import router from "@/router/projectRoutes";
+import { router } from "@/router/projectRoutes";
 
 const app = createApp(App);
 app.use(router);

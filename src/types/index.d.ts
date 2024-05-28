@@ -5,8 +5,10 @@ export type PluginOptions = {
 };
 
 export type ResourceInSearch = {
+  _id: string;
   label: string;
   tags: string[];
+  url: string;
 };
 
 declare module "@vue/runtime-core" {
