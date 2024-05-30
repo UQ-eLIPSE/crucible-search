@@ -2035,8 +2035,8 @@ const vo = [
     tags: ["VETS2011", "subject:Physiology", "system:Exercise", "animal:Horse"],
     url: "https://crucible-uat.uqcloud.net/resource/5a0ba18d34cc363763e05e99/61a9ae14e04e3d5bffb26ef7/6290636464c71f1df2110ec9"
   }
-], yo = K("$getApi"), _o = (e) => {
-  console.log("findData...called with ..", e, yo);
+], yo = K("getApi"), _o = (e) => {
+  console.log("findData...called with ..", e, yo), console.log("hi");
   try {
     return vo.filter(
       (n) => n.tags.join(",").includes(e)
