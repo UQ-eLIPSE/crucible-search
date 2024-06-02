@@ -9,7 +9,6 @@ app.use(router);
 // * TEMPORARY STATIC URL TO FETCH
 const staticApiUrl = "http://localhost:8080/api/resource/getResultByQueryTag";
 
-// createSearchPlugin(app, { router, getApi: "https://api.example.com" });
 createSearchPlugin(app, { router, getApi: staticApiUrl });
 
 app.mount("#app");
