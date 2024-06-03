@@ -1,8 +1,10 @@
 import { mount } from "@vue/test-utils";
 import { describe, expect, vi, it } from "vitest";
 import { flushPromises } from "@vue/test-utils";
-
+import { projectRoutes } from "@/router/projectRoutes";
 import DisplayResult from "@/components/DisplayResult.vue";
+import { createRouter, createWebHistory } from "vue-router";
+import { createApp } from "vue";
 
 describe("DisplayResult.vue", () => {
   vi.mock("@/components/DataAccessLayer", () => ({
@@ -22,20 +24,30 @@ describe("DisplayResult.vue", () => {
     ]),
   }));
   it("displays the correct result", async () => {
-    const mockRoute = {
+    const app = createApp({});
+
+    const mockRouter = createRouter({
+      history: createWebHistory(),
+      routes: [],
+    });
+    const mockRouteQuery = {
       query: {
         tag: "test_tag",
       },
     };
-    const mockRouter = {
+    const mockRouterPushFun = {
       push: vi.fn(),
     };
+    app.provide("$router", mockRouter);
 
     const wrapper = mount(DisplayResult, {
       global: {
-        mocks: {
-          $route: mockRoute,
+        provide: {
           $router: mockRouter,
+        },
+        mocks: {
+          $route: mockRouteQuery,
+          $router: mockRouterPushFun,
         },
       },
     });

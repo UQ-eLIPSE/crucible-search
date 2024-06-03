@@ -1923,7 +1923,7 @@ const vo = [
   for (const [o, s] of t)
     n[o] = s;
   return n;
-}, $e = /* @__PURE__ */ Ie(ko, [["__scopeId", "data-v-cbd9fd05"]]), No = {}, Oo = { id: "app" };
+}, $e = /* @__PURE__ */ Ie(ko, [["__scopeId", "data-v-ff5fb783"]]), No = {}, Oo = { id: "app" };
 function Co(e, t) {
   const n = He("CrucibleSearch"), o = He("RouterView");
   return j(), M("div", Oo, [
