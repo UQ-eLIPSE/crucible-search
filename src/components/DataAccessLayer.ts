@@ -1,4 +1,4 @@
-import { resources as staticResources } from "@/resources";
+import { staticResources } from "@/resources";
 import { inject } from "vue";
 import { ResourceInSearch } from "@/types";
 

@@ -1,4 +1,4 @@
-export const resources = [
+export const staticResources = [
   {
     _id: "61a9ae14e04e3d5bffb26ef7",
     label: "VETS2011 Physiology",

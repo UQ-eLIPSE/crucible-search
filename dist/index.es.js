@@ -1942,7 +1942,7 @@ function Ot() {
   const e = W("$router");
   return e || xo;
 }
-const To = (e) => (Lt("data-v-d054827a"), e = e(), Ut(), e), Io = { class: "search-container" }, Do = { class: "search-box" }, Vo = /* @__PURE__ */ To(() => /* @__PURE__ */ q("label", { for: "" }, null, -1)), jo = /* @__PURE__ */ le({
+const To = (e) => (Lt("data-v-b75677aa"), e = e(), Ut(), e), Io = { class: "search-container" }, Do = { class: "search-box" }, Vo = /* @__PURE__ */ To(() => /* @__PURE__ */ q("label", { for: "" }, null, -1)), jo = /* @__PURE__ */ le({
   __name: "CrucibleSearch",
   setup(e) {
     const t = Ot(), n = (o) => {
@@ -1959,7 +1959,7 @@ const To = (e) => (Lt("data-v-d054827a"), e = e(), Ut(), e), Io = { class: "sear
       ])
     ]));
   }
-}), Mo = /* @__PURE__ */ Ie(jo, [["__scopeId", "data-v-d054827a"]]);
+}), Mo = /* @__PURE__ */ Ie(jo, [["__scopeId", "data-v-b75677aa"]]);
 function Uo(e, t) {
   const { router: n, getApi: o } = t;
   e.component("CrucibleSearch", Mo), e.component("DisplayResult", $e), e.provide("$router", n), e.provide("$getApi", o), n.addRoute({ path: "/search", component: $e });
