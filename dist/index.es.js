@@ -1862,7 +1862,7 @@ const vo = [
       t + "?" + new URLSearchParams({ tag: e })
     )).json();
   } catch {
-    return alert("Error fetching data from the server, only display test data."), null;
+    alert("Error fetching data from the server, only display test data.");
   }
 }, _o = async (e) => {
   try {

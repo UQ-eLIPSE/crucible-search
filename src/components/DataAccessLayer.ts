@@ -2,9 +2,7 @@ import { staticResources } from "@/resources";
 import { inject } from "vue";
 import { ResourceInSearch } from "@/types";
 
-const fetchAllData = async (
-  tag: string,
-): Promise<ResourceInSearch[] | null> => {
+const fetchAllData = async (tag: string) => {
   try {
     const getApisFromHost = inject("$getApi") as string;
     const apiData = await fetch(
@@ -13,7 +11,6 @@ const fetchAllData = async (
     return await apiData.json();
   } catch (err) {
     alert("Error fetching data from the server, only display test data.");
-    return null;
   }
 };
 
