@@ -1,16 +1,29 @@
-import { resources } from "@/resources";
+import { staticResources } from "@/resources";
 import { inject } from "vue";
 import { ResourceInSearch } from "@/types";
-const getApisFromHost = inject("$getApi");
 
-export const findData = (inputValue: string): ResourceInSearch[] => {
-  console.log("findData...called with ..", inputValue, getApisFromHost); //Todo: Remove once API integration is done
-
+const fetchAllData = async (tag: string) => {
   try {
-    const results = resources.filter((resource: ResourceInSearch) =>
-      resource.tags.join(",").includes(inputValue),
-    ) || { label: "", tags: [] };
-    return results;
+    const getApisFromHost = inject("$getApi") as string;
+    const apiData = await fetch(
+      getApisFromHost + "?" + new URLSearchParams({ tag }),
+    );
+    return await apiData.json();
+  } catch (err) {
+    alert("Error fetching data from the server, only display test data.");
+  }
+};
+
+export const findData = async (
+  inputValue: string,
+): Promise<ResourceInSearch[]> => {
+  try {
+    const resources =
+      (await fetchAllData(inputValue)) ||
+      staticResources.filter((resource: ResourceInSearch) =>
+        resource.tags.join(",").includes(inputValue),
+      );
+    return resources;
   } catch (err) {
     console.log(err);
     return [];

@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
-// import A from "../components/DisplayResult.vue";
+import DispalyResult from "../components/DisplayResult.vue";
 import App from "@/App.vue";
-const routes = [{ path: "/", component: App }];
+const routes = [
+  { path: "/", component: App },
+  { path: "/search", component: DispalyResult },
+];
 
-const router = createRouter({
+export const projectRoutes = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 });
-
-export default router;

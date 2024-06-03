@@ -1,5664 +1,1971 @@
-import { inject as T, defineComponent as m, openBlock as o, createElementBlock as s, createElementVNode as g, withKeys as h, pushScopeId as E, popScopeId as G, ref as c, onMounted as P, watch as L, toDisplayString as d, Fragment as b, renderList as y, createTextVNode as f } from "vue";
-function S() {
-  const e = T("$router");
-  if (!e)
-    throw new Error("Router instance is not provided");
-  return console.log(e), e;
+import { shallowRef as xt, unref as F, shallowReactive as Tt, nextTick as It, defineComponent as le, reactive as Dt, inject as W, computed as I, h as ct, provide as ve, ref as we, watch as Ae, getCurrentInstance as lt, watchEffect as Vt, onMounted as jt, openBlock as j, createElementBlock as M, createElementVNode as q, toDisplayString as ye, Fragment as Be, renderList as qe, resolveComponent as He, createVNode as Ge, withKeys as Mt, pushScopeId as Lt, popScopeId as Ut } from "vue";
+function Bt() {
+  return ut().__VUE_DEVTOOLS_GLOBAL_HOOK__;
 }
-const O = (e) => (E("data-v-adc0d429"), e = e(), G(), e), Q = { class: "search-container" }, I = { class: "search-box" }, k = /* @__PURE__ */ O(() => /* @__PURE__ */ g("label", { for: "" }, null, -1)), D = /* @__PURE__ */ m({
+function ut() {
+  return typeof navigator < "u" && typeof window < "u" ? window : typeof globalThis < "u" ? globalThis : {};
+}
+const qt = typeof Proxy == "function", Ht = "devtools-plugin:setup", Gt = "plugin:settings:set";
+let Q, Re;
+function Kt() {
+  var e;
+  return Q !== void 0 || (typeof window < "u" && window.performance ? (Q = !0, Re = window.performance) : typeof globalThis < "u" && (!((e = globalThis.perf_hooks) === null || e === void 0) && e.performance) ? (Q = !0, Re = globalThis.perf_hooks.performance) : Q = !1), Q;
+}
+function Wt() {
+  return Kt() ? Re.now() : Date.now();
+}
+class zt {
+  constructor(t, n) {
+    this.target = null, this.targetQueue = [], this.onQueue = [], this.plugin = t, this.hook = n;
+    const o = {};
+    if (t.settings)
+      for (const u in t.settings) {
+        const d = t.settings[u];
+        o[u] = d.defaultValue;
+      }
+    const s = `__vue-devtools-plugin-settings__${t.id}`;
+    let f = Object.assign({}, o);
+    try {
+      const u = localStorage.getItem(s), d = JSON.parse(u);
+      Object.assign(f, d);
+    } catch {
+    }
+    this.fallbacks = {
+      getSettings() {
+        return f;
+      },
+      setSettings(u) {
+        try {
+          localStorage.setItem(s, JSON.stringify(u));
+        } catch {
+        }
+        f = u;
+      },
+      now() {
+        return Wt();
+      }
+    }, n && n.on(Gt, (u, d) => {
+      u === this.plugin.id && this.fallbacks.setSettings(d);
+    }), this.proxiedOn = new Proxy({}, {
+      get: (u, d) => this.target ? this.target.on[d] : (...l) => {
+        this.onQueue.push({
+          method: d,
+          args: l
+        });
+      }
+    }), this.proxiedTarget = new Proxy({}, {
+      get: (u, d) => this.target ? this.target[d] : d === "on" ? this.proxiedOn : Object.keys(this.fallbacks).includes(d) ? (...l) => (this.targetQueue.push({
+        method: d,
+        args: l,
+        resolve: () => {
+        }
+      }), this.fallbacks[d](...l)) : (...l) => new Promise((h) => {
+        this.targetQueue.push({
+          method: d,
+          args: l,
+          resolve: h
+        });
+      })
+    });
+  }
+  async setRealTarget(t) {
+    this.target = t;
+    for (const n of this.onQueue)
+      this.target.on[n.method](...n.args);
+    for (const n of this.targetQueue)
+      n.resolve(await this.target[n.method](...n.args));
+  }
+}
+function Qt(e, t) {
+  const n = e, o = ut(), s = Bt(), f = qt && n.enableEarlyProxy;
+  if (s && (o.__VUE_DEVTOOLS_PLUGIN_API_AVAILABLE__ || !f))
+    s.emit(Ht, e, t);
+  else {
+    const u = f ? new zt(n, s) : null;
+    (o.__VUE_DEVTOOLS_PLUGINS__ = o.__VUE_DEVTOOLS_PLUGINS__ || []).push({
+      pluginDescriptor: n,
+      setupFn: t,
+      proxy: u
+    }), u && t(u.proxiedTarget);
+  }
+}
+/*!
+  * vue-router v4.3.2
+  * (c) 2024 Eduardo San Martin Morote
+  * @license MIT
+  */
+const L = typeof document < "u";
+function Ft(e) {
+  return e.__esModule || e[Symbol.toStringTag] === "Module";
+}
+const P = Object.assign;
+function _e(e, t) {
+  const n = {};
+  for (const o in t) {
+    const s = t[o];
+    n[o] = T(s) ? s.map(e) : e(s);
+  }
+  return n;
+}
+const ne = () => {
+}, T = Array.isArray;
+function w(e) {
+  const t = Array.from(arguments).slice(1);
+  console.warn.apply(console, ["[Vue Router warn]: " + e].concat(t));
+}
+const ft = /#/g, Yt = /&/g, Jt = /\//g, Xt = /=/g, Zt = /\?/g, dt = /\+/g, en = /%5B/g, tn = /%5D/g, ht = /%5E/g, nn = /%60/g, pt = /%7B/g, on = /%7C/g, mt = /%7D/g, rn = /%20/g;
+function xe(e) {
+  return encodeURI("" + e).replace(on, "|").replace(en, "[").replace(tn, "]");
+}
+function sn(e) {
+  return xe(e).replace(pt, "{").replace(mt, "}").replace(ht, "^");
+}
+function Se(e) {
+  return xe(e).replace(dt, "%2B").replace(rn, "+").replace(ft, "%23").replace(Yt, "%26").replace(nn, "`").replace(pt, "{").replace(mt, "}").replace(ht, "^");
+}
+function an(e) {
+  return Se(e).replace(Xt, "%3D");
+}
+function cn(e) {
+  return xe(e).replace(ft, "%23").replace(Zt, "%3F");
+}
+function ln(e) {
+  return e == null ? "" : cn(e).replace(Jt, "%2F");
+}
+function Y(e) {
+  try {
+    return decodeURIComponent("" + e);
+  } catch {
+    process.env.NODE_ENV !== "production" && w(`Error decoding "${e}". Using original value`);
+  }
+  return "" + e;
+}
+const un = /\/$/, fn = (e) => e.replace(un, "");
+function Ee(e, t, n = "/") {
+  let o, s = {}, f = "", u = "";
+  const d = t.indexOf("#");
+  let l = t.indexOf("?");
+  return d < l && d >= 0 && (l = -1), l > -1 && (o = t.slice(0, l), f = t.slice(l + 1, d > -1 ? d : t.length), s = e(f)), d > -1 && (o = o || t.slice(0, d), u = t.slice(d, t.length)), o = pn(o ?? t, n), {
+    fullPath: o + (f && "?") + f + u,
+    path: o,
+    query: s,
+    hash: Y(u)
+  };
+}
+function dn(e, t) {
+  const n = t.query ? e(t.query) : "";
+  return t.path + (n && "?") + n + (t.hash || "");
+}
+function Ke(e, t) {
+  return !t || !e.toLowerCase().startsWith(t.toLowerCase()) ? e : e.slice(t.length) || "/";
+}
+function We(e, t, n) {
+  const o = t.matched.length - 1, s = n.matched.length - 1;
+  return o > -1 && o === s && H(t.matched[o], n.matched[s]) && gt(t.params, n.params) && e(t.query) === e(n.query) && t.hash === n.hash;
+}
+function H(e, t) {
+  return (e.aliasOf || e) === (t.aliasOf || t);
+}
+function gt(e, t) {
+  if (Object.keys(e).length !== Object.keys(t).length)
+    return !1;
+  for (const n in e)
+    if (!hn(e[n], t[n]))
+      return !1;
+  return !0;
+}
+function hn(e, t) {
+  return T(e) ? ze(e, t) : T(t) ? ze(t, e) : e === t;
+}
+function ze(e, t) {
+  return T(t) ? e.length === t.length && e.every((n, o) => n === t[o]) : e.length === 1 && e[0] === t;
+}
+function pn(e, t) {
+  if (e.startsWith("/"))
+    return e;
+  if (process.env.NODE_ENV !== "production" && !t.startsWith("/"))
+    return w(`Cannot resolve a relative location without an absolute path. Trying to resolve "${e}" from "${t}". It should look like "/${t}".`), e;
+  if (!e)
+    return t;
+  const n = t.split("/"), o = e.split("/"), s = o[o.length - 1];
+  (s === ".." || s === ".") && o.push("");
+  let f = n.length - 1, u, d;
+  for (u = 0; u < o.length; u++)
+    if (d = o[u], d !== ".")
+      if (d === "..")
+        f > 1 && f--;
+      else
+        break;
+  return n.slice(0, f).join("/") + "/" + o.slice(u).join("/");
+}
+var re;
+(function(e) {
+  e.pop = "pop", e.push = "push";
+})(re || (re = {}));
+var oe;
+(function(e) {
+  e.back = "back", e.forward = "forward", e.unknown = "";
+})(oe || (oe = {}));
+function mn(e) {
+  if (!e)
+    if (L) {
+      const t = document.querySelector("base");
+      e = t && t.getAttribute("href") || "/", e = e.replace(/^\w+:\/\/[^\/]+/, "");
+    } else
+      e = "/";
+  return e[0] !== "/" && e[0] !== "#" && (e = "/" + e), fn(e);
+}
+const gn = /^[^#]+#/;
+function vn(e, t) {
+  return e.replace(gn, "#") + t;
+}
+function yn(e, t) {
+  const n = document.documentElement.getBoundingClientRect(), o = e.getBoundingClientRect();
+  return {
+    behavior: t.behavior,
+    left: o.left - n.left - (t.left || 0),
+    top: o.top - n.top - (t.top || 0)
+  };
+}
+const ue = () => ({
+  left: window.scrollX,
+  top: window.scrollY
+});
+function _n(e) {
+  let t;
+  if ("el" in e) {
+    const n = e.el, o = typeof n == "string" && n.startsWith("#");
+    if (process.env.NODE_ENV !== "production" && typeof e.el == "string" && (!o || !document.getElementById(e.el.slice(1))))
+      try {
+        const f = document.querySelector(e.el);
+        if (o && f) {
+          w(`The selector "${e.el}" should be passed as "el: document.querySelector('${e.el}')" because it starts with "#".`);
+          return;
+        }
+      } catch {
+        w(`The selector "${e.el}" is invalid. If you are using an id selector, make sure to escape it. You can find more information about escaping characters in selectors at https://mathiasbynens.be/notes/css-escapes or use CSS.escape (https://developer.mozilla.org/en-US/docs/Web/API/CSS/escape).`);
+        return;
+      }
+    const s = typeof n == "string" ? o ? document.getElementById(n.slice(1)) : document.querySelector(n) : n;
+    if (!s) {
+      process.env.NODE_ENV !== "production" && w(`Couldn't find element using selector "${e.el}" returned by scrollBehavior.`);
+      return;
+    }
+    t = yn(s, e);
+  } else
+    t = e;
+  "scrollBehavior" in document.documentElement.style ? window.scrollTo(t) : window.scrollTo(t.left != null ? t.left : window.scrollX, t.top != null ? t.top : window.scrollY);
+}
+function Qe(e, t) {
+  return (history.state ? history.state.position - t : -1) + e;
+}
+const Pe = /* @__PURE__ */ new Map();
+function En(e, t) {
+  Pe.set(e, t);
+}
+function bn(e) {
+  const t = Pe.get(e);
+  return Pe.delete(e), t;
+}
+let wn = () => location.protocol + "//" + location.host;
+function vt(e, t) {
+  const { pathname: n, search: o, hash: s } = t, f = e.indexOf("#");
+  if (f > -1) {
+    let d = s.includes(e.slice(f)) ? e.slice(f).length : 1, l = s.slice(d);
+    return l[0] !== "/" && (l = "/" + l), Ke(l, "");
+  }
+  return Ke(n, e) + o + s;
+}
+function Rn(e, t, n, o) {
+  let s = [], f = [], u = null;
+  const d = ({ state: i }) => {
+    const p = vt(e, location), y = n.value, N = t.value;
+    let k = 0;
+    if (i) {
+      if (n.value = p, t.value = i, u && u === y) {
+        u = null;
+        return;
+      }
+      k = N ? i.position - N.position : 0;
+    } else
+      o(p);
+    s.forEach((_) => {
+      _(n.value, y, {
+        delta: k,
+        type: re.pop,
+        direction: k ? k > 0 ? oe.forward : oe.back : oe.unknown
+      });
+    });
+  };
+  function l() {
+    u = n.value;
+  }
+  function h(i) {
+    s.push(i);
+    const p = () => {
+      const y = s.indexOf(i);
+      y > -1 && s.splice(y, 1);
+    };
+    return f.push(p), p;
+  }
+  function r() {
+    const { history: i } = window;
+    i.state && i.replaceState(P({}, i.state, { scroll: ue() }), "");
+  }
+  function c() {
+    for (const i of f)
+      i();
+    f = [], window.removeEventListener("popstate", d), window.removeEventListener("beforeunload", r);
+  }
+  return window.addEventListener("popstate", d), window.addEventListener("beforeunload", r, {
+    passive: !0
+  }), {
+    pauseListeners: l,
+    listen: h,
+    destroy: c
+  };
+}
+function Fe(e, t, n, o = !1, s = !1) {
+  return {
+    back: e,
+    current: t,
+    forward: n,
+    replaced: o,
+    position: window.history.length,
+    scroll: s ? ue() : null
+  };
+}
+function Sn(e) {
+  const { history: t, location: n } = window, o = {
+    value: vt(e, n)
+  }, s = { value: t.state };
+  s.value || f(o.value, {
+    back: null,
+    current: o.value,
+    forward: null,
+    // the length is off by one, we need to decrease it
+    position: t.length - 1,
+    replaced: !0,
+    // don't add a scroll as the user may have an anchor, and we want
+    // scrollBehavior to be triggered without a saved position
+    scroll: null
+  }, !0);
+  function f(l, h, r) {
+    const c = e.indexOf("#"), i = c > -1 ? (n.host && document.querySelector("base") ? e : e.slice(c)) + l : wn() + e + l;
+    try {
+      t[r ? "replaceState" : "pushState"](h, "", i), s.value = h;
+    } catch (p) {
+      process.env.NODE_ENV !== "production" ? w("Error with push/replace State", p) : console.error(p), n[r ? "replace" : "assign"](i);
+    }
+  }
+  function u(l, h) {
+    const r = P({}, t.state, Fe(
+      s.value.back,
+      // keep back and forward entries but override current position
+      l,
+      s.value.forward,
+      !0
+    ), h, { position: s.value.position });
+    f(l, r, !0), o.value = l;
+  }
+  function d(l, h) {
+    const r = P(
+      {},
+      // use current history state to gracefully handle a wrong call to
+      // history.replaceState
+      // https://github.com/vuejs/router/issues/366
+      s.value,
+      t.state,
+      {
+        forward: l,
+        scroll: ue()
+      }
+    );
+    process.env.NODE_ENV !== "production" && !t.state && w(`history.state seems to have been manually replaced without preserving the necessary values. Make sure to preserve existing history state if you are manually calling history.replaceState:
+
+history.replaceState(history.state, '', url)
+
+You can find more information at https://next.router.vuejs.org/guide/migration/#usage-of-history-state.`), f(r.current, r, !0);
+    const c = P({}, Fe(o.value, l, null), { position: r.position + 1 }, h);
+    f(l, c, !1), o.value = l;
+  }
+  return {
+    location: o,
+    state: s,
+    push: d,
+    replace: u
+  };
+}
+function Pn(e) {
+  e = mn(e);
+  const t = Sn(e), n = Rn(e, t.state, t.location, t.replace);
+  function o(f, u = !0) {
+    u || n.pauseListeners(), history.go(f);
+  }
+  const s = P({
+    // it's overridden right after
+    location: "",
+    base: e,
+    go: o,
+    createHref: vn.bind(null, e)
+  }, t, n);
+  return Object.defineProperty(s, "location", {
+    enumerable: !0,
+    get: () => t.location.value
+  }), Object.defineProperty(s, "state", {
+    enumerable: !0,
+    get: () => t.state.value
+  }), s;
+}
+function ce(e) {
+  return typeof e == "string" || e && typeof e == "object";
+}
+function yt(e) {
+  return typeof e == "string" || typeof e == "symbol";
+}
+const U = {
+  path: "/",
+  name: void 0,
+  params: {},
+  query: {},
+  hash: "",
+  fullPath: "/",
+  matched: [],
+  meta: {},
+  redirectedFrom: void 0
+}, ke = Symbol(process.env.NODE_ENV !== "production" ? "navigation failure" : "");
+var Ye;
+(function(e) {
+  e[e.aborted = 4] = "aborted", e[e.cancelled = 8] = "cancelled", e[e.duplicated = 16] = "duplicated";
+})(Ye || (Ye = {}));
+const kn = {
+  1({ location: e, currentLocation: t }) {
+    return `No match for
+ ${JSON.stringify(e)}${t ? `
+while being at
+` + JSON.stringify(t) : ""}`;
+  },
+  2({ from: e, to: t }) {
+    return `Redirected from "${e.fullPath}" to "${On(t)}" via a navigation guard.`;
+  },
+  4({ from: e, to: t }) {
+    return `Navigation aborted from "${e.fullPath}" to "${t.fullPath}" via a navigation guard.`;
+  },
+  8({ from: e, to: t }) {
+    return `Navigation cancelled from "${e.fullPath}" to "${t.fullPath}" with a new navigation.`;
+  },
+  16({ from: e, to: t }) {
+    return `Avoided redundant navigation to current location: "${e.fullPath}".`;
+  }
+};
+function J(e, t) {
+  return process.env.NODE_ENV !== "production" ? P(new Error(kn[e](t)), {
+    type: e,
+    [ke]: !0
+  }, t) : P(new Error(), {
+    type: e,
+    [ke]: !0
+  }, t);
+}
+function V(e, t) {
+  return e instanceof Error && ke in e && (t == null || !!(e.type & t));
+}
+const Nn = ["params", "query", "hash"];
+function On(e) {
+  if (typeof e == "string")
+    return e;
+  if (e.path != null)
+    return e.path;
+  const t = {};
+  for (const n of Nn)
+    n in e && (t[n] = e[n]);
+  return JSON.stringify(t, null, 2);
+}
+const Je = "[^/]+?", Cn = {
+  sensitive: !1,
+  strict: !1,
+  start: !0,
+  end: !0
+}, $n = /[.+*?^${}()[\]/\\]/g;
+function An(e, t) {
+  const n = P({}, Cn, t), o = [];
+  let s = n.start ? "^" : "";
+  const f = [];
+  for (const h of e) {
+    const r = h.length ? [] : [
+      90
+      /* PathScore.Root */
+    ];
+    n.strict && !h.length && (s += "/");
+    for (let c = 0; c < h.length; c++) {
+      const i = h[c];
+      let p = 40 + (n.sensitive ? 0.25 : 0);
+      if (i.type === 0)
+        c || (s += "/"), s += i.value.replace($n, "\\$&"), p += 40;
+      else if (i.type === 1) {
+        const { value: y, repeatable: N, optional: k, regexp: _ } = i;
+        f.push({
+          name: y,
+          repeatable: N,
+          optional: k
+        });
+        const E = _ || Je;
+        if (E !== Je) {
+          p += 10;
+          try {
+            new RegExp(`(${E})`);
+          } catch (x) {
+            throw new Error(`Invalid custom RegExp for param "${y}" (${E}): ` + x.message);
+          }
+        }
+        let C = N ? `((?:${E})(?:/(?:${E}))*)` : `(${E})`;
+        c || (C = // avoid an optional / if there are more segments e.g. /:p?-static
+        // or /:p?-:p2
+        k && h.length < 2 ? `(?:/${C})` : "/" + C), k && (C += "?"), s += C, p += 20, k && (p += -8), N && (p += -20), E === ".*" && (p += -50);
+      }
+      r.push(p);
+    }
+    o.push(r);
+  }
+  if (n.strict && n.end) {
+    const h = o.length - 1;
+    o[h][o[h].length - 1] += 0.7000000000000001;
+  }
+  n.strict || (s += "/?"), n.end ? s += "$" : n.strict && (s += "(?:/|$)");
+  const u = new RegExp(s, n.sensitive ? "" : "i");
+  function d(h) {
+    const r = h.match(u), c = {};
+    if (!r)
+      return null;
+    for (let i = 1; i < r.length; i++) {
+      const p = r[i] || "", y = f[i - 1];
+      c[y.name] = p && y.repeatable ? p.split("/") : p;
+    }
+    return c;
+  }
+  function l(h) {
+    let r = "", c = !1;
+    for (const i of e) {
+      (!c || !r.endsWith("/")) && (r += "/"), c = !1;
+      for (const p of i)
+        if (p.type === 0)
+          r += p.value;
+        else if (p.type === 1) {
+          const { value: y, repeatable: N, optional: k } = p, _ = y in h ? h[y] : "";
+          if (T(_) && !N)
+            throw new Error(`Provided param "${y}" is an array but it is not repeatable (* or + modifiers)`);
+          const E = T(_) ? _.join("/") : _;
+          if (!E)
+            if (k)
+              i.length < 2 && (r.endsWith("/") ? r = r.slice(0, -1) : c = !0);
+            else
+              throw new Error(`Missing required param "${y}"`);
+          r += E;
+        }
+    }
+    return r || "/";
+  }
+  return {
+    re: u,
+    score: o,
+    keys: f,
+    parse: d,
+    stringify: l
+  };
+}
+function xn(e, t) {
+  let n = 0;
+  for (; n < e.length && n < t.length; ) {
+    const o = t[n] - e[n];
+    if (o)
+      return o;
+    n++;
+  }
+  return e.length < t.length ? e.length === 1 && e[0] === 80 ? -1 : 1 : e.length > t.length ? t.length === 1 && t[0] === 80 ? 1 : -1 : 0;
+}
+function Tn(e, t) {
+  let n = 0;
+  const o = e.score, s = t.score;
+  for (; n < o.length && n < s.length; ) {
+    const f = xn(o[n], s[n]);
+    if (f)
+      return f;
+    n++;
+  }
+  if (Math.abs(s.length - o.length) === 1) {
+    if (Xe(o))
+      return 1;
+    if (Xe(s))
+      return -1;
+  }
+  return s.length - o.length;
+}
+function Xe(e) {
+  const t = e[e.length - 1];
+  return e.length > 0 && t[t.length - 1] < 0;
+}
+const In = {
+  type: 0,
+  value: ""
+}, Dn = /[a-zA-Z0-9_]/;
+function Vn(e) {
+  if (!e)
+    return [[]];
+  if (e === "/")
+    return [[In]];
+  if (!e.startsWith("/"))
+    throw new Error(process.env.NODE_ENV !== "production" ? `Route paths should start with a "/": "${e}" should be "/${e}".` : `Invalid path "${e}"`);
+  function t(p) {
+    throw new Error(`ERR (${n})/"${h}": ${p}`);
+  }
+  let n = 0, o = n;
+  const s = [];
+  let f;
+  function u() {
+    f && s.push(f), f = [];
+  }
+  let d = 0, l, h = "", r = "";
+  function c() {
+    h && (n === 0 ? f.push({
+      type: 0,
+      value: h
+    }) : n === 1 || n === 2 || n === 3 ? (f.length > 1 && (l === "*" || l === "+") && t(`A repeatable param (${h}) must be alone in its segment. eg: '/:ids+.`), f.push({
+      type: 1,
+      value: h,
+      regexp: r,
+      repeatable: l === "*" || l === "+",
+      optional: l === "*" || l === "?"
+    })) : t("Invalid state to consume buffer"), h = "");
+  }
+  function i() {
+    h += l;
+  }
+  for (; d < e.length; ) {
+    if (l = e[d++], l === "\\" && n !== 2) {
+      o = n, n = 4;
+      continue;
+    }
+    switch (n) {
+      case 0:
+        l === "/" ? (h && c(), u()) : l === ":" ? (c(), n = 1) : i();
+        break;
+      case 4:
+        i(), n = o;
+        break;
+      case 1:
+        l === "(" ? n = 2 : Dn.test(l) ? i() : (c(), n = 0, l !== "*" && l !== "?" && l !== "+" && d--);
+        break;
+      case 2:
+        l === ")" ? r[r.length - 1] == "\\" ? r = r.slice(0, -1) + l : n = 3 : r += l;
+        break;
+      case 3:
+        c(), n = 0, l !== "*" && l !== "?" && l !== "+" && d--, r = "";
+        break;
+      default:
+        t("Unknown state");
+        break;
+    }
+  }
+  return n === 2 && t(`Unfinished custom RegExp for param "${h}"`), c(), u(), s;
+}
+function jn(e, t, n) {
+  const o = An(Vn(e.path), n);
+  if (process.env.NODE_ENV !== "production") {
+    const f = /* @__PURE__ */ new Set();
+    for (const u of o.keys)
+      f.has(u.name) && w(`Found duplicated params with name "${u.name}" for path "${e.path}". Only the last one will be available on "$route.params".`), f.add(u.name);
+  }
+  const s = P(o, {
+    record: e,
+    parent: t,
+    // these needs to be populated by the parent
+    children: [],
+    alias: []
+  });
+  return t && !s.record.aliasOf == !t.record.aliasOf && t.children.push(s), s;
+}
+function Mn(e, t) {
+  const n = [], o = /* @__PURE__ */ new Map();
+  t = tt({ strict: !1, end: !0, sensitive: !1 }, t);
+  function s(r) {
+    return o.get(r);
+  }
+  function f(r, c, i) {
+    const p = !i, y = Ln(r);
+    process.env.NODE_ENV !== "production" && Hn(y, c), y.aliasOf = i && i.record;
+    const N = tt(t, r), k = [
+      y
+    ];
+    if ("alias" in r) {
+      const C = typeof r.alias == "string" ? [r.alias] : r.alias;
+      for (const x of C)
+        k.push(P({}, y, {
+          // this allows us to hold a copy of the `components` option
+          // so that async components cache is hold on the original record
+          components: i ? i.record.components : y.components,
+          path: x,
+          // we might be the child of an alias
+          aliasOf: i ? i.record : y
+          // the aliases are always of the same kind as the original since they
+          // are defined on the same record
+        }));
+    }
+    let _, E;
+    for (const C of k) {
+      const { path: x } = C;
+      if (c && x[0] !== "/") {
+        const G = c.record.path, D = G[G.length - 1] === "/" ? "" : "/";
+        C.path = c.record.path + (x && D + x);
+      }
+      if (process.env.NODE_ENV !== "production" && C.path === "*")
+        throw new Error(`Catch all routes ("*") must now be defined using a param with a custom regexp.
+See more at https://next.router.vuejs.org/guide/migration/#removed-star-or-catch-all-routes.`);
+      if (_ = jn(C, c, N), process.env.NODE_ENV !== "production" && c && x[0] === "/" && Gn(_, c), i ? (i.alias.push(_), process.env.NODE_ENV !== "production" && qn(i, _)) : (E = E || _, E !== _ && E.alias.push(_), p && r.name && !et(_) && u(r.name)), y.children) {
+        const G = y.children;
+        for (let D = 0; D < G.length; D++)
+          f(G[D], _, i && i.children[D]);
+      }
+      i = i || _, (_.record.components && Object.keys(_.record.components).length || _.record.name || _.record.redirect) && l(_);
+    }
+    return E ? () => {
+      u(E);
+    } : ne;
+  }
+  function u(r) {
+    if (yt(r)) {
+      const c = o.get(r);
+      c && (o.delete(r), n.splice(n.indexOf(c), 1), c.children.forEach(u), c.alias.forEach(u));
+    } else {
+      const c = n.indexOf(r);
+      c > -1 && (n.splice(c, 1), r.record.name && o.delete(r.record.name), r.children.forEach(u), r.alias.forEach(u));
+    }
+  }
+  function d() {
+    return n;
+  }
+  function l(r) {
+    let c = 0;
+    for (; c < n.length && Tn(r, n[c]) >= 0 && // Adding children with empty path should still appear before the parent
+    // https://github.com/vuejs/router/issues/1124
+    (r.record.path !== n[c].record.path || !_t(r, n[c])); )
+      c++;
+    n.splice(c, 0, r), r.record.name && !et(r) && o.set(r.record.name, r);
+  }
+  function h(r, c) {
+    let i, p = {}, y, N;
+    if ("name" in r && r.name) {
+      if (i = o.get(r.name), !i)
+        throw J(1, {
+          location: r
+        });
+      if (process.env.NODE_ENV !== "production") {
+        const E = Object.keys(r.params || {}).filter((C) => !i.keys.find((x) => x.name === C));
+        E.length && w(`Discarded invalid param(s) "${E.join('", "')}" when navigating. See https://github.com/vuejs/router/blob/main/packages/router/CHANGELOG.md#414-2022-08-22 for more details.`);
+      }
+      N = i.record.name, p = P(
+        // paramsFromLocation is a new object
+        Ze(
+          c.params,
+          // only keep params that exist in the resolved location
+          // only keep optional params coming from a parent record
+          i.keys.filter((E) => !E.optional).concat(i.parent ? i.parent.keys.filter((E) => E.optional) : []).map((E) => E.name)
+        ),
+        // discard any existing params in the current location that do not exist here
+        // #1497 this ensures better active/exact matching
+        r.params && Ze(r.params, i.keys.map((E) => E.name))
+      ), y = i.stringify(p);
+    } else if (r.path != null)
+      y = r.path, process.env.NODE_ENV !== "production" && !y.startsWith("/") && w(`The Matcher cannot resolve relative paths but received "${y}". Unless you directly called \`matcher.resolve("${y}")\`, this is probably a bug in vue-router. Please open an issue at https://github.com/vuejs/router/issues/new/choose.`), i = n.find((E) => E.re.test(y)), i && (p = i.parse(y), N = i.record.name);
+    else {
+      if (i = c.name ? o.get(c.name) : n.find((E) => E.re.test(c.path)), !i)
+        throw J(1, {
+          location: r,
+          currentLocation: c
+        });
+      N = i.record.name, p = P({}, c.params, r.params), y = i.stringify(p);
+    }
+    const k = [];
+    let _ = i;
+    for (; _; )
+      k.unshift(_.record), _ = _.parent;
+    return {
+      name: N,
+      path: y,
+      params: p,
+      matched: k,
+      meta: Bn(k)
+    };
+  }
+  return e.forEach((r) => f(r)), { addRoute: f, resolve: h, removeRoute: u, getRoutes: d, getRecordMatcher: s };
+}
+function Ze(e, t) {
+  const n = {};
+  for (const o of t)
+    o in e && (n[o] = e[o]);
+  return n;
+}
+function Ln(e) {
+  return {
+    path: e.path,
+    redirect: e.redirect,
+    name: e.name,
+    meta: e.meta || {},
+    aliasOf: void 0,
+    beforeEnter: e.beforeEnter,
+    props: Un(e),
+    children: e.children || [],
+    instances: {},
+    leaveGuards: /* @__PURE__ */ new Set(),
+    updateGuards: /* @__PURE__ */ new Set(),
+    enterCallbacks: {},
+    components: "components" in e ? e.components || null : e.component && { default: e.component }
+  };
+}
+function Un(e) {
+  const t = {}, n = e.props || !1;
+  if ("component" in e)
+    t.default = n;
+  else
+    for (const o in e.components)
+      t[o] = typeof n == "object" ? n[o] : n;
+  return t;
+}
+function et(e) {
+  for (; e; ) {
+    if (e.record.aliasOf)
+      return !0;
+    e = e.parent;
+  }
+  return !1;
+}
+function Bn(e) {
+  return e.reduce((t, n) => P(t, n.meta), {});
+}
+function tt(e, t) {
+  const n = {};
+  for (const o in e)
+    n[o] = o in t ? t[o] : e[o];
+  return n;
+}
+function Ne(e, t) {
+  return e.name === t.name && e.optional === t.optional && e.repeatable === t.repeatable;
+}
+function qn(e, t) {
+  for (const n of e.keys)
+    if (!n.optional && !t.keys.find(Ne.bind(null, n)))
+      return w(`Alias "${t.record.path}" and the original record: "${e.record.path}" must have the exact same param named "${n.name}"`);
+  for (const n of t.keys)
+    if (!n.optional && !e.keys.find(Ne.bind(null, n)))
+      return w(`Alias "${t.record.path}" and the original record: "${e.record.path}" must have the exact same param named "${n.name}"`);
+}
+function Hn(e, t) {
+  t && t.record.name && !e.name && !e.path && w(`The route named "${String(t.record.name)}" has a child without a name and an empty path. Using that name won't render the empty path child so you probably want to move the name to the child instead. If this is intentional, add a name to the child route to remove the warning.`);
+}
+function Gn(e, t) {
+  for (const n of t.keys)
+    if (!e.keys.find(Ne.bind(null, n)))
+      return w(`Absolute path "${e.record.path}" must have the exact same param named "${n.name}" as its parent "${t.record.path}".`);
+}
+function _t(e, t) {
+  return t.children.some((n) => n === e || _t(e, n));
+}
+function Kn(e) {
+  const t = {};
+  if (e === "" || e === "?")
+    return t;
+  const o = (e[0] === "?" ? e.slice(1) : e).split("&");
+  for (let s = 0; s < o.length; ++s) {
+    const f = o[s].replace(dt, " "), u = f.indexOf("="), d = Y(u < 0 ? f : f.slice(0, u)), l = u < 0 ? null : Y(f.slice(u + 1));
+    if (d in t) {
+      let h = t[d];
+      T(h) || (h = t[d] = [h]), h.push(l);
+    } else
+      t[d] = l;
+  }
+  return t;
+}
+function nt(e) {
+  let t = "";
+  for (let n in e) {
+    const o = e[n];
+    if (n = an(n), o == null) {
+      o !== void 0 && (t += (t.length ? "&" : "") + n);
+      continue;
+    }
+    (T(o) ? o.map((f) => f && Se(f)) : [o && Se(o)]).forEach((f) => {
+      f !== void 0 && (t += (t.length ? "&" : "") + n, f != null && (t += "=" + f));
+    });
+  }
+  return t;
+}
+function Wn(e) {
+  const t = {};
+  for (const n in e) {
+    const o = e[n];
+    o !== void 0 && (t[n] = T(o) ? o.map((s) => s == null ? null : "" + s) : o == null ? o : "" + o);
+  }
+  return t;
+}
+const zn = Symbol(process.env.NODE_ENV !== "production" ? "router view location matched" : ""), ot = Symbol(process.env.NODE_ENV !== "production" ? "router view depth" : ""), Te = Symbol(process.env.NODE_ENV !== "production" ? "router" : ""), Et = Symbol(process.env.NODE_ENV !== "production" ? "route location" : ""), Oe = Symbol(process.env.NODE_ENV !== "production" ? "router view location" : "");
+function ee() {
+  let e = [];
+  function t(o) {
+    return e.push(o), () => {
+      const s = e.indexOf(o);
+      s > -1 && e.splice(s, 1);
+    };
+  }
+  function n() {
+    e = [];
+  }
+  return {
+    add: t,
+    list: () => e.slice(),
+    reset: n
+  };
+}
+function B(e, t, n, o, s, f = (u) => u()) {
+  const u = o && // name is defined if record is because of the function overload
+  (o.enterCallbacks[s] = o.enterCallbacks[s] || []);
+  return () => new Promise((d, l) => {
+    const h = (i) => {
+      i === !1 ? l(J(4, {
+        from: n,
+        to: t
+      })) : i instanceof Error ? l(i) : ce(i) ? l(J(2, {
+        from: t,
+        to: i
+      })) : (u && // since enterCallbackArray is truthy, both record and name also are
+      o.enterCallbacks[s] === u && typeof i == "function" && u.push(i), d());
+    }, r = f(() => e.call(o && o.instances[s], t, n, process.env.NODE_ENV !== "production" ? Qn(h, t, n) : h));
+    let c = Promise.resolve(r);
+    if (e.length < 3 && (c = c.then(h)), process.env.NODE_ENV !== "production" && e.length > 2) {
+      const i = `The "next" callback was never called inside of ${e.name ? '"' + e.name + '"' : ""}:
+${e.toString()}
+. If you are returning a value instead of calling "next", make sure to remove the "next" parameter from your function.`;
+      if (typeof r == "object" && "then" in r)
+        c = c.then((p) => h._called ? p : (w(i), Promise.reject(new Error("Invalid navigation guard"))));
+      else if (r !== void 0 && !h._called) {
+        w(i), l(new Error("Invalid navigation guard"));
+        return;
+      }
+    }
+    c.catch((i) => l(i));
+  });
+}
+function Qn(e, t, n) {
+  let o = 0;
+  return function() {
+    o++ === 1 && w(`The "next" callback was called more than once in one navigation guard when going from "${n.fullPath}" to "${t.fullPath}". It should be called exactly one time in each navigation guard. This will fail in production.`), e._called = !0, o === 1 && e.apply(null, arguments);
+  };
+}
+function be(e, t, n, o, s = (f) => f()) {
+  const f = [];
+  for (const u of e) {
+    process.env.NODE_ENV !== "production" && !u.components && !u.children.length && w(`Record with path "${u.path}" is either missing a "component(s)" or "children" property.`);
+    for (const d in u.components) {
+      let l = u.components[d];
+      if (process.env.NODE_ENV !== "production") {
+        if (!l || typeof l != "object" && typeof l != "function")
+          throw w(`Component "${d}" in record with path "${u.path}" is not a valid component. Received "${String(l)}".`), new Error("Invalid route component");
+        if ("then" in l) {
+          w(`Component "${d}" in record with path "${u.path}" is a Promise instead of a function that returns a Promise. Did you write "import('./MyPage.vue')" instead of "() => import('./MyPage.vue')" ? This will break in production if not fixed.`);
+          const h = l;
+          l = () => h;
+        } else
+          l.__asyncLoader && // warn only once per component
+          !l.__warnedDefineAsync && (l.__warnedDefineAsync = !0, w(`Component "${d}" in record with path "${u.path}" is defined using "defineAsyncComponent()". Write "() => import('./MyPage.vue')" instead of "defineAsyncComponent(() => import('./MyPage.vue'))".`));
+      }
+      if (!(t !== "beforeRouteEnter" && !u.instances[d]))
+        if (Fn(l)) {
+          const r = (l.__vccOpts || l)[t];
+          r && f.push(B(r, n, o, u, d, s));
+        } else {
+          let h = l();
+          process.env.NODE_ENV !== "production" && !("catch" in h) && (w(`Component "${d}" in record with path "${u.path}" is a function that does not return a Promise. If you were passing a functional component, make sure to add a "displayName" to the component. This will break in production if not fixed.`), h = Promise.resolve(h)), f.push(() => h.then((r) => {
+            if (!r)
+              return Promise.reject(new Error(`Couldn't resolve component "${d}" at "${u.path}"`));
+            const c = Ft(r) ? r.default : r;
+            u.components[d] = c;
+            const p = (c.__vccOpts || c)[t];
+            return p && B(p, n, o, u, d, s)();
+          }));
+        }
+    }
+  }
+  return f;
+}
+function Fn(e) {
+  return typeof e == "object" || "displayName" in e || "props" in e || "__vccOpts" in e;
+}
+function rt(e) {
+  const t = W(Te), n = W(Et);
+  let o = !1, s = null;
+  const f = I(() => {
+    const r = F(e.to);
+    return process.env.NODE_ENV !== "production" && (!o || r !== s) && (ce(r) || (o ? w(`Invalid value for prop "to" in useLink()
+- to:`, r, `
+- previous to:`, s, `
+- props:`, e) : w(`Invalid value for prop "to" in useLink()
+- to:`, r, `
+- props:`, e)), s = r, o = !0), t.resolve(r);
+  }), u = I(() => {
+    const { matched: r } = f.value, { length: c } = r, i = r[c - 1], p = n.matched;
+    if (!i || !p.length)
+      return -1;
+    const y = p.findIndex(H.bind(null, i));
+    if (y > -1)
+      return y;
+    const N = st(r[c - 2]);
+    return (
+      // we are dealing with nested routes
+      c > 1 && // if the parent and matched route have the same path, this link is
+      // referring to the empty child. Or we currently are on a different
+      // child of the same parent
+      st(i) === N && // avoid comparing the child with its parent
+      p[p.length - 1].path !== N ? p.findIndex(H.bind(null, r[c - 2])) : y
+    );
+  }), d = I(() => u.value > -1 && Zn(n.params, f.value.params)), l = I(() => u.value > -1 && u.value === n.matched.length - 1 && gt(n.params, f.value.params));
+  function h(r = {}) {
+    return Xn(r) ? t[F(e.replace) ? "replace" : "push"](
+      F(e.to)
+      // avoid uncaught errors are they are logged anyway
+    ).catch(ne) : Promise.resolve();
+  }
+  if (process.env.NODE_ENV !== "production" && L) {
+    const r = lt();
+    if (r) {
+      const c = {
+        route: f.value,
+        isActive: d.value,
+        isExactActive: l.value,
+        error: null
+      };
+      r.__vrl_devtools = r.__vrl_devtools || [], r.__vrl_devtools.push(c), Vt(() => {
+        c.route = f.value, c.isActive = d.value, c.isExactActive = l.value, c.error = ce(F(e.to)) ? null : 'Invalid "to" value';
+      }, { flush: "post" });
+    }
+  }
+  return {
+    route: f,
+    href: I(() => f.value.href),
+    isActive: d,
+    isExactActive: l,
+    navigate: h
+  };
+}
+const Yn = /* @__PURE__ */ le({
+  name: "RouterLink",
+  compatConfig: { MODE: 3 },
+  props: {
+    to: {
+      type: [String, Object],
+      required: !0
+    },
+    replace: Boolean,
+    activeClass: String,
+    // inactiveClass: String,
+    exactActiveClass: String,
+    custom: Boolean,
+    ariaCurrentValue: {
+      type: String,
+      default: "page"
+    }
+  },
+  useLink: rt,
+  setup(e, { slots: t }) {
+    const n = Dt(rt(e)), { options: o } = W(Te), s = I(() => ({
+      [at(e.activeClass, o.linkActiveClass, "router-link-active")]: n.isActive,
+      // [getLinkClass(
+      //   props.inactiveClass,
+      //   options.linkInactiveClass,
+      //   'router-link-inactive'
+      // )]: !link.isExactActive,
+      [at(e.exactActiveClass, o.linkExactActiveClass, "router-link-exact-active")]: n.isExactActive
+    }));
+    return () => {
+      const f = t.default && t.default(n);
+      return e.custom ? f : ct("a", {
+        "aria-current": n.isExactActive ? e.ariaCurrentValue : null,
+        href: n.href,
+        // this would override user added attrs but Vue will still add
+        // the listener, so we end up triggering both
+        onClick: n.navigate,
+        class: s.value
+      }, f);
+    };
+  }
+}), Jn = Yn;
+function Xn(e) {
+  if (!(e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) && !e.defaultPrevented && !(e.button !== void 0 && e.button !== 0)) {
+    if (e.currentTarget && e.currentTarget.getAttribute) {
+      const t = e.currentTarget.getAttribute("target");
+      if (/\b_blank\b/i.test(t))
+        return;
+    }
+    return e.preventDefault && e.preventDefault(), !0;
+  }
+}
+function Zn(e, t) {
+  for (const n in t) {
+    const o = t[n], s = e[n];
+    if (typeof o == "string") {
+      if (o !== s)
+        return !1;
+    } else if (!T(s) || s.length !== o.length || o.some((f, u) => f !== s[u]))
+      return !1;
+  }
+  return !0;
+}
+function st(e) {
+  return e ? e.aliasOf ? e.aliasOf.path : e.path : "";
+}
+const at = (e, t, n) => e ?? t ?? n, eo = /* @__PURE__ */ le({
+  name: "RouterView",
+  // #674 we manually inherit them
+  inheritAttrs: !1,
+  props: {
+    name: {
+      type: String,
+      default: "default"
+    },
+    route: Object
+  },
+  // Better compat for @vue/compat users
+  // https://github.com/vuejs/router/issues/1315
+  compatConfig: { MODE: 3 },
+  setup(e, { attrs: t, slots: n }) {
+    process.env.NODE_ENV !== "production" && no();
+    const o = W(Oe), s = I(() => e.route || o.value), f = W(ot, 0), u = I(() => {
+      let h = F(f);
+      const { matched: r } = s.value;
+      let c;
+      for (; (c = r[h]) && !c.components; )
+        h++;
+      return h;
+    }), d = I(() => s.value.matched[u.value]);
+    ve(ot, I(() => u.value + 1)), ve(zn, d), ve(Oe, s);
+    const l = we();
+    return Ae(() => [l.value, d.value, e.name], ([h, r, c], [i, p, y]) => {
+      r && (r.instances[c] = h, p && p !== r && h && h === i && (r.leaveGuards.size || (r.leaveGuards = p.leaveGuards), r.updateGuards.size || (r.updateGuards = p.updateGuards))), h && r && // if there is no instance but to and from are the same this might be
+      // the first visit
+      (!p || !H(r, p) || !i) && (r.enterCallbacks[c] || []).forEach((N) => N(h));
+    }, { flush: "post" }), () => {
+      const h = s.value, r = e.name, c = d.value, i = c && c.components[r];
+      if (!i)
+        return it(n.default, { Component: i, route: h });
+      const p = c.props[r], y = p ? p === !0 ? h.params : typeof p == "function" ? p(h) : p : null, k = ct(i, P({}, y, t, {
+        onVnodeUnmounted: (_) => {
+          _.component.isUnmounted && (c.instances[r] = null);
+        },
+        ref: l
+      }));
+      if (process.env.NODE_ENV !== "production" && L && k.ref) {
+        const _ = {
+          depth: u.value,
+          name: c.name,
+          path: c.path,
+          meta: c.meta
+        };
+        (T(k.ref) ? k.ref.map((C) => C.i) : [k.ref.i]).forEach((C) => {
+          C.__vrv_devtools = _;
+        });
+      }
+      return (
+        // pass the vnode to the slot as a prop.
+        // h and <component :is="..."> both accept vnodes
+        it(n.default, { Component: k, route: h }) || k
+      );
+    };
+  }
+});
+function it(e, t) {
+  if (!e)
+    return null;
+  const n = e(t);
+  return n.length === 1 ? n[0] : n;
+}
+const to = eo;
+function no() {
+  const e = lt(), t = e.parent && e.parent.type.name, n = e.parent && e.parent.subTree && e.parent.subTree.type;
+  if (t && (t === "KeepAlive" || t.includes("Transition")) && typeof n == "object" && n.name === "RouterView") {
+    const o = t === "KeepAlive" ? "keep-alive" : "transition";
+    w(`<router-view> can no longer be used directly inside <transition> or <keep-alive>.
+Use slot props instead:
+
+<router-view v-slot="{ Component }">
+  <${o}>
+    <component :is="Component" />
+  </${o}>
+</router-view>`);
+  }
+}
+function te(e, t) {
+  const n = P({}, e, {
+    // remove variables that can contain vue instances
+    matched: e.matched.map((o) => po(o, ["instances", "children", "aliasOf"]))
+  });
+  return {
+    _custom: {
+      type: null,
+      readOnly: !0,
+      display: e.fullPath,
+      tooltip: t,
+      value: n
+    }
+  };
+}
+function ie(e) {
+  return {
+    _custom: {
+      display: e
+    }
+  };
+}
+let oo = 0;
+function ro(e, t, n) {
+  if (t.__hasDevtools)
+    return;
+  t.__hasDevtools = !0;
+  const o = oo++;
+  Qt({
+    id: "org.vuejs.router" + (o ? "." + o : ""),
+    label: "Vue Router",
+    packageName: "vue-router",
+    homepage: "https://router.vuejs.org",
+    logo: "https://router.vuejs.org/logo.png",
+    componentStateTypes: ["Routing"],
+    app: e
+  }, (s) => {
+    typeof s.now != "function" && console.warn("[Vue Router]: You seem to be using an outdated version of Vue Devtools. Are you still using the Beta release instead of the stable one? You can find the links at https://devtools.vuejs.org/guide/installation.html."), s.on.inspectComponent((r, c) => {
+      r.instanceData && r.instanceData.state.push({
+        type: "Routing",
+        key: "$route",
+        editable: !1,
+        value: te(t.currentRoute.value, "Current Route")
+      });
+    }), s.on.visitComponentTree(({ treeNode: r, componentInstance: c }) => {
+      if (c.__vrv_devtools) {
+        const i = c.__vrv_devtools;
+        r.tags.push({
+          label: (i.name ? `${i.name.toString()}: ` : "") + i.path,
+          textColor: 0,
+          tooltip: "This component is rendered by &lt;router-view&gt;",
+          backgroundColor: bt
+        });
+      }
+      T(c.__vrl_devtools) && (c.__devtoolsApi = s, c.__vrl_devtools.forEach((i) => {
+        let p = i.route.path, y = St, N = "", k = 0;
+        i.error ? (p = i.error, y = lo, k = uo) : i.isExactActive ? (y = Rt, N = "This is exactly active") : i.isActive && (y = wt, N = "This link is active"), r.tags.push({
+          label: p,
+          textColor: k,
+          tooltip: N,
+          backgroundColor: y
+        });
+      }));
+    }), Ae(t.currentRoute, () => {
+      l(), s.notifyComponentUpdate(), s.sendInspectorTree(d), s.sendInspectorState(d);
+    });
+    const f = "router:navigations:" + o;
+    s.addTimelineLayer({
+      id: f,
+      label: `Router${o ? " " + o : ""} Navigations`,
+      color: 4237508
+    }), t.onError((r, c) => {
+      s.addTimelineEvent({
+        layerId: f,
+        event: {
+          title: "Error during Navigation",
+          subtitle: c.fullPath,
+          logType: "error",
+          time: s.now(),
+          data: { error: r },
+          groupId: c.meta.__navigationId
+        }
+      });
+    });
+    let u = 0;
+    t.beforeEach((r, c) => {
+      const i = {
+        guard: ie("beforeEach"),
+        from: te(c, "Current Location during this navigation"),
+        to: te(r, "Target location")
+      };
+      Object.defineProperty(r.meta, "__navigationId", {
+        value: u++
+      }), s.addTimelineEvent({
+        layerId: f,
+        event: {
+          time: s.now(),
+          title: "Start of navigation",
+          subtitle: r.fullPath,
+          data: i,
+          groupId: r.meta.__navigationId
+        }
+      });
+    }), t.afterEach((r, c, i) => {
+      const p = {
+        guard: ie("afterEach")
+      };
+      i ? (p.failure = {
+        _custom: {
+          type: Error,
+          readOnly: !0,
+          display: i ? i.message : "",
+          tooltip: "Navigation Failure",
+          value: i
+        }
+      }, p.status = ie("❌")) : p.status = ie("✅"), p.from = te(c, "Current Location during this navigation"), p.to = te(r, "Target location"), s.addTimelineEvent({
+        layerId: f,
+        event: {
+          title: "End of navigation",
+          subtitle: r.fullPath,
+          time: s.now(),
+          data: p,
+          logType: i ? "warning" : "default",
+          groupId: r.meta.__navigationId
+        }
+      });
+    });
+    const d = "router-inspector:" + o;
+    s.addInspector({
+      id: d,
+      label: "Routes" + (o ? " " + o : ""),
+      icon: "book",
+      treeFilterPlaceholder: "Search routes"
+    });
+    function l() {
+      if (!h)
+        return;
+      const r = h;
+      let c = n.getRoutes().filter((i) => !i.parent || // these routes have a parent with no component which will not appear in the view
+      // therefore we still need to include them
+      !i.parent.record.components);
+      c.forEach(Nt), r.filter && (c = c.filter((i) => (
+        // save matches state based on the payload
+        Ce(i, r.filter.toLowerCase())
+      ))), c.forEach((i) => kt(i, t.currentRoute.value)), r.rootNodes = c.map(Pt);
+    }
+    let h;
+    s.on.getInspectorTree((r) => {
+      h = r, r.app === e && r.inspectorId === d && l();
+    }), s.on.getInspectorState((r) => {
+      if (r.app === e && r.inspectorId === d) {
+        const i = n.getRoutes().find((p) => p.record.__vd_id === r.nodeId);
+        i && (r.state = {
+          options: ao(i)
+        });
+      }
+    }), s.sendInspectorTree(d), s.sendInspectorState(d);
+  });
+}
+function so(e) {
+  return e.optional ? e.repeatable ? "*" : "?" : e.repeatable ? "+" : "";
+}
+function ao(e) {
+  const { record: t } = e, n = [
+    { editable: !1, key: "path", value: t.path }
+  ];
+  return t.name != null && n.push({
+    editable: !1,
+    key: "name",
+    value: t.name
+  }), n.push({ editable: !1, key: "regexp", value: e.re }), e.keys.length && n.push({
+    editable: !1,
+    key: "keys",
+    value: {
+      _custom: {
+        type: null,
+        readOnly: !0,
+        display: e.keys.map((o) => `${o.name}${so(o)}`).join(" "),
+        tooltip: "Param keys",
+        value: e.keys
+      }
+    }
+  }), t.redirect != null && n.push({
+    editable: !1,
+    key: "redirect",
+    value: t.redirect
+  }), e.alias.length && n.push({
+    editable: !1,
+    key: "aliases",
+    value: e.alias.map((o) => o.record.path)
+  }), Object.keys(e.record.meta).length && n.push({
+    editable: !1,
+    key: "meta",
+    value: e.record.meta
+  }), n.push({
+    key: "score",
+    editable: !1,
+    value: {
+      _custom: {
+        type: null,
+        readOnly: !0,
+        display: e.score.map((o) => o.join(", ")).join(" | "),
+        tooltip: "Score used to sort routes",
+        value: e.score
+      }
+    }
+  }), n;
+}
+const bt = 15485081, wt = 2450411, Rt = 8702998, io = 2282478, St = 16486972, co = 6710886, lo = 16704226, uo = 12131356;
+function Pt(e) {
+  const t = [], { record: n } = e;
+  n.name != null && t.push({
+    label: String(n.name),
+    textColor: 0,
+    backgroundColor: io
+  }), n.aliasOf && t.push({
+    label: "alias",
+    textColor: 0,
+    backgroundColor: St
+  }), e.__vd_match && t.push({
+    label: "matches",
+    textColor: 0,
+    backgroundColor: bt
+  }), e.__vd_exactActive && t.push({
+    label: "exact",
+    textColor: 0,
+    backgroundColor: Rt
+  }), e.__vd_active && t.push({
+    label: "active",
+    textColor: 0,
+    backgroundColor: wt
+  }), n.redirect && t.push({
+    label: typeof n.redirect == "string" ? `redirect: ${n.redirect}` : "redirects",
+    textColor: 16777215,
+    backgroundColor: co
+  });
+  let o = n.__vd_id;
+  return o == null && (o = String(fo++), n.__vd_id = o), {
+    id: o,
+    label: n.path,
+    tags: t,
+    children: e.children.map(Pt)
+  };
+}
+let fo = 0;
+const ho = /^\/(.*)\/([a-z]*)$/;
+function kt(e, t) {
+  const n = t.matched.length && H(t.matched[t.matched.length - 1], e.record);
+  e.__vd_exactActive = e.__vd_active = n, n || (e.__vd_active = t.matched.some((o) => H(o, e.record))), e.children.forEach((o) => kt(o, t));
+}
+function Nt(e) {
+  e.__vd_match = !1, e.children.forEach(Nt);
+}
+function Ce(e, t) {
+  const n = String(e.re).match(ho);
+  if (e.__vd_match = !1, !n || n.length < 3)
+    return !1;
+  if (new RegExp(n[1].replace(/\$$/, ""), n[2]).test(t))
+    return e.children.forEach((u) => Ce(u, t)), e.record.path !== "/" || t === "/" ? (e.__vd_match = e.re.test(t), !0) : !1;
+  const s = e.record.path.toLowerCase(), f = Y(s);
+  return !t.startsWith("/") && (f.includes(t) || s.includes(t)) || f.startsWith(t) || s.startsWith(t) || e.record.name && String(e.record.name).includes(t) ? !0 : e.children.some((u) => Ce(u, t));
+}
+function po(e, t) {
+  const n = {};
+  for (const o in e)
+    t.includes(o) || (n[o] = e[o]);
+  return n;
+}
+function mo(e) {
+  const t = Mn(e.routes, e), n = e.parseQuery || Kn, o = e.stringifyQuery || nt, s = e.history;
+  if (process.env.NODE_ENV !== "production" && !s)
+    throw new Error('Provide the "history" option when calling "createRouter()": https://next.router.vuejs.org/api/#history.');
+  const f = ee(), u = ee(), d = ee(), l = xt(U);
+  let h = U;
+  L && e.scrollBehavior && "scrollRestoration" in history && (history.scrollRestoration = "manual");
+  const r = _e.bind(null, (a) => "" + a), c = _e.bind(null, ln), i = (
+    // @ts-expect-error: intentionally avoid the type check
+    _e.bind(null, Y)
+  );
+  function p(a, g) {
+    let m, v;
+    return yt(a) ? (m = t.getRecordMatcher(a), process.env.NODE_ENV !== "production" && !m && w(`Parent route "${String(a)}" not found when adding child route`, g), v = g) : v = a, t.addRoute(v, m);
+  }
+  function y(a) {
+    const g = t.getRecordMatcher(a);
+    g ? t.removeRoute(g) : process.env.NODE_ENV !== "production" && w(`Cannot remove non-existent route "${String(a)}"`);
+  }
+  function N() {
+    return t.getRoutes().map((a) => a.record);
+  }
+  function k(a) {
+    return !!t.getRecordMatcher(a);
+  }
+  function _(a, g) {
+    if (g = P({}, g || l.value), typeof a == "string") {
+      const b = Ee(n, a, g.path), O = t.resolve({ path: b.path }, g), K = s.createHref(b.fullPath);
+      return process.env.NODE_ENV !== "production" && (K.startsWith("//") ? w(`Location "${a}" resolved to "${K}". A resolved location cannot start with multiple slashes.`) : O.matched.length || w(`No match found for location with path "${a}"`)), P(b, O, {
+        params: i(O.params),
+        hash: Y(b.hash),
+        redirectedFrom: void 0,
+        href: K
+      });
+    }
+    process.env.NODE_ENV !== "production" && !ce(a) && (w(`router.resolve() was passed an invalid location. This will fail in production.
+- Location:`, a), a = {});
+    let m;
+    if (a.path != null)
+      process.env.NODE_ENV !== "production" && "params" in a && !("name" in a) && // @ts-expect-error: the type is never
+      Object.keys(a.params).length && w(`Path "${a.path}" was passed with params but they will be ignored. Use a named route alongside params instead.`), m = P({}, a, {
+        path: Ee(n, a.path, g.path).path
+      });
+    else {
+      const b = P({}, a.params);
+      for (const O in b)
+        b[O] == null && delete b[O];
+      m = P({}, a, {
+        params: c(b)
+      }), g.params = c(g.params);
+    }
+    const v = t.resolve(m, g), S = a.hash || "";
+    process.env.NODE_ENV !== "production" && S && !S.startsWith("#") && w(`A \`hash\` should always start with the character "#". Replace "${S}" with "#${S}".`), v.params = r(i(v.params));
+    const $ = dn(o, P({}, a, {
+      hash: sn(S),
+      path: v.path
+    })), R = s.createHref($);
+    return process.env.NODE_ENV !== "production" && (R.startsWith("//") ? w(`Location "${a}" resolved to "${R}". A resolved location cannot start with multiple slashes.`) : v.matched.length || w(`No match found for location with path "${a.path != null ? a.path : a}"`)), P({
+      fullPath: $,
+      // keep the hash encoded so fullPath is effectively path + encodedQuery +
+      // hash
+      hash: S,
+      query: (
+        // if the user is using a custom query lib like qs, we might have
+        // nested objects, so we keep the query as is, meaning it can contain
+        // numbers at `$route.query`, but at the point, the user will have to
+        // use their own type anyway.
+        // https://github.com/vuejs/router/issues/328#issuecomment-649481567
+        o === nt ? Wn(a.query) : a.query || {}
+      )
+    }, v, {
+      redirectedFrom: void 0,
+      href: R
+    });
+  }
+  function E(a) {
+    return typeof a == "string" ? Ee(n, a, l.value.path) : P({}, a);
+  }
+  function C(a, g) {
+    if (h !== a)
+      return J(8, {
+        from: g,
+        to: a
+      });
+  }
+  function x(a) {
+    return X(a);
+  }
+  function G(a) {
+    return x(P(E(a), { replace: !0 }));
+  }
+  function D(a) {
+    const g = a.matched[a.matched.length - 1];
+    if (g && g.redirect) {
+      const { redirect: m } = g;
+      let v = typeof m == "function" ? m(a) : m;
+      if (typeof v == "string" && (v = v.includes("?") || v.includes("#") ? v = E(v) : (
+        // force empty params
+        { path: v }
+      ), v.params = {}), process.env.NODE_ENV !== "production" && v.path == null && !("name" in v))
+        throw w(`Invalid redirect found:
+${JSON.stringify(v, null, 2)}
+ when navigating to "${a.fullPath}". A redirect must contain a name or path. This will break in production.`), new Error("Invalid redirect");
+      return P({
+        query: a.query,
+        hash: a.hash,
+        // avoid transferring params if the redirect has a path
+        params: v.path != null ? {} : a.params
+      }, v);
+    }
+  }
+  function X(a, g) {
+    const m = h = _(a), v = l.value, S = a.state, $ = a.force, R = a.replace === !0, b = D(m);
+    if (b)
+      return X(
+        P(E(b), {
+          state: typeof b == "object" ? P({}, S, b.state) : S,
+          force: $,
+          replace: R
+        }),
+        // keep original redirectedFrom if it exists
+        g || m
+      );
+    const O = m;
+    O.redirectedFrom = g;
+    let K;
+    return !$ && We(o, v, m) && (K = J(16, { to: O, from: v }), Le(
+      v,
+      v,
+      // this is a push, the only way for it to be triggered from a
+      // history.listen is with a redirect, which makes it become a push
+      !0,
+      // This cannot be the first navigation because the initial location
+      // cannot be manually navigated to
+      !1
+    )), (K ? Promise.resolve(K) : De(O, v)).catch((A) => V(A) ? (
+      // navigation redirects still mark the router as ready
+      V(
+        A,
+        2
+        /* ErrorTypes.NAVIGATION_GUARD_REDIRECT */
+      ) ? A : pe(A)
+    ) : (
+      // reject any unknown error
+      he(A, O, v)
+    )).then((A) => {
+      if (A) {
+        if (V(
+          A,
+          2
+          /* ErrorTypes.NAVIGATION_GUARD_REDIRECT */
+        ))
+          return process.env.NODE_ENV !== "production" && // we are redirecting to the same location we were already at
+          We(o, _(A.to), O) && // and we have done it a couple of times
+          g && // @ts-expect-error: added only in dev
+          (g._count = g._count ? (
+            // @ts-expect-error
+            g._count + 1
+          ) : 1) > 30 ? (w(`Detected a possibly infinite redirection in a navigation guard when going from "${v.fullPath}" to "${O.fullPath}". Aborting to avoid a Stack Overflow.
+ Are you always returning a new location within a navigation guard? That would lead to this error. Only return when redirecting or aborting, that should fix this. This might break in production if not fixed.`), Promise.reject(new Error("Infinite redirect in navigation guard"))) : X(
+            // keep options
+            P({
+              // preserve an existing replacement but allow the redirect to override it
+              replace: R
+            }, E(A.to), {
+              state: typeof A.to == "object" ? P({}, S, A.to.state) : S,
+              force: $
+            }),
+            // preserve the original redirectedFrom if any
+            g || O
+          );
+      } else
+        A = je(O, v, !0, R, S);
+      return Ve(O, v, A), A;
+    });
+  }
+  function Ct(a, g) {
+    const m = C(a, g);
+    return m ? Promise.reject(m) : Promise.resolve();
+  }
+  function fe(a) {
+    const g = ae.values().next().value;
+    return g && typeof g.runWithContext == "function" ? g.runWithContext(a) : a();
+  }
+  function De(a, g) {
+    let m;
+    const [v, S, $] = go(a, g);
+    m = be(v.reverse(), "beforeRouteLeave", a, g);
+    for (const b of v)
+      b.leaveGuards.forEach((O) => {
+        m.push(B(O, a, g));
+      });
+    const R = Ct.bind(null, a, g);
+    return m.push(R), z(m).then(() => {
+      m = [];
+      for (const b of f.list())
+        m.push(B(b, a, g));
+      return m.push(R), z(m);
+    }).then(() => {
+      m = be(S, "beforeRouteUpdate", a, g);
+      for (const b of S)
+        b.updateGuards.forEach((O) => {
+          m.push(B(O, a, g));
+        });
+      return m.push(R), z(m);
+    }).then(() => {
+      m = [];
+      for (const b of $)
+        if (b.beforeEnter)
+          if (T(b.beforeEnter))
+            for (const O of b.beforeEnter)
+              m.push(B(O, a, g));
+          else
+            m.push(B(b.beforeEnter, a, g));
+      return m.push(R), z(m);
+    }).then(() => (a.matched.forEach((b) => b.enterCallbacks = {}), m = be($, "beforeRouteEnter", a, g, fe), m.push(R), z(m))).then(() => {
+      m = [];
+      for (const b of u.list())
+        m.push(B(b, a, g));
+      return m.push(R), z(m);
+    }).catch((b) => V(
+      b,
+      8
+      /* ErrorTypes.NAVIGATION_CANCELLED */
+    ) ? b : Promise.reject(b));
+  }
+  function Ve(a, g, m) {
+    d.list().forEach((v) => fe(() => v(a, g, m)));
+  }
+  function je(a, g, m, v, S) {
+    const $ = C(a, g);
+    if ($)
+      return $;
+    const R = g === U, b = L ? history.state : {};
+    m && (v || R ? s.replace(a.fullPath, P({
+      scroll: R && b && b.scroll
+    }, S)) : s.push(a.fullPath, S)), l.value = a, Le(a, g, m, R), pe();
+  }
+  let Z;
+  function $t() {
+    Z || (Z = s.listen((a, g, m) => {
+      if (!Ue.listening)
+        return;
+      const v = _(a), S = D(v);
+      if (S) {
+        X(P(S, { replace: !0 }), v).catch(ne);
+        return;
+      }
+      h = v;
+      const $ = l.value;
+      L && En(Qe($.fullPath, m.delta), ue()), De(v, $).catch((R) => V(
+        R,
+        12
+        /* ErrorTypes.NAVIGATION_CANCELLED */
+      ) ? R : V(
+        R,
+        2
+        /* ErrorTypes.NAVIGATION_GUARD_REDIRECT */
+      ) ? (X(
+        R.to,
+        v
+        // avoid an uncaught rejection, let push call triggerError
+      ).then((b) => {
+        V(
+          b,
+          20
+          /* ErrorTypes.NAVIGATION_DUPLICATED */
+        ) && !m.delta && m.type === re.pop && s.go(-1, !1);
+      }).catch(ne), Promise.reject()) : (m.delta && s.go(-m.delta, !1), he(R, v, $))).then((R) => {
+        R = R || je(
+          // after navigation, all matched components are resolved
+          v,
+          $,
+          !1
+        ), R && (m.delta && // a new navigation has been triggered, so we do not want to revert, that will change the current history
+        // entry while a different route is displayed
+        !V(
+          R,
+          8
+          /* ErrorTypes.NAVIGATION_CANCELLED */
+        ) ? s.go(-m.delta, !1) : m.type === re.pop && V(
+          R,
+          20
+          /* ErrorTypes.NAVIGATION_DUPLICATED */
+        ) && s.go(-1, !1)), Ve(v, $, R);
+      }).catch(ne);
+    }));
+  }
+  let de = ee(), Me = ee(), se;
+  function he(a, g, m) {
+    pe(a);
+    const v = Me.list();
+    return v.length ? v.forEach((S) => S(a, g, m)) : (process.env.NODE_ENV !== "production" && w("uncaught error during route navigation:"), console.error(a)), Promise.reject(a);
+  }
+  function At() {
+    return se && l.value !== U ? Promise.resolve() : new Promise((a, g) => {
+      de.add([a, g]);
+    });
+  }
+  function pe(a) {
+    return se || (se = !a, $t(), de.list().forEach(([g, m]) => a ? m(a) : g()), de.reset()), a;
+  }
+  function Le(a, g, m, v) {
+    const { scrollBehavior: S } = e;
+    if (!L || !S)
+      return Promise.resolve();
+    const $ = !m && bn(Qe(a.fullPath, 0)) || (v || !m) && history.state && history.state.scroll || null;
+    return It().then(() => S(a, g, $)).then((R) => R && _n(R)).catch((R) => he(R, a, g));
+  }
+  const me = (a) => s.go(a);
+  let ge;
+  const ae = /* @__PURE__ */ new Set(), Ue = {
+    currentRoute: l,
+    listening: !0,
+    addRoute: p,
+    removeRoute: y,
+    hasRoute: k,
+    getRoutes: N,
+    resolve: _,
+    options: e,
+    push: x,
+    replace: G,
+    go: me,
+    back: () => me(-1),
+    forward: () => me(1),
+    beforeEach: f.add,
+    beforeResolve: u.add,
+    afterEach: d.add,
+    onError: Me.add,
+    isReady: At,
+    install(a) {
+      const g = this;
+      a.component("RouterLink", Jn), a.component("RouterView", to), a.config.globalProperties.$router = g, Object.defineProperty(a.config.globalProperties, "$route", {
+        enumerable: !0,
+        get: () => F(l)
+      }), L && // used for the initial navigation client side to avoid pushing
+      // multiple times when the router is used in multiple apps
+      !ge && l.value === U && (ge = !0, x(s.location).catch((S) => {
+        process.env.NODE_ENV !== "production" && w("Unexpected error when starting the router:", S);
+      }));
+      const m = {};
+      for (const S in U)
+        Object.defineProperty(m, S, {
+          get: () => l.value[S],
+          enumerable: !0
+        });
+      a.provide(Te, g), a.provide(Et, Tt(m)), a.provide(Oe, l);
+      const v = a.unmount;
+      ae.add(a), a.unmount = function() {
+        ae.delete(a), ae.size < 1 && (h = U, Z && Z(), Z = null, l.value = U, ge = !1, se = !1), v();
+      }, process.env.NODE_ENV !== "production" && L && ro(a, g, t);
+    }
+  };
+  function z(a) {
+    return a.reduce((g, m) => g.then(() => fe(m)), Promise.resolve());
+  }
+  return Ue;
+}
+function go(e, t) {
+  const n = [], o = [], s = [], f = Math.max(t.matched.length, e.matched.length);
+  for (let u = 0; u < f; u++) {
+    const d = t.matched[u];
+    d && (e.matched.find((h) => H(h, d)) ? o.push(d) : n.push(d));
+    const l = e.matched[u];
+    l && (t.matched.find((h) => H(h, l)) || s.push(l));
+  }
+  return [n, o, s];
+}
+const vo = [
+  {
+    _id: "61a9ae14e04e3d5bffb26ef7",
+    label: "VETS2011 Physiology",
+    tags: ["course:VETS2011"],
+    url: "https://crucible-uat.uqcloud.net/resource/5a0ba18d34cc363763e05e99/61a9ae14e04e3d5bffb26ef7"
+  },
+  {
+    _id: "624380e164c71f1df2110dfd",
+    label: "Respiratory Physiology",
+    tags: ["VETS2011", "subject:Physiology", "system:Respiratory_System"],
+    url: "https://crucible-uat.uqcloud.net/resource/5a0ba18d34cc363763e05e99/61a9ae14e04e3d5bffb26ef7/624380e164c71f1df2110dfd"
+  },
+  {
+    _id: "6290636464c71f1df2110ec9",
+    label: "Equine Exercise Physiology",
+    tags: ["VETS2011", "subject:Physiology", "system:Exercise", "animal:Horse"],
+    url: "https://crucible-uat.uqcloud.net/resource/5a0ba18d34cc363763e05e99/61a9ae14e04e3d5bffb26ef7/6290636464c71f1df2110ec9"
+  }
+], yo = async (e) => {
+  try {
+    const t = W("$getApi");
+    return await (await fetch(
+      t + "?" + new URLSearchParams({ tag: e })
+    )).json();
+  } catch {
+    alert("Error fetching data from the server, only display test data.");
+  }
+}, _o = async (e) => {
+  try {
+    return await yo(e) || vo.filter(
+      (n) => n.tags.join(",").includes(e)
+    );
+  } catch (t) {
+    return console.log(t), [];
+  }
+}, Eo = { class: "search-results-container" }, bo = { class: "container-description" }, wo = { class: "label-badges" }, Ro = {
+  key: 0,
+  class: "results"
+}, So = ["href"], Po = {
+  key: 1,
+  class: "no-results"
+}, ko = /* @__PURE__ */ le({
+  __name: "DisplayResult",
+  setup(e) {
+    const t = we([
+      { _id: "", label: "", tags: [""], url: "" }
+    ]), n = Ot(), o = we("");
+    jt(async () => {
+      n ? (o.value = n.currentRoute.value.query.tag, await s(o.value)) : o.value = "undefined";
+    });
+    const s = async (f) => {
+      const u = await _o(f);
+      u && (t.value = u);
+    };
+    return Ae(n.currentRoute, async (f, u) => {
+      const d = f.query.tag || "", l = u.query.tag || "";
+      d !== l && await s(d);
+    }), (f, u) => (j(), M("div", Eo, [
+      q("div", bo, [
+        q("button", {
+          onClick: u[0] || (u[0] = () => f.$router.back())
+        }, "↵"),
+        q("div", wo, " (" + ye(t.value.length) + " records in total) ", 1)
+      ]),
+      t.value.length ? (j(), M("div", Ro, [
+        q("ul", null, [
+          (j(!0), M(Be, null, qe(t.value, (d, l) => (j(), M("li", { key: l }, [
+            q("a", {
+              href: d.url,
+              target: "_blank",
+              class: "linkToResource"
+            }, ye(d.label), 9, So),
+            (j(!0), M(Be, null, qe(d.tags, (h, r) => (j(), M("span", {
+              key: r,
+              class: "tag-badges"
+            }, ye(h), 1))), 128))
+          ]))), 128))
+        ])
+      ])) : (j(), M("p", Po, "No results found"))
+    ]));
+  }
+}), Ie = (e, t) => {
+  const n = e.__vccOpts || e;
+  for (const [o, s] of t)
+    n[o] = s;
+  return n;
+}, $e = /* @__PURE__ */ Ie(ko, [["__scopeId", "data-v-cbd9fd05"]]), No = {}, Oo = { id: "app" };
+function Co(e, t) {
+  const n = He("CrucibleSearch"), o = He("RouterView");
+  return j(), M("div", Oo, [
+    Ge(n),
+    Ge(o)
+  ]);
+}
+const $o = /* @__PURE__ */ Ie(No, [["render", Co]]), Ao = [
+  { path: "/", component: $o },
+  { path: "/search", component: $e }
+], xo = mo({
+  history: Pn("/"),
+  routes: Ao
+});
+function Ot() {
+  const e = W("$router");
+  return e || xo;
+}
+const To = (e) => (Lt("data-v-b75677aa"), e = e(), Ut(), e), Io = { class: "search-container" }, Do = { class: "search-box" }, Vo = /* @__PURE__ */ To(() => /* @__PURE__ */ q("label", { for: "" }, null, -1)), jo = /* @__PURE__ */ le({
   __name: "CrucibleSearch",
   setup(e) {
-    const a = S(), t = (l) => {
-      a.push({ path: `/search-in-tag/${l || "2011"}` });
+    const t = Ot(), n = (o) => {
+      t.push({ path: "/search", query: { tag: o } });
     };
-    return (l, i) => (o(), s("div", Q, [
-      g("div", I, [
-        k,
-        g("input", {
+    return (o, s) => (j(), M("div", Io, [
+      q("div", Do, [
+        Vo,
+        q("input", {
           type: "text",
-          placeholder: "Enter a valid Tag (or try enter VETS)",
-          onKeyup: i[0] || (i[0] = h((r) => t(r.target.value), ["enter"]))
+          placeholder: "Enter a tag (e.g. VETS2011)",
+          onKeyup: s[0] || (s[0] = Mt((f) => n(f.target.value), ["enter"]))
         }, null, 32)
       ])
     ]));
   }
-}), V = (e, a) => {
-  const t = e.__vccOpts || e;
-  for (const [l, i] of a)
-    t[l] = i;
-  return t;
-}, N = /* @__PURE__ */ V(D, [["__scopeId", "data-v-adc0d429"]]), M = [
-  {
-    tags: ["course:VETS2011"],
-    label: "VETS2011 Physiology"
-  },
-  {
-    tags: ["subject:physiology", "system:nervous_system"],
-    label: "Neurophysiology"
-  },
-  {
-    tags: [
-      "Neuron",
-      " Nerve",
-      " Motor Nerve",
-      " Sensory Nerve",
-      " Membrane Potential",
-      " Membrane Depolarisation",
-      " Summation",
-      " Action Potential",
-      " EPSP",
-      " IPSP",
-      " Saltatory Conduction",
-      " Glial Cell"
-    ],
-    label: "Lecture 1 - Neurons and the Action Potential"
-  },
-  {
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ],
-    label: "Quiz - Check your understanding: Neurons and the Resting Membrane Potential"
-  },
-  {
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ],
-    label: "Quiz - Check your understanding: Post-synaptic Binding Outcomes, the Action Potential, and Saltatory Conduction"
-  },
-  {
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ],
-    label: "Quiz - Check your understanding: Glial Cells and the Myelin Sheath"
-  },
-  {
-    tags: [
-      "Electrical Synapse",
-      " Chemical Synapse",
-      " Neurotransmission",
-      " Neurotransmitter",
-      " Ion Channels",
-      " Ionotropic",
-      " Metabotropic",
-      " Cholinergic",
-      " Adrenergic",
-      " Neuromuscular Junction"
-    ],
-    label: "Lecture 2 - The Synapse and Neurotransmission"
-  },
-  {
-    tags: [
-      "Muscle Stretch Receptors and Reflexes",
-      " Muscle",
-      " Muscle Spindle",
-      " Intrafusal",
-      " Extrafusal",
-      " Stretch Reflex",
-      " Golgi Tendon Organ",
-      " Reflex Arc",
-      " Pain Withdrawal Reflex",
-      " Flexion Reflex",
-      " Pupillary Light Reflex"
-    ],
-    label: "Lecture 3 - Reflexes and Muscle Stretch Receptors"
-  },
-  {
-    tags: [
-      "Somatosensory",
-      " Pacini Corpuscles",
-      " Meissner’s Corpuscles",
-      " Encapsulated Mechanoreceptor",
-      " Ruffini Endings",
-      " Unencapsulated Mechanoreceptor",
-      " Root hair plexus",
-      " Merkel ending",
-      " Nociception",
-      " Free Nerve Endings",
-      " Hyperalgesia",
-      " Sensitisation",
-      " Endogenous Analgesia System"
-    ],
-    label: "Lecture 4 - Cutaneous Sensory Afferents and Pain"
-  },
-  {
-    tags: [
-      ": Prefrontal area",
-      " Frontal lobe",
-      " Broca’s area",
-      " Parietal lobe",
-      " Wernicke’s area",
-      " Occipital lobe",
-      " Cerebellum",
-      " Cortex",
-      " Temporal lobe",
-      " Limbic system",
-      " Thalamocortical system",
-      " Hippocampal formation",
-      " Hippocampus",
-      " Non-associative learning",
-      " Associative learning",
-      " Habituation",
-      " Sensitisation",
-      " Classical conditioning",
-      " Operant conditioning",
-      " Learning"
-    ],
-    label: "Lecture 5 - The Central Nervous System and Learning"
-  },
-  {
-    tags: [
-      "Movement",
-      " Skeletal Muscle",
-      " Myofilaments",
-      " Muscle contraction",
-      " Muscle relaxation",
-      " Cross-bridge cycling",
-      " Motor control",
-      " Spinocerebellar tract",
-      " Corticospinal tract",
-      " Corticobulbar tract",
-      " Pyramidal tract",
-      " Motor unit",
-      " Basal ganglion"
-    ],
-    label: "Lecture 6 - Locomotion and Motor Learning"
-  },
-  {
-    tags: [
-      "Eye",
-      " Lens",
-      " Pupil",
-      " Retina",
-      " Parasympathetic",
-      " Sympathetic",
-      " Refraction",
-      " Hypertropia",
-      " Myopia",
-      " Astigmatism",
-      " Cataracts",
-      " Depth Perception",
-      " Signal Convergence",
-      " Photoreceptor",
-      " Rod",
-      " Cone"
-    ],
-    label: "Lecture 7 - Vision"
-  },
-  {
-    tags: [
-      "Soundwave",
-      " Frequency",
-      " Hearing range",
-      " Hearing",
-      " External ear",
-      " Middle ear",
-      " Inner ear",
-      " Attenuation reflex",
-      " Round window",
-      " Cochlea",
-      " Hair cells",
-      " Sensory transduction",
-      " Stereocilia",
-      " Kinocilium",
-      " Vestibular",
-      " Semicircular canals",
-      " Otolith",
-      " Vestibulospinal tract",
-      " Vestibular disease",
-      " Nystagmus"
-    ],
-    label: "Lecture 8 - Hearing and Balance"
-  },
-  {
-    tags: ["hello", "world"],
-    label: "Rotating Earth"
-  },
-  {
-    tags: ["hello", "world"],
-    label: "Chrome test - revolving planet"
-  },
-  {
-    tags: [
-      "Sympathetic",
-      " Parasympathetic",
-      " Enteric",
-      " Adrenergic",
-      " Cholinergic",
-      " Muscarinic",
-      " Nicotinic",
-      " CNS",
-      " Autonomic",
-      " Somatic",
-      " Homeostasis",
-      " Acetylcholine",
-      " Noradrenaline",
-      " Preganglionic Fibre",
-      " Postganglionic Fibre",
-      " Varicosities",
-      " Hypothalamus",
-      " Brainstem",
-      " Heart",
-      " Blood vessels",
-      " Lungs",
-      " Gastrointestinal tract",
-      " Eye",
-      " Bladder",
-      " Skin"
-    ],
-    label: "Lecture 10 - The Autonomic Nervous System"
-  },
-  {
-    tags: ["VETS2011", "subject:Physiology", "system:Respiratory_System"],
-    label: "Respiratory Physiology"
-  },
-  {
-    tags: [""],
-    label: "Learning Outcomes: Pulmonary Circulation - Complete Lecture"
-  },
-  {
-    tags: [""],
-    label: "Oxygen Transport"
-  },
-  {
-    tags: ["AWS"],
-    label: "LR UQCLOUD Volcano"
-  },
-  {
-    tags: ["test"],
-    label: "Phil T test"
-  },
-  {
-    tags: ["EAIT"],
-    label: "Sue Demo"
-  },
-  {
-    tags: ["VETS2011", "subject:Physiology", "system:Exercise", "animal:Horse"],
-    label: "Equine Exercise Physiology"
-  },
-  {
-    tags: [""],
-    label: "Learning Outcomes: Equine Exercise Physiology - Complete Lecture"
-  },
-  {
-    tags: [""],
-    label: "Learning Outcomes: Breathing and Lung Mechanics - Complete Lecture"
-  },
-  {
-    tags: [""],
-    label: "Learning Outcomes: Gas Transport - Complete Lecture"
-  },
-  {
-    tags: [""],
-    label: "Learning Outcomes: Hypoxaemia and Hypercapnia - Complete Lecture"
-  },
-  {
-    tags: [""],
-    label: "Learning Outcomes: Respiratory Adaptations - Complete Lecture"
-  },
-  {
-    tags: [""],
-    label: "Learning Outcomes: Control and Regulation of Breathing - Complete Lecture"
-  },
-  {
-    tags: ["VETS1003"],
-    label: "Digestive Anatomy and Physiology Study Guide"
-  },
-  {
-    tags: [""],
-    label: "Learning Outcomes: Neurons and the Action Potential - Complete Lecture"
-  },
-  {
-    tags: [
-      "Muscle Stretch Receptors and Reflexes",
-      " Muscle",
-      " Muscle Spindle",
-      " Intrafusal",
-      " Extrafusal",
-      " Stretch Reflex",
-      " Golgi Tendon Organ",
-      " Reflex Arc",
-      " Pain Withdrawal Reflex",
-      " Flexion Reflex",
-      " Pupillary Light Reflex"
-    ],
-    label: "Muscle Stretch Receptors and Reflexes - Complete Lecture"
-  },
-  {
-    tags: [""],
-    label: "Learning Outcomes: Reflexes and Muscle Stretch Receptors - Complete Lecture"
-  },
-  {
-    tags: [""],
-    label: "Learning Outcomes: The Central Nervous System and Learning - Complete Lecture"
-  },
-  {
-    tags: [""],
-    label: "Learning Outcomes: Vision - Complete Lecture"
-  },
-  {
-    tags: [""],
-    label: "Learning Outcomes: Hearing and Balance - Complete Lecture"
-  },
-  {
-    tags: [""],
-    label: "Learning Outcomes: Taste and Smell - Complete Lecture"
-  },
-  {
-    tags: [""],
-    label: "Learning Outcomes: The Autonomic Nervous System - Complete Lecture"
-  },
-  {
-    tags: [""],
-    label: "Learning Outcomes: The Synapse and Neurotransmission - Complete Lecture"
-  },
-  {
-    tags: ["test"],
-    label: "PipITest"
-  },
-  {
-    tags: ["hardwork", "elearning", "tandl"],
-    label: "Kim Demo"
-  },
-  {
-    tags: ["Joke"],
-    label: "Some Topic of Interest"
-  },
-  {
-    tags: ["joke"],
-    label: "This is a topic"
-  },
-  {
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ],
-    label: "Quiz - Check your understanding: Neurons and the Action Potential - Complete Lecture"
-  },
-  {
-    tags: [""],
-    label: "Backup quizzes (Please leave and keep hidden)"
-  },
-  {
-    tags: ["hello", "world"],
-    label: "Chrome test - revolving planet"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Chemistry of Life"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Chemistry of Life 2"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Chemistry of Life 3"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Chemistry of Life 1"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Chemistry of Life 1 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Atoms"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Chemical Bonds"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Water"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Carbon"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Carbohydrates and Proteins"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Nucleic Acids and Lipids"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Chemistry of Life 1 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Lecture Slides PDF: Chemistry of Life 1"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Lecture Slides with Transcript PDF: Chemistry of Life 1"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Eukaryotic Cell"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cytoskeleton"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Eukaryotic Cell 1"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Eukaryotic Cell 2"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Eukaryotic Cell 1 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Golgi activity"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Mitosis"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Eukaryotic Cell 2 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Eukaryotic Cell"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Eukaryotic Cell 2 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Eukaryotic Cell 1 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cytoskeleton - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Atoms"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Atoms"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Atoms"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcome: Chemical Bonds"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Chemical Bonds"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Chemical Bonds"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcome: Water"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Water"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Water"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcome: Carbon"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Carbon"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Carbon"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcome: Carbohydrates and Proteins"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Carbohydrates and Proteins"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Carbohydrates and Proteins"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcome: Nucleic Acids and Lipids"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Nucleic Acids and Lipids"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Nucleic Acids and Lipids"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Chemistry of Life 1 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Chemistry of Life 2 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Metabolism and ATP"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Enzymes"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Chemistry of Life 2 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Lecture Slides PDF: Chemistry of Life 2"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Lecture Slides with Transcript PDF: Chemistry of Life 2"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Metabolism and ATP"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Metabolism and ATP"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Metabolism and ATP"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Enzymes"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Enzymes"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Enzymes"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Chemistry of Life 2 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Chemistry of Life 3 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cellular Respiration - Glycolysis and the Krebs Cycle"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Electron Transport Chain"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Energy Sources - Anaerobic Metabolism"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Chemistry of Life 3 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Lecture Slides PDF: Chemistry of Life 3"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Lecture Slides with Transcript PDF: Chemistry of Life 3"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Cellular Respiration - Glycolysis and the Krebs Cycle"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Cellular Respiration - Glycolysis and the Krebs Cycle"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Cellular Respiration - Glycolysis and the Krebs Cycle"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes:  Electron Transport Chain"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Electron Transport Chain"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding:  Electron Transport Chain"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Energy Sources - Anaerobic Metabolism"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Energy Sources - Anaerobic Metabolism"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Energy Sources - Anaerobic Metabolism"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Chemistry of Life 3 - Complete Lecture"
-  },
-  {
-    tags: ["Eukaryotic", ""],
-    label: "Video - Eukaryotic Cell 1"
-  },
-  {
-    tags: ["VETS4010"],
-    label: "VETS4010 Endocrine"
-  },
-  {
-    label: "Cellular Respiration - Glycolysis and the Krebs Cycle Question 1",
-    tags: [""]
-  },
-  {
-    label: "Cellular Respiration - Glycolysis and the Krebs Cycle Question 2",
-    tags: [""]
-  },
-  {
-    label: "Cellular Respiration - Glycolysis and the Krebs Cycle Question 3",
-    tags: [""]
-  },
-  {
-    label: "Cellular Respiration - Glycolysis and the Krebs Cycle Question 4",
-    tags: [""]
-  },
-  {
-    label: "White Blood Cells - Immune Responses Question 1",
-    tags: [""]
-  },
-  {
-    label: "White Blood Cells - Immune Responses Question 2",
-    tags: [""]
-  },
-  {
-    label: "This is a Topic: better layout for resources Question 1",
-    tags: ["test"]
-  },
-  {
-    label: "Cellular Respiration - Glycolysis and the Krebs Cycle Question 1",
-    tags: [""]
-  },
-  {
-    label: "Cellular Respiration - Glycolysis and the Krebs Cycle Question 3",
-    tags: [""]
-  },
-  {
-    label: "Cellular Respiration - Glycolysis and the Krebs Cycle Question 2",
-    tags: [""]
-  },
-  {
-    label: "Cellular Respiration - Glycolysis and the Krebs Cycle Question 4",
-    tags: [""]
-  },
-  {
-    label: "Chemistry of Life 3 Question 11",
-    tags: [""]
-  },
-  {
-    label: "Chemistry of Life 3 Question 10",
-    tags: [""]
-  },
-  {
-    label: "Chemistry of Life 3 Question 9",
-    tags: [""]
-  },
-  {
-    label: "Chemistry of Life 3 Question 2",
-    tags: [""]
-  },
-  {
-    label: "Chemistry of Life 3 Question 7",
-    tags: [""]
-  },
-  {
-    label: "Chemistry of Life 3 Question 3",
-    tags: [""]
-  },
-  {
-    label: "Chemistry of Life 3 Question 4",
-    tags: [""]
-  },
-  {
-    label: "Chemistry of Life 3 Question 5",
-    tags: [""]
-  },
-  {
-    label: "Chemistry of Life 3 Question 1",
-    tags: [""]
-  },
-  {
-    label: "Chemistry of Life 3 Question 8",
-    tags: [""]
-  },
-  {
-    label: "Chemistry of Life 3 Question 6",
-    tags: [""]
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Eukaryotic Cell 1 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Eukaryotic Cell - Whole Topic Quiz"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Eukaryotic Cell 2 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Eukaryotic Cell 2 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Eukaryotic Cell 1 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Cytoskeleton - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cytoskeleton - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Cytoskeleton - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Eukaryotic Cell 1 - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Nucleus"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Ribosomes and Protein Synthesis"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Mitochondria, Centrioles, and Cellular Processes"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Golgi Apparatus and Lysosomes"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Introduction to the Cell"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Cytoplasm and Endoplasmic Reticulum (ER)"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Eukaryotic Cell 2 - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Neurophysiology"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Muscle Physiology"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Blood Physiology"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Body Fluid Homeostasis"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "pH Homeostasis"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Cytoskeleton"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Cytoskeleton - Whole Topic Quiz"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Epithelia"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Connective Tissue"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Muscle"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Nervous Tissue"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cartilage and Bone"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Blood"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Integument"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Glands and Secretion"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your  understanding: Epithelia"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Connective Tissue"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Muscle"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Nervous Tissue"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Cartilage and Bone"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Blood"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Integument"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Glands and Secretion"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Epithelia - Whole Topic Quiz"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Connective Tissue - Whole Topic Quiz"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Muscle - Whole Topic Quiz"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Nervous Tissue - Whole Topic Quiz"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Cartilage and Bone - Whole Topic Quiz"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Blood - Whole Topic Quiz"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Integument - Whole Topic Quiz"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Glands and Secretion - Whole Topic Quiz"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Epithelia"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Connective Tissue"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Muscle"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Cartilage and Bone"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Nervous Tissue"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Blood"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Integument"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Glands and Secretion"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Introduction to Histology"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Membrane Transport"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cloning, Stem Cells, and Beyond"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cell Signalling"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Introduction to Histology - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Introduction to Histology - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Epithelia - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Connective Tissue - Full Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Connective Tissue - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Muscle - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Muscle - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Nervous Tissue 1"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Nervous Tissue 2"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Nervous Tissue 1 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Nervous Tissue 1 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Nervous Tissue 2 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Nervous Tissue 2 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cartilage and Bone 1"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cartilage and Bone 2"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cartilage and Bone 1 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cartilage and Bone 1 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cartilage and Bone 2 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cartilage and Bone 2 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Membrane Transport 1"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Membrane Transport 2"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Membrane Transport 3"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Membrane Transport 1 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Membrane Transport 1 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Membrane Transport 2 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Membrane Transport 2 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Membrane Transport 3 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Membrane Transport 3 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Neurophysiology 1"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Neurophysiology 2"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Neurophysiology 1 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Neurons"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Resting Membrane Potential"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Post-Synaptic Binding Outcomes and the Action Potential"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "The Synapse"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Channels and Receptors"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "The Neuromuscular Junction"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Neurophysiology 1 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Lecture Slides PDF: Neurophysiology 1"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Lecture Slides with Transcript PDF: Neurophysiology 1"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcome: Neurons"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Neurons"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Neurons"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcome: Resting Membrane Potential"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Resting Membrane Potential"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Resting Membrane Potential"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Post-Synaptic Binding Outcomes and the Action Potential"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Post-Synaptic Binding Outcomes and the Action Potential"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Post-Synaptic Binding Outcomes and the Action Potential"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: The Synapse"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: The Synapse"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: The Synapse"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Channels and Receptors"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Channels and Receptors"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: The Neuromuscular Junction"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: The Neuromuscular Junction"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: The Neuromuscular Junction"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Channels and Receptors"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Neurophysiology 1 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Neurophysiology 2 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Neurophysiology 2 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcome: Autonomic Nervous System Neurotransmitters and Receptors"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Organisation of the Nervous System"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Structural Divisions of the Peripheral Nervous System"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Autonomic Nervous System Neurotransmitters and Receptors"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Organisation of the Nervous System"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Structural Divisions of the Peripheral Nervous System"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Organisation of the Nervous System"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Organisation of the Nervous System"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Autonomic Nervous System Neurotransmitters and Receptors"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Autonomic Nervous System Neurotransmitters and Receptors"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Structural Divisions of the Peripheral Nervous System"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Structural Divisions of the Peripheral Nervous System"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Lecture Slides PDF: Neurophysiology 2"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Lecture Slides with Transcript PDF: Neurophysiology 2"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Neurophysiology 2 - Complete Lecture"
-  },
-  {
-    label: "Cellular Respiration - Glycolysis and the Krebs Cycle Question 1",
-    tags: [""]
-  },
-  {
-    label: "Cellular Respiration - Glycolysis and the Krebs Cycle Question 2",
-    tags: [""]
-  },
-  {
-    label: "Cellular Respiration - Glycolysis and the Krebs Cycle Question 3",
-    tags: [""]
-  },
-  {
-    label: "Cellular Respiration - Glycolysis and the Krebs Cycle Question 4",
-    tags: [""]
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Muscle Physiology 2 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Muscle Physiology 1 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Muscle Physiology 2 - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Muscle Physiology 2 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Muscle Physiology 1 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Smooth Muscle - Location and Types"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Sliding Filament Theory"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Smooth Muscle - Location and Types"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Sliding Filament Theory"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Sliding Filament Theory"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Sliding Filament Theory"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Smooth Muscle - Location and Types"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Muscle Contraction and Relaxation"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Smooth Muscle - Location and Types"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Muscle Contraction and Relaxation"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Smooth Muscle - Contraction and Relaxation"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Smooth Muscle - Contraction and Relaxation"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Smooth Muscle - Contraction and Relaxation"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Muscle Contraction and Relaxation"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Smooth Muscle - Contraction and Relaxation"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Muscle Contraction and Relaxation"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Muscle Physiology 1"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Motor Unit and Force Production"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Motor Unit and Force Production"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Motor Unit and Force Production"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Motor Unit and Force Production"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Muscle Physiology 2"
-  },
-  {
-    label: "White Blood Cells - Immune Responses Question 1",
-    tags: [""]
-  },
-  {
-    label: "White Blood Cells - Immune Responses Question 2",
-    tags: [""]
-  },
-  {
-    label: "White Blood Cells - Immune Responses Question 1",
-    tags: [""]
-  },
-  {
-    label: "White Blood Cells - Immune Responses Question 2",
-    tags: [""]
-  },
-  {
-    label: "White Blood Cells - Immune Responses Question 1",
-    tags: [""]
-  },
-  {
-    label: "White Blood Cells - Immune Responses Question 2",
-    tags: [""]
-  },
-  {
-    label: "White Blood Cells - Immune Responses Question 1",
-    tags: [""]
-  },
-  {
-    label: "White Blood Cells - Immune Responses Question 2",
-    tags: [""]
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Lecture Slides PDF: Muscle Physiology 1"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Lecture Slides with Transcript PDF: Muscle Physiology 1"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Muscle Physiology 1 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Red Blood Cells - Carbon Dioxide Transport"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Red Blood Cells - Oxygen Transport"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Red Blood Cells - Oxygen Transport"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Blood Physiology - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcome: Haemostasis"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Red Blood Cells - Carbon Dioxide Transport"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: White Blood Cells - Immune Responses"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Haemostasis"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: White Blood Cells - Immune Responses"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Blood Physiology - Complete Lecture"
-  },
-  {
-    label: "White Blood Cells - Immune Responses Question 1",
-    tags: [""]
-  },
-  {
-    label: "White Blood Cells - Immune Responses Question 2",
-    tags: [""]
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Haemostasis"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Red Blood Cells - Oxygen Transport"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: White Blood Cells - Immune Responses"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Haemostasis"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Red Blood Cells - Oxygen Transport"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "White Blood Cells - Immune Responses"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Red Blood Cells - Carbon Dioxide Transport"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Red Blood Cells - Carbon Dioxide Transport"
-  },
-  {
-    label: "White Blood Cells - Immune Responses Question 1",
-    tags: [""]
-  },
-  {
-    label: "White Blood Cells - Immune Responses Question 2",
-    tags: [""]
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Body Fluid Compartments"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Body Fluid Compartments"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Body Fluid Homeostasis - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Body Fluid Homeostasis - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Body Fluid Compartments"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Body Fluid Compartments"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Osmoregulation"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcome: Fluid Movement Between Compartments"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Osmoregulation"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Fluid Movement Between Compartments"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Osmoregulation"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Osmoregulation"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Fluid Movement Between Compartments"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Fluid Movement Between Compartments"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: pH Homeostasis - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "pH Homeostasis - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Acid-Base Regulation"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Acid-Base Regulation"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcome: pH Range in the Body"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Learning Outcomes: Acidosis/Alkalosis"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: pH Range in the Body"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Acidosis/Alkalosis"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Acid-Base Regulation"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Acid-Base Regulation"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: pH Range in the Body"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "pH Range in the Body"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Acidosis/Alkalosis"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Acidosis/Alkalosis"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Biological Membranes "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Specialisations and Modifications of Plasma Membranes"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Plasma Membrane"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Movement Across Membranes"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Cell Death "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Cytoskeleton - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Actin"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Tubulin"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Introduction to the Cytoskeleton"
-  },
-  {
-    tags: ["cytokeleton", ""],
-    label: "Video 4 - Intermediate Filaments"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Intermediate Filaments"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Introduction to Histology - Complete Lecture"
-  },
-  {
-    tags: [""],
-    label: "Video: Cytoskeleton - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Epithelia - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Connective Tissue - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Muscle - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Nervous Tissue 1 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Nervous Tissue 2 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Cartilage and Bone 1 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Notes: Cartilage and Bone 2 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Membrane Transport 1 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Membrane Transport 2 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Cytoskeleton"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Lecture Slides PDF: pH Homeostasis"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Lecture Slides with Transcript PDF: pH Homeostasis"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Introduction to Cell Ultrastructure and Histology - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Steps in Tissue Preparation "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Advanced Imaging Techniques "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Deep Dive into Tissue Types, and the Importance of Histology "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Overview of Tissue Types and Embryonic Germ Layers "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Introduction to Histology "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Introduction to Histology - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Epithelia - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Epithelia - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Connective Tissue - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Muscle - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Nervous Tissue 1 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Nervous Tissue 2 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Epithelia - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Classification and Functions of Epithelia "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Introduction to Epithelia "
-  },
-  {
-    tags: ["Simple Epithelia", ""],
-    label: "Video 3 - Simple Epithelia "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Stratified Epithelia "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Simple Epithelia "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Connective Tissue Proper - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Introduction to Connective Tissue Proper  "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Tumours and Clinical Significance of Connective Tissue"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Cells in Connective Tissue Proper "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Types of Connective Tissue "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Composition of Connective Tissue Proper "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Eukaryotic Cell"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Lecture Slides PDF: Muscle Physiology 2"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Lecture Slides with Transcript PDF: Muscle Physiology 2"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Muscle Physiology 2 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Lecture Slides PDF: Blood Physiology"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Lecture Slides with Transcript PDF: Blood Physiology"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Blood Physiology - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Lecture Slides PDF: Body Fluid Homeostasis"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Lecture Slides with Transcript PDF: Body Fluid Homeostasis"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: Body Fluid Homeostasis - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Quiz - Check your understanding: pH Homeostasis - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Membrane Transport 3 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Membrane Transport 1 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Membrane Transport 2 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Membrane Transport 3 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Membrane Transport 1 - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: General Principles of Diffusion "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Osmosis "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Transport Across the Membrane "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Membrane Transport 2 - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Membrane Transport 3 - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Muscle - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Cardiac Muscle"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Growth of Skeletal Muscle"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Striations and Ultrastructure of Skeletal Muscle Fibres"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Smooth Muscle"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Types of Skeletal Muscle Fibres "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Embryological Development of Skeletal Muscle  "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Innervation of Skeletal Muscle "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Anatomy and Histology of Skeletal Muscle "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Introduction to Muscle "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Plasma Membrane"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Simple Diffusion "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Facilitated Diffusion "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Primary Active Transport "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Secondary Active Transport "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Endocytosis "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Exocytosis "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Uniport, Symport, and Antiport Systems"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Active Transport and its Types "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Membrane Transport - Putting it all Together "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: T-Tubules and Sarcoplasmic Reticulum "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Nervous Tissue 1 - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Classification of Neurons "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Introduction to Nervous Tissue "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Neuroglia "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: The Neuron "
-  },
-  {
-    tags: ["nervoustissue", ""],
-    label: "Video 5 - Myelination "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Myelination "
-  },
-  {
-    tags: ["nervous", ""],
-    label: "Video 4 - Neuroglia "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Nervous Tissue 2 - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Histology of the Brain and Spinal Cord "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Histology of the Peripheral Nervous System "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Functional Organisation of Nerves "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: The Synapse "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Different Functional Types of Neurons "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: " Video: Motor End Plates and Sensory Receptors "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Cartilage and Bone 1 - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Cartilage and Bone 1 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Types of Cartilage"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Introduction to Bone"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Introduction to Cartilage and Bone "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Introduction to Cartilage "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Growth of Cartilage"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Structure of Bones"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Periosteum and Endosteum"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Cell Types of Bone"
-  },
-  {
-    tags: ["bone", ""],
-    label: "Video 9 - Microscopic Organisation"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Microscopic Organisation of Bone"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Cartilage and Bone 2 - Complete Lecture Video"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Cartilage and Bone 2 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Introduction to Bone Formation"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Bone Formation (Ossification)"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Continued Growth in Long Bones"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Endochondral Ossification "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Glandular Epithelium and Secretion"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Glands and Secretion - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Glands and Secretion - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Methods of Exocrine Secretion"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Glandular Structure"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Exocrine Gland Types"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Nature of Secretory Product"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Glands and Secretion - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Glands and Secretion - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Glands and Secretion - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Chemistry of Life 2 - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Chemistry of Life 1 - Complete Lecture Recording"
-  },
-  {
-    tags: ["Integument", ""],
-    label: "Integument 3"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Blood - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Blood - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Granular Leukocytes"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Introduction to Leukocytes "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Thrombocytes"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Introduction to Blood"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Non-Granular Leukocytes"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Erythrocytes "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Lymph"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Haematopoiesis"
-  },
-  {
-    tags: [""],
-    label: "Video 9 - Blood Vessels"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Lymph Vessels"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Blood Vessels"
-  },
-  {
-    tags: [""],
-    label: "Video 6 - Thrombocytes"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Blood - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Blood - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Blood - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Chemistry of Life 3 - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Integument 2"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Integument 1"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Integument 3"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Integument 1 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Integument 1 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Integument 2 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Integument 2 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Integument 3 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Integument 3 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Integument 1 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Integument 2 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Integument 3 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Integument 1 - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Integument 1 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Dermis and Hypodermis "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Cells of the Epidermis"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Functions of Skin "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Structure of Hair "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Structure of Skin "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video 6: Sinus (Tactile) Hairs "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Integument 2 - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Integument 2 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Skin Appendages, Tori, and Scales"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Antlers "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Claws"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Hair"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Horns"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Integument 3 - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Integument 3 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Skin Glands"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Methods of Exocrine Secretion "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Merocrine Sweat Glands"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Sebaceous Glands "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Specialised Skin Glands "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Apocrine Sweat Glands"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cloning, Stem Cells, and Beyond - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Cloning, Stem Cells, and Beyond - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Cloning, Stem Cells, and Beyond - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cloning, Stem Cells, and Beyond - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Cloning, Stem Cells, and Beyond - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Debate on Cloning Pets"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Introduction to Cloning "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Cloning Endangered Species - Challenges, Techniques, and Outcomes"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Introduction to Stem Cells"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: The Challenges of Cloning"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: The Benefits of Cloning "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Can We Apply This Technology To Extinct Species? "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Reproduction in (Endangered) Species Using Stem Cells "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: CRISPR/Cas9 Genome Editing"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cell Signalling 1"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cell Signalling 2"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cell Signalling 3"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cell Signalling 1 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cell Signalling 1 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cell Signalling 2 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cell Signalling 2 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cell Signalling 3 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cell Signalling 3 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Cell Signalling 1 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Cell Signalling 2 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Cell Signalling 3 - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Cell Signalling 1 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Cell Signalling 2 - Topic Video Series"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Note: Cell Signalling 3 - Topic Video Series"
-  },
-  {
-    tags: ["cell signalling", " Competitive Binding of AChR"],
-    label: "Video 2 - Competitive Binding of AChR "
-  },
-  {
-    tags: ["cellsinalling", " Enzyme-linked Receptors"],
-    label: "Video 5 - Enzyme-linked Receptors "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Introduction to Cell Signalling"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Signalling Molecules"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Cellular Responses"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Types of Signalling"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Signal Transduction"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Introduction to Transmembrane Receptors"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Receptors"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Competitive Binding of AChR"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Enzyme-linked Receptors"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Ion Channel-linked Receptors"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: G Protein-coupled Receptors"
-  },
-  {
-    tags: [""],
-    label: "Video 7  - Intracellular Receptors "
-  },
-  {
-    tags: [""],
-    label: "Video 5 - Enzyme-linked Receptors "
-  },
-  {
-    tags: [""],
-    label: "Video 7  - Intracellular Receptors "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Intracellular Receptors"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Calcium as a Second Messenger"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Second Messengers"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Cyclic Adenosine Monophosphate"
-  },
-  {
-    tags: [""],
-    label: "Video 5 - Nitric Oxide Signalling "
-  },
-  {
-    tags: [""],
-    label: "Video 4 - Phosphoinositol Signalling Pathway "
-  },
-  {
-    tags: [""],
-    label: "Video 6 - Exosomes "
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Phosphoinositol Signalling Pathway"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Nitric Oxide Signalling"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Exosomes"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Cell Signalling 1 - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Cell Signalling 2 - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Cell Signalling 3 - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Blood, Lymph, and Nerve Supply"
-  },
-  {
-    tags: ["PHIL"],
-    label: "Today's Quiz is Smart"
-  },
-  {
-    tags: ["hello", "world"],
-    label: "Rotating Earth"
-  },
-  {
-    tags: ["hello", "world"],
-    label: "Chrome test - revolving planet"
-  },
-  {
-    tags: ["EAIT"],
-    label: "Sue Demo"
-  },
-  {
-    tags: ["Joke"],
-    label: "Some Topic of Interest"
-  },
-  {
-    tags: ["hello", "world"],
-    label: "Chrome test - revolving planet"
-  },
-  {
-    tags: ["joke"],
-    label: "This is a topic"
-  },
-  {
-    tags: ["hardwork", "elearning", "tandl"],
-    label: "Kim Demo"
-  },
-  {
-    tags: ["PHIL"],
-    label: "Today's Quiz is Smart"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Neurophysiology 2 - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Neurophysiology 1 - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Muscle Physiology 1 - Complete Lecture Recording"
-  },
-  {
-    tags: [""],
-    label: "Clinical Implications of Absorption - Blood Flow, Neonates, and Diarrhoea"
-  },
-  {
-    tags: ["VETS1021"],
-    label: "VETS1021 Functional Anatomy of Locomotion"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Blood Physiology - Complete Lecture Recording"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: pH Homeostasis - Complete Lecture"
-  },
-  {
-    tags: ["AGRC1041"],
-    label: "Video: Body Fluid Homeostasis - Complete Lecture Recording"
-  },
-  {
-    label: "White Blood Cells - Immune Responses Question 1",
-    tags: [""]
-  },
-  {
-    label: "White Blood Cells - Immune Responses Question 2",
-    tags: [""]
-  },
-  {
-    tags: [
-      "VETS3010",
-      "virology",
-      "poxvirus",
-      "viraldiagnostics",
-      "herpesviruses",
-      "adeno",
-      "papilloma",
-      "parvo",
-      "circoviruses",
-      "retroviruses"
-    ],
-    label: "VETS3010 Virology "
-  },
-  {
-    tags: ["VETS3010", " virology", " parvovirus", " parvo"],
-    label: "Parvoviruses"
-  },
-  {
-    tags: ["swine", "pigs", "parvo", "parvovirus", "VETS3010"],
-    label: "Swine parvovirus"
-  },
-  {
-    tags: ["equine", "horses", "parvo", "parvovirus", "VETS3010"],
-    label: "Equine parvovirus"
-  },
-  {
-    tags: ["porcine", "swine", "pigs", "parvo", "parvovirus", "VETS3010"],
-    label: "Porcine parvovirus"
-  },
-  {
-    tags: ["dog", "cat", "parvo", "parvovirus", "VETS3010"],
-    label: "Parvovirus part 1"
-  },
-  {
-    tags: ["dog", "cat", "parvo", "parvovirus", "VETS3010"],
-    label: "Parvovirus part 2"
-  },
-  {
-    tags: ["VETS3010", "circovirus", "viruses"],
-    label: "Circoviruses"
-  },
-  {
-    tags: ["VETS3010", "circoviruses"],
-    label: "Circoviruses"
-  },
-  {
-    tags: ["dogs", "canine", "circovirus", "VETS3010"],
-    label: "Canine circovirus"
-  },
-  {
-    tags: ["swine", "pigs", "circovirus", "VETS3010"],
-    label: "Porcine circovirus"
-  },
-  {
-    tags: ["VETS3010", "influenza", "flu.swine", "avian", "equine"],
-    label: "Influenza"
-  },
-  {
-    tags: ["influenza", "flu", "VETS3010"],
-    label: "Influenza virus"
-  },
-  {
-    tags: ["swine", "influenza", "flu", "VETS3010"],
-    label: "Swine influenza"
-  },
-  {
-    tags: ["canine", "influenza", "flu", "VETS3010"],
-    label: "Canine Influenza"
-  },
-  {
-    tags: ["equine", "influenza", "flu", "VETS3010"],
-    label: "Equine influenza"
-  },
-  {
-    tags: ["influenza", "antagenicchange", "flu", "VETS3010"],
-    label: "Influenza - antagenic change"
-  },
-  {
-    tags: ["avian", "influenza", "flu", "VETS3010"],
-    label: "Avian influenza"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "VETS3010 Parasitology"
-  },
-  {
-    tags: ["Parasites of canines and Felines - Ticks and Tick Paralysis", ""],
-    label: "Video Script: Parasites of canines and Felines - Ticks and Tick Paralysis"
-  },
-  {
-    tags: ["Parasites of Canine and Felines -Vector-borne diseases"],
-    label: "Video Script: Parasites of Canine and Felines -Vector-borne diseases"
-  },
-  {
-    tags: ["Parasites of canines and Felines - Ticks and Tick Paralysis", ""],
-    label: "Video Script: Parasites of canines and Felines - Ticks and Tick Paralysis"
-  },
-  {
-    tags: ["Parasites of Canine and Felines -Vector-borne diseases"],
-    label: "Video Script: Parasites of Canine and Felines -Vector-borne diseases"
-  },
-  {
-    tags: ["Parasites of canines and Felines - Ticks and Tick Paralysis", ""],
-    label: "Video Script: Parasites of canines and Felines - Ticks and Tick Paralysis"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Introduction to Swaid Abdullah's VETS3010 Parasitology Content"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Parasites of Small Animal Skin"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Fleas of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lice and Other Insects of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Mites and Mange in Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Ear Mites and Other Mites of Small Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Ticks and Tick Paralysis of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Ruminant Flystrike"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Other Flies of Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Heartworm of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lice of Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Other Cardiorespiratory Parasites of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", " parasitology"],
-    label: "Cardiorespiratory Parasites of Small Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Mites and Mange in Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Ticks of Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Tick-borne Diseases: Tick Fever in Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Ectoparasites of Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Parasites of Poultry and Caged Birds"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Parasites of Poultry and Caged Birds"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Helminth Parasites of Pigs"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Protozoan and Arthropod Parasites of Pigs"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Parasites of Pigs"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Introduction to Swaid Abdullah's VET3010 Parasitology Content"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video:  Fleas of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Lice and Other Insects of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Mites and Mange in Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Ear Mites and Other Mites of Small Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Ticks and Tick Paralysis of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Tick- and Vector-borne Diseases in Dogs"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Tick- and Vector-borne Diseases in Dogs - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Heartworm of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Other Cardiorespiratory Parasites of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: [
-      "Videos: Parasites of Canines and Felines - Cardiorespiratory parasites - Heartworm",
-      ""
-    ],
-    label: "Video: Parasites of Canines and Felines - Cardiorespiratory parasites - Heartworm"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Ruminant Flystrike - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Other Flies of Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Lice of Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Mites and Mange in Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Ticks of Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Tick Fever in Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Parasites of Poultry and Caged Birds - Complete Lecture"
-  },
-  {
-    tags: ["Parasites of Aquarium Fish"],
-    label: "Video Script: Parasites of Aquarium Fish"
-  },
-  {
-    tags: ["Parasites of Poutry & Caged Birds", ""],
-    label: "Video Script: Parasites of Poutry & Caged Birds"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Helminths Parasites of Pigs - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Protozoan and Arthropod Parasites of Pigs - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Protozoan Parasites of Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Protozoan Parasites of Ruminant Gastrointestinal System"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Protozoan Parasites of Ruminant Reproductive System"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Protozoan Parasites of Ruminant Gastrointestinal System - Complete Lecture"
-  },
-  {
-    tags: ["Protozoan Parasites of Ruminants", ""],
-    label: "Video Script: Protozoan Parasites of Ruminants- Gastrointestinal System & Genital System"
-  },
-  {
-    tags: ["Protozoan Parasites of Ruminants", ""],
-    label: "Video Script: Protozoan Parasites of Ruminants- Gastrointestinal System & Genital System"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Protozoan Parasites of the Ruminant Reproductive System - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Introduction to Swaid Abdullah's VETS3010 Parasitology Content"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF:  Fleas of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Lice and Other Insects of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Mites and Mange in Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Ear Mites and Other Mites of Small Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Ticks and Tick Paralysis of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Tick- and Vector-borne Diseases in Dogs"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Heartworm of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Other Cardiorespiratory Parasites of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Ruminant Flystrike"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Other Flies of Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Lice of Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Mites and Mange in Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Ticks of Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Tick Fever in Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Protozoan Parasites of the Ruminant Gastrointestinal System"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Protozoan Parasites of the Ruminant Reproductive System"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Parasites of Poultry and Caged Birds"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Helminth Parasites of Pigs"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Protozoan and Arthropod Parasites of Pigs"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Introduction to Swaid Abdullah's VETS3010 Parasitology Content"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF:  Fleas of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Lice and Other Insects of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Mites and Mange in Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Ear Mites and Other Mites of Small Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Ticks and Tick Paralysis of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Tick- and Vector-borne Diseases in Dogs"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Introduction to Swaid Abdullah's VETS3010 Parasitology Content"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note:  Fleas of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Lice and Other Insects of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Mites and Mange in Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Ear Mites and Other Mites of Small Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Ticks and Tick Paralysis of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Tick- and Vector-borne Diseases in Dogs - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Heartworm of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Other Cardiorespiratory Parasites of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Ruminant Flystrike - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Other Flies of Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Lice of Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Mites and Mange in Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Tick Fever in Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Ticks of Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Protozoan Parasites of Ruminant Gastrointestinal System - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Protozoan Parasites of Ruminant Reproductive System - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Parasites of Poultry and Caged Birds"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Helminths Parasites of Pigs - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Protozoan and Arthropod Parasites of Pigs - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Heartworm of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Other Cardiorespiratory Parasites of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Parasites of Deer and Camelids"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Parasites of Deer and Camelids"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Parasites of Deer and Camelids - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Parasites of Deer and Camelids - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Parasites of Deer and Camelids"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Parasites of Aquarium Fish"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Parasites of Aquarium Fish"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Parasites of Aquarium Fish - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Parasites of Aquarium Fish"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Parasites of Aquarium Fish"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Food-borne Parasitic Diseases"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Food-borne Parasitic Diseases"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Food-borne Parasitic Diseases - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Food-borne Parasitic Diseases - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Food-borne Parasitic Diseases"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Ruminant Flystrike"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Other Flies of Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Lice of Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Mites and Mange in Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Ticks of Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Tick Fever in Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Protozoan Parasites of Ruminant Gastrointestinal System"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Protozoan Parasites of Ruminant Reproductive System"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Parasites of Deer and Camelids"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Parasites of Poultry and Caged Birds"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Parasites of Aquarium Fish"
-  },
-  {
-    label: "Neurons and the Resting Membrane Potential Question 1",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Neurons and the Resting Membrane Potential Question 4",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Neurons and the Resting Membrane Potential Question 2",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Neurons and the Resting Membrane Potential Question 3",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Post-synaptic Binding Outcomes, the Action Potential, and Saltatory Conduction Question 1",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Post-synaptic Binding Outcomes, the Action Potential, and Saltatory Conduction Question 3",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Post-synaptic Binding Outcomes, the Action Potential, and Saltatory Conduction Question 6",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Post-synaptic Binding Outcomes, the Action Potential, and Saltatory Conduction Question 2",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Post-synaptic Binding Outcomes, the Action Potential, and Saltatory Conduction Question 4",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Post-synaptic Binding Outcomes, the Action Potential, and Saltatory Conduction Question 5",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Glial Cells and the Myelin Sheath Question 1",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Glial Cells and the Myelin Sheath Question 2",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Neurophysiology Question 1",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Neurophysiology Question 2",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Neurophysiology Question 3",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Neurophysiology Question 9",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Neurophysiology Question 8",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Neurophysiology Question 5",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Neurophysiology Question 6",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Neurophysiology Question 7",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Neurophysiology Question 4",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Neurophysiology Question 10",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Neurophysiology Question 12",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Neurophysiology Question 11",
-    tags: [
-      "VETS2011",
-      " SEM1",
-      " second year",
-      " physiology",
-      " neurophysiology"
-    ]
-  },
-  {
-    label: "Atoms Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Atoms Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemical Bonds Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemical Bonds Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Water Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Water Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Carbon Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Carbon Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Carbohydrates and Proteins Question 3",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Carbohydrates and Proteins Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Carbohydrates and Proteins Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Nucleic Acids and Lipids Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Nucleic Acids and Lipids Question 4",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Nucleic Acids and Lipids Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Nucleic Acids and Lipids Question 3",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 1 Question 13",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 1 Question 8",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 1 Question 10",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 1 Question 9",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 1 Question 7",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 1 Question 6",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 1 Question 5",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 1 Question 3",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 1 Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 1 Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 1 Question 4",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 1 Question 11",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 1 Question 14",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 1 Question 12",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 1 Question 15",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Metabolism and ATP Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Metabolism and ATP Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Metabolism and ATP Question 4",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Metabolism and ATP Question 3",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Enzymes Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Enzymes Question 3",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Enzymes Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 2 Question 7",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 2 Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 2 Question 6",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 2 Question 3",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 2 Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 2 Question 4",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 2 Question 5",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Cellular Respiration - Glycolysis and the Krebs Cycle Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Cellular Respiration - Glycolysis and the Krebs Cycle Question 4",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Cellular Respiration - Glycolysis and the Krebs Cycle Question 3",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Cellular Respiration - Glycolysis and the Krebs Cycle Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Electron Transport Chain Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Electron Transport Chain Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Electron Transport Chain Question 3",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Electron Transport Chain Question 4",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Energy Sources - Anaerobic Metabolism Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Energy Sources - Anaerobic Metabolism Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Energy Sources - Anaerobic Metabolism Question 3",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 3 Question 6",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 3 Question 10",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 3 Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 3 Question 11",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 3 Question 3",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 3 Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 3 Question 8",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 3 Question 5",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 3 Question 9",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 3 Question 7",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Chemistry of Life 3 Question 4",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your  understanding: Epithelia Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your  understanding: Epithelia Question 4",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your  understanding: Epithelia Question 3",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your  understanding: Epithelia Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Connective Tissue Question 3",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Connective Tissue Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Connective Tissue Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Muscle Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Cartilage and Bone Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Cartilage and Bone Question 4",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Cartilage and Bone Question 8",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Cartilage and Bone Question 7",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Cartilage and Bone Question 6",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Cartilage and Bone Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Cartilage and Bone Question 3",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Cartilage and Bone Question 5",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Nervous Tissue Question 4",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Nervous Tissue Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Nervous Tissue Question 3",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Nervous Tissue Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Blood Question 3",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Blood Question 6",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Blood Question 5",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Blood Question 4",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Blood Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Blood Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Integument Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Glands and Secretion Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Glands and Secretion Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurons Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurons Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Resting Membrane Potential Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Resting Membrane Potential Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Post-Synaptic Binding Outcomes and the Action Potential Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Post-Synaptic Binding Outcomes and the Action Potential Question 5",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Post-Synaptic Binding Outcomes and the Action Potential Question 4",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Post-Synaptic Binding Outcomes and the Action Potential Question 3",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Post-Synaptic Binding Outcomes and the Action Potential Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "The Synapse Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "The Synapse Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "The Neuromuscular Junction Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "The Neuromuscular Junction Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Channels and Receptors Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Channels and Receptors Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Channels and Receptors Question 3",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurophysiology 1 Question 12",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurophysiology 1 Question 11",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurophysiology 1 Question 10",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurophysiology 1 Question 9",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurophysiology 1 Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurophysiology 1 Question 3",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurophysiology 1 Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurophysiology 1 Question 15",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurophysiology 1 Question 13",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurophysiology 1 Question 14",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurophysiology 1 Question 4",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurophysiology 1 Question 6",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurophysiology 1 Question 7",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurophysiology 1 Question 8",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurophysiology 1 Question 5",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurophysiology 1 Question 16",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Organisation of the Nervous System Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Organisation of the Nervous System Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Autonomic Nervous System Neurotransmitters and Receptors Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Autonomic Nervous System Neurotransmitters and Receptors Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Structural Divisions of the Peripheral Nervous System Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Structural Divisions of the Peripheral Nervous System Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Structural Divisions of the Peripheral Nervous System Question 3",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurophysiology 2 Question 7",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurophysiology 2 Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurophysiology 2 Question 4",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurophysiology 2 Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurophysiology 2 Question 3",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurophysiology 2 Question 6",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Neurophysiology 2 Question 5",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Cytoskeleton Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Cytoskeleton Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Eukaryotic Cell Question 1",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Eukaryotic Cell Question 2",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Quiz - Check your understanding: Eukaryotic Cell Question 3",
-    tags: ["AGRC1041"]
-  },
-  {
-    label: "Question 1",
-    tags: ["XXX"]
-  },
-  {
-    tags: ["XXX"],
-    label: "Phil's Bad Quiz"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Helminth Parasites of Pigs"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Protozoan and Arthropod Parasites of Pigs"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Food-borne Parasitic Diseases"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Fleas of Dogs and Cats_modularisation-in-progress_KEEP-HIDDEN"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: " Lice and Other Insects of Dogs and Cats_modularisation-in-progress_KEEP-HIDDEN"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: " Mites and Mange in Dogs and Cats_modularisation-in-progress_KEEP-HIDDEN"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: " Ear Mites and Other Mites of Small Animals__modularisation-in-progress_KEEP-HIDDEN"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: " Ticks and Tick Paralysis of Dogs and Cats_modularisation-in-progress_KEEP-HIDDEN"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: " Tick- and Vector-borne Diseases in Dogs_modularisation-in-progress_KEEP-HIDDEN"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Fleas of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note:  Fleas of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video:  Fleas of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF:  Fleas of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF:  Fleas of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 2"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 3"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 2"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 3"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 4"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 2"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 3"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 4"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 2"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 3"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 4"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 4"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 3"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 4"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 2"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 2"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 4"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 2"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 3"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lice and Other Insects of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Mites and Mange in Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Ear Mites and Other Mites of Small Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Ticks and Tick Paralysis of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Tick- and Vector-borne Diseases in Dogs - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Heartworm of Dogs and Cats_modularisation-in-progress_KEEP-HIDDEN"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Other Cardiorespiratory Parasites of Dogs and Cats_modularisation-in-progress_KEEP-HIDDEN"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Heartworm of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 3"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 2"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 4"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 2"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Other Cardiorespiratory Parasites of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 4"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 3"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "COLLECTION 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "COLLECTION 2"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "COLLECTION 3"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "COLLECTION 4"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "COLLECTION 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "COLLECTION 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "COLLECTION 7"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Ruminant Flystrike_modularisation-in-progress_KEEP-HIDDEN"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: " Other Flies of Production Animals_modularisation-in-progress_KEEP-HIDDEN"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lice of Production Animals_modularisation-in-progress_KEEP-HIDDEN"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "COLLECTION 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "COLLECTION 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "COLLECTION 4"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "COLLECTION 7"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Mites and Mange in Production Animals_modularisation-in-progress_KEEP-HIDDEN"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: " Ticks of Production Animals_modularisation-in-progress_KEEP-HIDDEN"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Tick-borne Diseases: Tick Fever in Production Animals_modularisation-in-progress_KEEP-HIDDEN"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "COLLECTION 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Protozoan Parasites of Ruminant Reproductive System_modularisation-in-progress_KEEP-HIDDEN"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: " Protozoan Parasites of Ruminant Gastrointestinal System_modularisation-in-progress_KEEP-HIDDEN"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "COLLECTION 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "COLLECTION 2"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "COLLECTION 7"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "COLLECTION 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Helminth Parasites of Pigs_modularisation-in-progress_KEEP-HIDDEN"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Protozoan and Arthropod Parasites of Pigs_modularisation-in-progress_KEEP-HIDDEN"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "COLLECTION 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: " - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 3"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 3"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 2"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 4"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 4"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 7"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 8"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 9"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 10"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Ruminant Flystrike - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 4"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 3"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 2"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 7"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 8"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 9"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 10"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Other Flies of Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 2"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 3"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 4"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 7"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 8"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 9"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 10"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lice of Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 2"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 10"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 9"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 8"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 3"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 4"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 7"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Mites and Mange in Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 8"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 7"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 4"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 10"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 3"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 9"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 2"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Ticks of Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 3"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 2"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 4"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 10"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 9"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 7"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 8"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 3"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 4"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Tick-borne Diseases: Tick Fever in Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 2"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 7"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 10"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 8"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 9"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 3"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Protozoan Parasites of Ruminant Gastrointestinal System - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 2"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 4"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 7"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 8"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 9"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 10"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Protozoan Parasites of Ruminant Reproductive System - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 2"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 3"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 4"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 9"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 7"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 8"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 10"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Helminth Parasites of Pigs - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 2"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 3"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 4"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 10"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 8"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 7"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 9"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 2"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 3"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Protozoan and Arthropod Parasites of Pigs - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 4"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 10"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 6"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 8"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 5"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 7"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 9"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 9"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 7"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 10"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 1"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 7"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 10"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "TOPIC 9"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Lice and Other Insects of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Lice and Other Insects of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Lice and Other Insects of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Lice and Other Insects of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Lice and Other Insects of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Mites and Mange in Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Mites and Mange in Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Mites and Mange in Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Mites and Mange in Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Ear Mites and Other Mites of Small Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Ear Mites and Other Mites of Small Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note:  Ear Mites and Other Mites of Small Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Ear Mites and Other Mites of Small Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Ticks and Tick Paralysis of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Ticks and Tick Paralysis of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Ticks and Tick Paralysis of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Ticks and Tick Paralysis of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Ticks and Tick Paralysis of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Ticks and Tick Paralysis of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Tick- and Vector-borne Diseases in Dogs"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Tick- and Vector-borne Diseases in Dogs"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Tick- and Vector-borne Diseases in Dogs - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Tick- and Vector-borne Diseases in Dogs"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Lice and Other Insects of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Ear Mites and Other Mites of Small Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Tick- and Vector-borne Diseases in Dogs - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Heartworm of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Heartworm of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Heartworm of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Heartworm of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Other Cardiorespiratory Parasites of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Other Cardiorespiratory Parasites of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Other Cardiorespiratory Parasites of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Other Cardiorespiratory Parasites of Dogs and Cats"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Ruminant Flystrike - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Ruminant Flystrike"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Ruminant Flystrike"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Ruminant Flystrike"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Other Flies of Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Other Flies of Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Other Flies of Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Other Flies of Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Lice of Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Lice of Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Lice of Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Lice of Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Mites and Mange in Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Mites and Mange in Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Mites and Mange in Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Mites and Mange in Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Ticks of Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Ticks of Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Ticks of Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Ticks of Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Tick Fever in Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Tick Fever in Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Tick Fever in Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Tick Fever in Production Animals"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript: Protozoan Parasites of Ruminant Gastrointestinal System"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Protozoan Parasites of Ruminant Gastrointestinal System - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Protozoan Parasites of Ruminant Gastrointestinal System"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Protozoan Parasites of the Ruminant Gastrointestinal System"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Protozoan Parasites of Ruminant Gastrointestinal System"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Protozoan Parasites of the Ruminant Reproductive System"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Protozoan Parasites of Ruminant Reproductive System - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Protozoan Parasites of Ruminant Reproductive System"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Protozoan Parasites of the Ruminant Reproductive System"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Helminth Parasites of Pigs"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Helminth Parasites of Pigs"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Helminths Parasites of Pigs - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Helminths Parasites of Pigs - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Note: Protozoan and Arthropod Parasites of Pigs - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video Transcript PDF: Protozoan and Arthropod Parasites of Pigs"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Video: Protozoan and Arthropod Parasites of Pigs - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Lecture Slides PDF: Protozoan and Arthropod Parasites of Pigs"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Other Cardiorespiratory Parasites of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Ruminant Flystrike - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Lice of Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Mites and Mange in Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Ticks of Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Tick Fever in Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Protozoan Parasites of Ruminant Gastrointestinal System - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Protozoan Parasites of Ruminant Reproductive System - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Parasites of Deer and Camelids - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Parasites of Poultry and Caged Birds - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Parasites of Aquarium Fish - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Helminth Parasites of Pigs - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Protozoan and Arthropod Parasites of Pigs - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding:  Food-borne Parasitic Diseases - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "PDF: Heartworm Treatment Schema"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Fleas of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Lice and Other Insects of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Mites and Mange in Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Fleas of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Ear Mites and Other Mites of Small Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Ticks and Tick Paralysis of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "PDF: Heartworm Treatment Schema"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Heartworm of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Other Cardiorespiratory Parasites of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Other Flies of Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Ticks and Tick Paralysis of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Heartworm of Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Ruminant Flystrike - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Other Flies of Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Lice of Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Mites and Mange in Production Animals - Complete Lecture"
-  },
-  {
-    tags: ["VETS3010", "parasitology"],
-    label: "Quiz - Check your understanding: Mites and Mange in Dogs and Cats - Complete Lecture"
-  },
-  {
-    tags: ["VETS2008"],
-    label: "Male"
-  },
-  {
-    tags: ["VETS2008"],
-    label: "Female"
-  }
-], F = T("$getApi"), z = (e) => {
-  console.log("findData...called with ..", e, F);
-  try {
-    return M.filter(
-      (t) => t.tags.join(",").includes(e)
-    ) || { label: "", tags: [] };
-  } catch (a) {
-    return console.log(a), [];
-  }
-}, v = { class: "search-results-container" }, B = { class: "container-description" }, H = { class: "badgesOfsearchData" }, w = {
-  key: 0,
-  class: "results"
-}, _ = {
-  key: 1,
-  class: "no-results"
-}, x = /* @__PURE__ */ m({
-  __name: "DisplayResult",
-  setup(e) {
-    const a = c([{ label: "", tags: [""] }]), t = S(), l = c("");
-    P(() => {
-      t ? (l.value = t.currentRoute.value.params.tag, i(l.value)) : l.value = "undefined";
-    });
-    const i = async (r) => {
-      const n = await z(r);
-      n && (a.value = n);
-    };
-    return L(t.currentRoute, (r, n) => {
-      const u = r.params.tag || "", C = n.params.tag || "";
-      u !== C && i(u);
-    }), (r, n) => (o(), s("div", v, [
-      g("div", B, [
-        g("button", {
-          onClick: n[0] || (n[0] = () => r.$router.back())
-        }, "↵"),
-        g("div", H, " (" + d(a.value.length) + " records in total) ", 1)
-      ]),
-      a.value.length ? (o(), s("div", w, [
-        g("ul", null, [
-          (o(!0), s(b, null, y(a.value, (u, C) => (o(), s("li", { key: C }, [
-            f(d(u.label) + " ", 1),
-            (o(!0), s(b, null, y(u.tags, (R, A) => (o(), s("span", {
-              key: A,
-              class: "badgesOfsearchData"
-            }, d(R), 1))), 128))
-          ]))), 128))
-        ])
-      ])) : (o(), s("p", _, "No results found"))
-    ]));
-  }
-}), p = /* @__PURE__ */ V(x, [["__scopeId", "data-v-5d18b0c9"]]);
-function W(e, a) {
-  const { router: t, getApi: l } = a;
-  console.log("search plugin created"), e.component("CrucibleSearch", N), e.component("DisplayResult", p), e.provide("$router", t), e.provide("$getApi", l), t.addRoute({ path: "/search-in-tag/:tag", component: p });
+}), Mo = /* @__PURE__ */ Ie(jo, [["__scopeId", "data-v-b75677aa"]]);
+function Uo(e, t) {
+  const { router: n, getApi: o } = t;
+  e.component("CrucibleSearch", Mo), e.component("DisplayResult", $e), e.provide("$router", n), e.provide("$getApi", o), n.addRoute({ path: "/search", component: $e });
 }
 export {
-  N as CrucibleSearch,
-  p as DisplayResult,
-  W as createSearchPlugin
+  Mo as CrucibleSearch,
+  $e as DisplayResult,
+  Uo as createSearchPlugin
 };

@@ -4,7 +4,7 @@
       <label for=""></label>
       <input
         type="text"
-        placeholder="Enter a valid Tag (or try enter VETS)"
+        placeholder="Enter a tag (e.g. VETS2011)"
         @keyup.enter="showResult(($event.target as HTMLInputElement).value)"
       />
     </div>
@@ -16,7 +16,7 @@ import { useRouter } from "@/router/injectRoute";
 
 const router = useRouter();
 const showResult = (term: string | undefined) => {
-  router.push({ path: `/search-in-tag/${term || "2011"}` });
+  router.push({ path: "/search", query: { tag: term } });
 };
 </script>
 <style scoped>
@@ -32,7 +32,7 @@ input {
   border-radius: 5px;
   margin-right: 1rem;
   padding: 0;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   width: fit-content;
 }
 </style>

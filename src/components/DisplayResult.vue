@@ -2,19 +2,21 @@
   <div class="search-results-container">
     <div class="container-description">
       <button @click="() => $router.back()">&crarr;</button>
-      <div class="badgesOfsearchData">
+      <div class="label-badges">
         ({{ searchResults.length }} records in total)
       </div>
     </div>
     <div v-if="searchResults.length" class="results">
       <ul>
         <li v-for="(result, index) in searchResults" :key="index">
-          {{ result.label }}
+          <a :href="result.url" target="_blank" class="linkToResource">
+            {{ result.label }}
+          </a>
           <span
-            v-for="(tag, index_tag) in result.tags"
+            v-for="(item, index_tag) in result.tags"
             :key="index_tag"
-            class="badgesOfsearchData"
-            >{{ tag }}</span
+            class="tag-badges"
+            >{{ item }}</span
           >
         </li>
       </ul>
@@ -27,7 +29,9 @@
 import { findData } from "./DataAccessLayer";
 import { ResourceInSearch } from "@/types";
 
-const searchResults = ref<ResourceInSearch[]>([{ label: "", tags: [""] }]);
+const searchResults = ref<ResourceInSearch[]>([
+  { _id: "", label: "", tags: [""], url: "" },
+]);
 
 import { ref, onMounted, watch } from "vue";
 import { useRouter } from "@/router/injectRoute";
@@ -35,10 +39,10 @@ import { useRouter } from "@/router/injectRoute";
 const route = useRouter();
 const tag = ref("");
 
-onMounted(() => {
+onMounted(async () => {
   if (route) {
-    tag.value = route.currentRoute.value.params.tag as string;
-    fetchData(tag.value);
+    tag.value = route.currentRoute.value.query.tag as string;
+    await fetchData(tag.value);
   } else {
     tag.value = "undefined";
   }
@@ -48,11 +52,11 @@ const fetchData = async (tag: string) => {
 
   if (results) searchResults.value = results;
 };
-watch(route.currentRoute, (newRoute, oldRoute) => {
-  const newTag = (newRoute.params.tag as string) || "";
-  const oldTag = (oldRoute.params.tag as string) || "";
+watch(route.currentRoute, async (newRoute, oldRoute) => {
+  const newTag = (newRoute.query.tag as string) || "";
+  const oldTag = (oldRoute.query.tag as string) || "";
   if (newTag !== oldTag) {
-    fetchData(newTag);
+    await fetchData(newTag);
   }
 });
 </script>
@@ -112,7 +116,8 @@ h2 {
   color: #888;
 }
 
-.badgesOfsearchData {
+.tag-badges,
+.label-badges {
   background-color: #f3f4f6;
   color: #49075e;
   padding: 0.25rem;

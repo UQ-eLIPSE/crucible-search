@@ -39,6 +39,6 @@ export default defineConfig({
     environment: "jsdom",
   },
   server: {
-    open: isTest ? "/tests/testApp.vue" : "/index.html", // Open testApp.vue if in test mode
+    open: isTest ? "/tests/testApp.vue" : "/index.html",
   },
 });
