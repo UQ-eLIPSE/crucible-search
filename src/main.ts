@@ -1,14 +1,11 @@
 import { createApp } from "vue";
 import App from "@/App.vue";
 import { createSearchPlugin } from "@/SearchPlugin.ts";
-import { router } from "@/router/projectRoutes";
+import { projectRoutes } from "@/router/projectRoutes";
 
 const app = createApp(App);
-app.use(router);
+app.use(projectRoutes);
 
-// * TEMPORARY STATIC URL TO FETCH
-const staticApiUrl = "http://localhost:8080/api/resource/getResultByQueryTag";
-
-createSearchPlugin(app, { router, getApi: staticApiUrl });
+createSearchPlugin(app, { router: projectRoutes });
 
 app.mount("#app");

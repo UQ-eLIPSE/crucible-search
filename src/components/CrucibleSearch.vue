@@ -16,7 +16,7 @@ import { useRouter } from "@/router/injectRoute";
 
 const router = useRouter();
 const showResult = (term: string | undefined) => {
-  router.push({ path: "/search-in-tag", query: { tag: term } });
+  router.push({ path: "/search", query: { tag: term } });
 };
 </script>
 <style scoped>
