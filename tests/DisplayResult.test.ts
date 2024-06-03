@@ -1,7 +1,6 @@
 import { mount } from "@vue/test-utils";
 import { describe, expect, vi, it } from "vitest";
 import { flushPromises } from "@vue/test-utils";
-import { projectRoutes } from "@/router/projectRoutes";
 import DisplayResult from "@/components/DisplayResult.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import { createApp } from "vue";
