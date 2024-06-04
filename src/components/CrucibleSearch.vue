@@ -4,7 +4,7 @@
       <input
         v-model="searchTerm"
         type="text"
-        placeholder="Enter a tag (e.g., VETS2011)"
+        placeholder="search for topic and courses"
         @input="filterResults"
         @focus="handleFocus"
         @keydown="handleKeyDown"

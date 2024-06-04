@@ -1990,7 +1990,7 @@ const Io = { class: "search-container" }, Vo = { key: 0 }, jo = ["onClick"], Lo 
         Ut(K("input", {
           "onUpdate:modelValue": a[0] || (a[0] = (p) => n.value = p),
           type: "text",
-          placeholder: "Enter a tag (e.g., VETS2011)",
+          placeholder: "search for topic and courses",
           onInput: l,
           onFocus: u,
           onKeydown: h
@@ -2006,7 +2006,7 @@ const Io = { class: "search-container" }, Vo = { key: 0 }, jo = ["onClick"], Lo 
       ], 512)
     ]));
   }
-}), Mo = /* @__PURE__ */ Ve(Lo, [["__scopeId", "data-v-487fb845"]]);
+}), Mo = /* @__PURE__ */ Ve(Lo, [["__scopeId", "data-v-f21be478"]]);
 function Bo(e, t) {
   const { router: n, getApi: o } = t;
   e.component("CrucibleSearch", Mo), e.component("DisplayResult", xe), e.provide("$router", n), e.provide("$getApi", o), n.addRoute({ path: "/search", component: xe });
