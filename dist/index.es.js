@@ -322,7 +322,7 @@ function Sn(e, t, n, o) {
   }), {
     pauseListeners: u,
     listen: h,
-    destroy: c
+    destroy: l
   };
 }
 function Fe(e, t, n, o = !1, s = !1) {
@@ -519,7 +519,7 @@ function Tn(e, t) {
           }
         }
         let C = N ? `((?:${E})(?:/(?:${E}))*)` : `(${E})`;
-        c || (C = // avoid an optional / if there are more segments e.g. /:p?-static
+        l || (C = // avoid an optional / if there are more segments e.g. /:p?-static
         // or /:p?-:p2
         P && h.length < 2 ? `(?:/${C})` : "/" + C), P && (C += "?"), s += C, p += 20, P && (p += -8), N && (p += -20), E === ".*" && (p += -50);
       }
@@ -541,7 +541,7 @@ function Tn(e, t) {
       const p = r[a] || "", y = f[a - 1];
       c[y.name] = p && y.repeatable ? p.split("/") : p;
     }
-    return c;
+    return l;
   }
   function u(h) {
     let r = "", c = !1;
@@ -765,7 +765,7 @@ See more at https://next.router.vuejs.org/guide/migration/#removed-star-or-catch
       N = a.record.name, p = S(
         // paramsFromLocation is a new object
         Ze(
-          c.params,
+          l.params,
           // only keep params that exist in the resolved location
           // only keep optional params coming from a parent record
           a.keys.filter((E) => !E.optional).concat(a.parent ? a.parent.keys.filter((E) => E.optional) : []).map((E) => E.name)
@@ -780,7 +780,7 @@ See more at https://next.router.vuejs.org/guide/migration/#removed-star-or-catch
       if (a = c.name ? o.get(c.name) : n.find((E) => E.re.test(c.path)), !a)
         throw X(1, {
           location: r,
-          currentLocation: c
+          currentLocation: l
         });
       N = a.record.name, p = S({}, c.params, r.params), y = a.stringify(p);
     }
@@ -1016,10 +1016,10 @@ function rt(e) {
     const y = p.findIndex(q.bind(null, a));
     if (y > -1)
       return y;
-    const N = st(r[c - 2]);
+    const N = st(r[l - 2]);
     return (
       // we are dealing with nested routes
-      c > 1 && // if the parent and matched route have the same path, this link is
+      l > 1 && // if the parent and matched route have the same path, this link is
       // referring to the empty child. Or we currently are on a different
       // child of the same parent
       st(a) === N && // avoid comparing the child with its parent
@@ -1035,7 +1035,7 @@ function rt(e) {
   if (process.env.NODE_ENV !== "production" && M) {
     const r = lt();
     if (r) {
-      const c = {
+      const l = {
         route: f.value,
         isActive: d.value,
         isExactActive: u.value,
@@ -1139,8 +1139,8 @@ const at = (e, t, n) => e ?? t ?? n, no = /* @__PURE__ */ fe({
     const o = z($e), s = V(() => e.route || o.value), f = z(ot, 0), l = V(() => {
       let h = Y(f);
       const { matched: r } = s.value;
-      let c;
-      for (; (c = r[h]) && !c.components; )
+      let l;
+      for (; (l = r[h]) && !l.components; )
         h++;
       return h;
     }), d = V(() => s.value.matched[l.value]);
@@ -1156,7 +1156,7 @@ const at = (e, t, n) => e ?? t ?? n, no = /* @__PURE__ */ fe({
         return it(n.default, { Component: a, route: h });
       const p = c.props[r], y = p ? p === !0 ? h.params : typeof p == "function" ? p(h) : p : null, P = ct(a, S({}, y, t, {
         onVnodeUnmounted: (_) => {
-          _.component.isUnmounted && (c.instances[r] = null);
+          _.component.isUnmounted && (l.instances[r] = null);
         },
         ref: u
       }));
@@ -1237,7 +1237,7 @@ function ao(e, t, n) {
     componentStateTypes: ["Routing"],
     app: e
   }, (s) => {
-    typeof s.now != "function" && console.warn("[Vue Router]: You seem to be using an outdated version of Vue Devtools. Are you still using the Beta release instead of the stable one? You can find the links at https://devtools.vuejs.org/guide/installation.html."), s.on.inspectComponent((r, c) => {
+    typeof s.now != "function" && console.warn("[Vue Router]: You seem to be using an outdated version of Vue Devtools. Are you still using the Beta release instead of the stable one? You can find the links at https://devtools.vuejs.org/guide/installation.html."), s.on.inspectComponent((r, l) => {
       r.instanceData && r.instanceData.state.push({
         type: "Routing",
         key: "$route",
@@ -1271,16 +1271,16 @@ function ao(e, t, n) {
       id: f,
       label: `Router${o ? " " + o : ""} Navigations`,
       color: 4237508
-    }), t.onError((r, c) => {
+    }), t.onError((r, l) => {
       s.addTimelineEvent({
         layerId: f,
         event: {
           title: "Error during Navigation",
-          subtitle: c.fullPath,
+          subtitle: l.fullPath,
           logType: "error",
           time: s.now(),
           data: { error: r },
-          groupId: c.meta.__navigationId
+          groupId: l.meta.__navigationId
         }
       });
     });
