@@ -7,6 +7,7 @@
         placeholder="Enter a tag (e.g., VETS2011)"
         @input="filterResults"
         @focus="handleFocus"
+        @keydown="handleKeyDown"
       />
       <ul v-if="filteredTags.length && searchTerm && dropdownVisible">
         <li v-for="tag in filteredTags" :key="tag" @click="selectTag(tag)">
@@ -47,6 +48,13 @@ const selectTag = (tag: string) => {
 const handleFocus = () => {
   if (filteredTags.value.length && searchTerm.value) {
     dropdownVisible.value = true;
+  }
+};
+
+const handleKeyDown = (event: KeyboardEvent) => {
+  if (event.key === "Enter") {
+    selectTag(searchTerm.value);
+    searchTerm.value = "";
   }
 };
 
