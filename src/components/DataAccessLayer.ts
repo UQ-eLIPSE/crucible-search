@@ -33,6 +33,7 @@ export const findData = async (
 export const findTags = async (inputValue: string): Promise<string[]> => {
   try {
     // TODO: The API call from Crucible should be passed in here
+    // the below might change according to how we will be passing the APi
     const resources = staticResources;
 
     const tagsSet = new Set<string>();
