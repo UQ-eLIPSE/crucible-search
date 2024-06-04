@@ -29,3 +29,26 @@ export const findData = async (
     return [];
   }
 };
+
+export const findTags = async (inputValue: string): Promise<string[]> => {
+  try {
+    // TODO: The API call from Crucible should be passed in here
+    const resources = staticResources;
+
+    const tagsSet = new Set<string>();
+    resources.forEach((resource: ResourceInSearch) => {
+      resource.tags.forEach((fullTag) => {
+        const tagParts = fullTag.split(":");
+        const tagSuffix = tagParts[1];
+        if (tagSuffix.toLowerCase().includes(inputValue.toLowerCase())) {
+          tagsSet.add(tagSuffix);
+        }
+      });
+    });
+
+    return Array.from(tagsSet);
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+};
