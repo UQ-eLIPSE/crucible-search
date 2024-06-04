@@ -1,10 +1,8 @@
 import { staticResources } from "@/resources";
-import { inject } from "vue";
 import { ResourceInSearch } from "@/types";
 
-const fetchAllData = async (tag: string) => {
+const fetchAllData = async (tag: string, getApisFromHost: string) => {
   try {
-    const getApisFromHost = inject("$getApi") as string;
     const apiData = await fetch(
       getApisFromHost + "?" + new URLSearchParams({ tag }),
     );
@@ -16,10 +14,11 @@ const fetchAllData = async (tag: string) => {
 
 export const findData = async (
   inputValue: string,
+  getApisFromHost: string,
 ): Promise<ResourceInSearch[]> => {
   try {
     const resources =
-      (await fetchAllData(inputValue)) ||
+      (await fetchAllData(inputValue, getApisFromHost)) ||
       staticResources.filter((resource: ResourceInSearch) =>
         resource.tags.join(",").includes(inputValue),
       );

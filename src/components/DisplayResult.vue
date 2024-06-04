@@ -28,6 +28,8 @@
 <script setup lang="ts">
 import { findData } from "./DataAccessLayer";
 import { ResourceInSearch } from "@/types";
+import { inject } from "vue";
+const getApisFromHost = inject("$getApi") as string;
 
 const searchResults = ref<ResourceInSearch[]>([
   { _id: "", label: "", tags: [""], url: "" },
@@ -48,7 +50,7 @@ onMounted(async () => {
   }
 });
 const fetchData = async (tag: string) => {
-  const results = await findData(tag as string);
+  const results = await findData(tag as string, getApisFromHost);
 
   if (results) searchResults.value = results;
 };
