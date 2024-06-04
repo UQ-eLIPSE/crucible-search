@@ -24,7 +24,6 @@ export const findData = async (
       );
     return resources;
   } catch (err) {
-    console.log(err);
     return [];
   }
 };
@@ -48,7 +47,6 @@ export const findTags = async (inputValue: string): Promise<string[]> => {
 
     return Array.from(tagsSet);
   } catch (err) {
-    console.log(err);
     return [];
   }
 };

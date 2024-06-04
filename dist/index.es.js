@@ -1877,8 +1877,8 @@ const Ct = [
     return await _o(e, t) || Ct.filter(
       (o) => o.tags.join(",").includes(e)
     );
-  } catch (n) {
-    return console.log(n), [];
+  } catch {
+    return [];
   }
 }, bo = async (e) => {
   try {
@@ -1889,8 +1889,8 @@ const Ct = [
         u.toLowerCase().includes(e.toLowerCase()) && n.add(u);
       });
     }), Array.from(n);
-  } catch (t) {
-    return console.log(t), [];
+  } catch {
+    return [];
   }
 }, wo = { class: "search-results-container" }, Ro = { class: "container-description" }, ko = { class: "label-badges" }, So = {
   key: 0,
