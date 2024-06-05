@@ -27,3 +27,11 @@ export const staticResources = [
     url: "https://crucible-uat.uqcloud.net/resource/5a0ba18d34cc363763e05e99/61a9ae14e04e3d5bffb26ef7/6290636464c71f1df2110ec9",
   },
 ];
+
+export const tags = [
+  "VETS2011",
+  "physiology",
+  "respiratory_system",
+  "exercise",
+  "horse",
+];

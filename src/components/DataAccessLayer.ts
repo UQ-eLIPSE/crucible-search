@@ -1,4 +1,4 @@
-import { staticResources } from "@/resources";
+import { staticResources, tags } from "@/resources";
 import { ResourceInSearch } from "@/types";
 
 const fetchAllData = async (tag: string, getApisFromHost: string) => {
@@ -32,20 +32,15 @@ export const findTags = async (inputValue: string): Promise<string[]> => {
   try {
     // TODO: The API call from Crucible should be passed in here
     // the below might change according to how we will be passing the APi
-    const resources = staticResources;
 
-    const tagsSet = new Set<string>();
-    resources.forEach((resource: ResourceInSearch) => {
-      resource.tags.forEach((fullTag) => {
-        const tagParts = fullTag.split(":");
-        const tagSuffix = tagParts[1];
-        if (tagSuffix.toLowerCase().includes(inputValue.toLowerCase())) {
-          tagsSet.add(tagSuffix);
-        }
-      });
+    const settags = new Set<string>();
+    tags.forEach((tag) => {
+      if (tag.toLowerCase().includes(inputValue.toLowerCase())) {
+        settags.add(tag);
+      }
     });
 
-    return Array.from(tagsSet);
+    return Array.from(settags);
   } catch (err) {
     return [];
   }
