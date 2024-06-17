@@ -2004,8 +2004,8 @@ const Vo = { class: "search-container" }, jo = { key: 0 }, Lo = ["onClick"], Mo 
   }
 }), Uo = /* @__PURE__ */ Ve(Mo, [["__scopeId", "data-v-56d679e9"]]);
 function qo(e, t) {
-  const { router: n, getApi: o } = t;
-  e.component("CrucibleSearch", Uo), e.component("DisplayResult", xe), e.provide("$router", n), e.provide("$getApi", o), n.addRoute({ path: "/search", component: xe });
+  const { router: n, getApi: o, tagsApi: s } = t;
+  e.component("CrucibleSearch", Uo), e.component("DisplayResult", xe), e.provide("$router", n), e.provide("$getApi", o), e.provide("$tagsApi", s), n.addRoute({ path: "/search", component: xe });
 }
 export {
   Uo as CrucibleSearch,
