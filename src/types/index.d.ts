@@ -2,6 +2,7 @@ import { Router } from "vue-router";
 export type PluginOptions = {
   router: Router;
   getApi?: string;
+  tagsApi?: string;
 };
 
 export type ResourceInSearch = {
@@ -15,5 +16,6 @@ declare module "@vue/runtime-core" {
   interface ComponentCustomProperties {
     $router: string;
     $getApi: string;
+    $tagsApi: string;
   }
 }

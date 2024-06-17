@@ -28,13 +28,16 @@ export const findData = async (
   }
 };
 
-export const findTags = async (inputValue: string): Promise<string[]> => {
+export const findTags = async (
+  inputValue: string,
+  searchTagsApi: string,
+): Promise<string[]> => {
   try {
     // TODO: The API call from Crucible should be passed in here
     // the below might change according to how we will be passing the APi
-
+    const tagsCollection = (await (await fetch(searchTagsApi)).json()) || tags;
     const settags = new Set<string>();
-    tags.forEach((tag) => {
+    (tagsCollection as string[]).forEach((tag) => {
       if (tag.toLowerCase().includes(inputValue.toLowerCase())) {
         settags.add(tag);
       }

@@ -22,16 +22,20 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "@/router/injectRoute";
 import { findTags } from "./DataAccessLayer";
+import { inject } from "vue";
 
 const router = useRouter();
 const searchTerm = ref("");
 const filteredTags = ref<string[]>([]);
 const dropdownVisible = ref(false);
 const searchBoxRef = ref<HTMLElement | null>(null);
+const searchTagsApi =
+  (inject("$tagsApi") as string) ||
+  "http://localhost:8080/api/resource/alltags";
 
 const filterResults = async () => {
   if (searchTerm.value) {
-    filteredTags.value = await findTags(searchTerm.value);
+    filteredTags.value = await findTags(searchTerm.value, searchTagsApi);
     dropdownVisible.value = true;
   } else {
     filteredTags.value = [];
