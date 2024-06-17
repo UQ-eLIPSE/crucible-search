@@ -12,12 +12,6 @@
           <a :href="result.url" target="_blank" class="linkToResource">
             {{ result.label }}
           </a>
-          <span
-            v-for="(item, index_tag) in result.tags"
-            :key="index_tag"
-            class="tag-badges"
-            >{{ item }}</span
-          >
         </li>
       </ul>
     </div>

@@ -57,8 +57,5 @@ describe("DisplayResult.vue", () => {
     expect(wrapper.findAll(".linkToResource")).to.toBeTruthy;
     expect(wrapper.findAll(".linkToResource")[0].text()).toContain("label 1");
     expect(wrapper.findAll(".linkToResource")[1].text()).toContain("label 2");
-    expect(wrapper.findAll(".tag-badges").length).toEqual(4);
-    const tags = wrapper.findAll(".tag-badges").map((tag) => tag.text());
-    expect(tags).toEqual(["test_tag", "TAG1", "test_tag", "TAG2"]);
   });
 });
