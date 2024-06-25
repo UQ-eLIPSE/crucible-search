@@ -1966,7 +1966,7 @@ const Vo = { class: "search-container" }, jo = { key: 0 }, Lo = ["onClick"], Mo 
     ), c = async () => {
       n.value ? (o.value = (await wo(n.value, u)).slice(0, Mo), r.value = !0) : (o.value = [], r.value = !1);
     }, h = (p) => {
-      n.value = p, r.value = !1, t.push({ path: "/search", query: { tag: p } });
+      n.value = o.value.includes(p) ? p : o.value[0], r.value = !1, t.push({ path: "/search", query: { tag: n.value } });
     }, s = () => {
       o.value.length && n.value && (r.value = !0);
     }, l = (p) => {
@@ -2009,7 +2009,7 @@ const Vo = { class: "search-container" }, jo = { key: 0 }, Lo = ["onClick"], Mo 
       ], 512)
     ]));
   }
-}), Bo = /* @__PURE__ */ Ve(Uo, [["__scopeId", "data-v-7f40f757"]]);
+}), Bo = /* @__PURE__ */ Ve(Uo, [["__scopeId", "data-v-055f16f9"]]);
 function Ho(e, t) {
   const { router: n, getApi: o, tagsApi: r } = t;
   e.component("CrucibleSearch", Bo), e.component("DisplayResult", Te), e.provide("$router", n), e.provide("$getApi", o), e.provide("$tagsApi", r), n.addRoute({ path: "/search", component: Te });

@@ -55,6 +55,7 @@ const filterResults = async () => {
 };
 
 const selectTag = (tag: string) => {
+  // TODO: add tests for this
   searchTerm.value = !filteredTags.value.includes(tag)
     ? filteredTags.value[0] // default to the first tag if not in the dropdown list
     : tag;
@@ -133,6 +134,11 @@ li {
 }
 
 li:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+ul:not(:hover) > li:first-child {
   background-color: #f0f0f0;
   color: #333;
 }
