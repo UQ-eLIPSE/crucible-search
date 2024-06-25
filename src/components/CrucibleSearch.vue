@@ -11,7 +11,10 @@
       />
       <ul v-if="filteredTags.length && searchTerm && dropdownVisible">
         <li v-for="tag in filteredTags" :key="tag" @click="selectTag(tag)">
-          {{ tag }}
+          <template v-for="(char, index) in tag.split('')">
+            <span v-if="!isSearchTerm(char)" :key="index">{{ char }}</span>
+            <strong v-else :key="`strong-${index}`">{{ char }}</strong>
+          </template>
         </li>
       </ul>
     </div>
@@ -33,6 +36,10 @@ const searchTagsApi =
   (inject("$tagsApi") as string) ||
   "http://localhost:8080/api/resource/alltags";
 const maxSearchResults = 10;
+
+const isSearchTerm = (char: string) =>
+  // for the highlighting of the strong for the dropdown menu
+  searchTerm.value.toLowerCase().includes(char.toLowerCase());
 
 const filterResults = async () => {
   if (searchTerm.value) {
