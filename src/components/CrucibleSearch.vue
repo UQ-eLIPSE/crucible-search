@@ -32,12 +32,14 @@ const searchBoxRef = ref<HTMLElement | null>(null);
 const searchTagsApi =
   (inject("$tagsApi") as string) ||
   "http://localhost:8080/api/resource/alltags";
+const maxSearchResults = 10;
 
 const filterResults = async () => {
   if (searchTerm.value) {
     // fuzzy searched
-    filteredTags.value = await findTags(searchTerm.value, searchTagsApi);
-    console.log("LISTING suggested results: ", filteredTags.value.length);
+    filteredTags.value = (
+      await findTags(searchTerm.value, searchTagsApi)
+    ).slice(0, maxSearchResults);
     dropdownVisible.value = true;
   } else {
     filteredTags.value = [];
