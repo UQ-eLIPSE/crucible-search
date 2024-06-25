@@ -55,9 +55,11 @@ const filterResults = async () => {
 };
 
 const selectTag = (tag: string) => {
-  searchTerm.value = tag;
+  searchTerm.value = !filteredTags.value.includes(tag)
+    ? filteredTags.value[0] // default to the first tag if not in the dropdown list
+    : tag;
   dropdownVisible.value = false;
-  router.push({ path: "/search", query: { tag: tag } });
+  router.push({ path: "/search", query: { tag: searchTerm.value } });
 };
 
 const handleFocus = () => {
