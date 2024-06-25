@@ -23,8 +23,10 @@
 import { findData } from "./DataAccessLayer";
 import { ResourceInSearch } from "@/types";
 import { inject } from "vue";
-const getApisFromHost = inject("$getApi") as string;
-
+const getApisFromHost =
+  (inject("$getApi") as string) ??
+  "http://localhost:8080/api/resource/getResultByQueryTag";
+console.info("%cRetrieving data from:", "color: skyblue;", getApisFromHost);
 const searchResults = ref<ResourceInSearch[]>([
   { _id: "", label: "", tags: [""], url: "" },
 ]);

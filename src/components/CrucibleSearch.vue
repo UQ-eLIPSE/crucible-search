@@ -35,7 +35,9 @@ const searchTagsApi =
 
 const filterResults = async () => {
   if (searchTerm.value) {
+    // fuzzy searched
     filteredTags.value = await findTags(searchTerm.value, searchTagsApi);
+    console.log("LISTING suggested results: ", filteredTags.value.length);
     dropdownVisible.value = true;
   } else {
     filteredTags.value = [];
