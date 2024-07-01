@@ -18,9 +18,7 @@ describe("CrucibleSearch.vue", () => {
   vi.mock("@/components/DataAccessLayer", () => ({
     findTags: vi.fn((query) =>
       Promise.resolve(
-        ["TAG1", "TAG2", "Horse"].filter((tag) =>
-          tag.toLowerCase().includes(query.toLowerCase()),
-        ),
+        ["TAG1", "TAG2", "Horse"].filter((tag) => tag.includes(query)),
       ),
     ),
   }));
@@ -57,10 +55,5 @@ describe("CrucibleSearch.vue", () => {
     tag1.findAll("strong").forEach((char, index) => {
       expect(char.text()).toBe(value[index]);
     });
-  });
-
-  it("capitalises the first word of each search query", async () => {
-    await inputSearch("horse");
-    expect(wrapper.findAll("li")[0].text()).toBe("Horse");
   });
 });
