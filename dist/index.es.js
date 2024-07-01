@@ -1961,7 +1961,7 @@ const Vo = { class: "search-container" }, jo = { key: 0 }, Lo = ["onClick"], Mo 
   __name: "CrucibleSearch",
   setup(e) {
     const t = Ct(), n = z(""), o = z([]), r = z(!1), f = z(null), u = q("$tagsApi") || "http://localhost:8080/api/resource/alltags", d = (p) => (
-      // for the highlighting of the strong for the dropdown menu
+      // for the highlighting of the <strong> elements for the dropdown menu
       n.value.toLowerCase().includes(p.toLowerCase())
     ), c = async () => {
       n.value ? (o.value = (await wo(n.value, u)).slice(0, Mo), r.value = !0) : (o.value = [], r.value = !1);
@@ -1970,7 +1970,7 @@ const Vo = { class: "search-container" }, jo = { key: 0 }, Lo = ["onClick"], Mo 
     }, s = () => {
       o.value.length && n.value && (r.value = !0);
     }, l = (p) => {
-      p.key === "Enter" && (h(n.value), n.value = "");
+      p.key === "Enter" ? (h(n.value), n.value = "") : p.key === "Tab" && (p.preventDefault(), n.value = o.value[0] ?? n.value);
     }, a = (p) => {
       f.value && !f.value.contains(p.target) && (r.value = !1);
     };
@@ -2009,7 +2009,7 @@ const Vo = { class: "search-container" }, jo = { key: 0 }, Lo = ["onClick"], Mo 
       ], 512)
     ]));
   }
-}), Bo = /* @__PURE__ */ Ve(Uo, [["__scopeId", "data-v-6ab24998"]]);
+}), Bo = /* @__PURE__ */ Ve(Uo, [["__scopeId", "data-v-3a7ef61b"]]);
 function Ho(e, t) {
   const { router: n, getApi: o, tagsApi: r } = t;
   e.component("CrucibleSearch", Bo), e.component("DisplayResult", Te), e.provide("$router", n), e.provide("$getApi", o), e.provide("$tagsApi", r), n.addRoute({ path: "/search", component: Te });
