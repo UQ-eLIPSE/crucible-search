@@ -4,10 +4,17 @@
       <input
         v-model="searchTerm"
         type="text"
+        class="search-term"
         placeholder="search for topic and courses"
         @input="filterResults"
         @focus="handleFocus"
         @keydown="handleKeyDown"
+      />
+      <input
+        type="text"
+        class="search-suggestion"
+        :value="currentSuggestion"
+        disabled
       />
       <ul v-if="filteredTags.length && searchTerm && dropdownVisible">
         <li v-for="tag in filteredTags" :key="tag" @click="selectTag(tag)">
@@ -32,13 +39,14 @@ const searchTerm = ref("");
 const filteredTags = ref<string[]>([]);
 const dropdownVisible = ref(false);
 const searchBoxRef = ref<HTMLElement | null>(null);
+const currentSuggestion = ref("");
 const searchTagsApi =
   (inject("$tagsApi") as string) ||
   "http://localhost:8080/api/resource/alltags";
 const maxSearchResults = 10;
 
 const isSearchTerm = (char: string) =>
-  // for the highlighting of the strong for the dropdown menu
+  // for the highlighting of the <strong> elements for the dropdown menu
   searchTerm.value.toLowerCase().includes(char.toLowerCase());
 
 const filterResults = async () => {
@@ -47,9 +55,16 @@ const filterResults = async () => {
     filteredTags.value = (
       await findTags(searchTerm.value, searchTagsApi)
     ).slice(0, maxSearchResults);
+
+    // for text suggestion functionality in input field
+    currentSuggestion.value = filteredTags.value[0]
+      ? searchTerm.value + filteredTags.value[0].slice(searchTerm.value.length)
+      : "";
+
     dropdownVisible.value = true;
   } else {
     filteredTags.value = [];
+    currentSuggestion.value = "";
     dropdownVisible.value = false;
   }
 };
@@ -73,6 +88,9 @@ const handleKeyDown = (event: KeyboardEvent) => {
   if (event.key === "Enter") {
     selectTag(searchTerm.value);
     searchTerm.value = "";
+  } else if (event.key === "Tab") {
+    event.preventDefault(); // Prevent the default tab key behavior
+    searchTerm.value = currentSuggestion.value;
   }
 };
 
@@ -109,6 +127,19 @@ input {
   border-radius: 8px;
   font-size: 1rem;
   width: 100%;
+}
+
+.search-term {
+  background: transparent;
+  z-index: 2;
+}
+
+.search-suggestion {
+  position: absolute;
+  color: lightgray;
+  z-index: 1;
+  max-width: fit-content;
+  border: none;
 }
 
 ul {
