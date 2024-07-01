@@ -2009,7 +2009,7 @@ const Vo = { class: "search-container" }, jo = { key: 0 }, Lo = ["onClick"], Mo 
       ], 512)
     ]));
   }
-}), Bo = /* @__PURE__ */ Ve(Uo, [["__scopeId", "data-v-4df3af08"]]);
+}), Bo = /* @__PURE__ */ Ve(Uo, [["__scopeId", "data-v-6ab24998"]]);
 function Ho(e, t) {
   const { router: n, getApi: o, tagsApi: r } = t;
   e.component("CrucibleSearch", Bo), e.component("DisplayResult", Te), e.provide("$router", n), e.provide("$getApi", o), e.provide("$tagsApi", r), n.addRoute({ path: "/search", component: Te });

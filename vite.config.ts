@@ -37,6 +37,7 @@ export default defineConfig({
     include: [path.resolve(__dirname, "./tests/*.test.ts")],
     globals: true,
     environment: "jsdom",
+    css: true,
   },
   server: {
     open: isTest ? "/tests/testApp.vue" : "/index.html",
