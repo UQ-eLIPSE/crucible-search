@@ -128,9 +128,9 @@ ul {
 li {
   padding: 10px;
   cursor: pointer;
-  transition:
-    background-color 0.3s,
-    color 0.3s;
+  transition: background-color 0.3s;
+  color: 0.3s;
+  text-transform: capitalize;
 }
 
 li:hover {
