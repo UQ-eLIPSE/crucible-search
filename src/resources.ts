@@ -29,3 +29,12 @@ export const staticResources = [
 ];
 
 export const tags = ["VET2011"];
+
+export const taxonomyTags = [
+  "course:VETS2011",
+  "course:VETS2012",
+  "subject:Physiology",
+  "system:Respiratory_System",
+  "system:Exercise",
+  "animal:Horse",
+];

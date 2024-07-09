@@ -1938,6 +1938,7 @@ const yo = [
   for (const [o, r] of t)
     n[o] = r;
   return n;
+<<<<<<< Updated upstream
 }, Te = /* @__PURE__ */ Ve(Co, [["__scopeId", "data-v-8413d12c"]]), $o = {}, Ao = { id: "app" };
 function To(e, t) {
   const n = He("CrucibleSearch"), o = He("RouterView");
@@ -1952,6 +1953,69 @@ const xo = /* @__PURE__ */ Ve($o, [["render", To]]), Do = [
 ], Io = go({
   history: Pn("/"),
   routes: Do
+=======
+}, De = /* @__PURE__ */ Le(Do, [["__scopeId", "data-v-8413d12c"]]), ee = (e) => (qt("data-v-b782ead9"), e = e(), Ht(), e), Io = /* @__PURE__ */ ee(() => /* @__PURE__ */ O("h1", null, "This is a Filter", -1)), Vo = { class: "container" }, jo = /* @__PURE__ */ Bt('<input id="All" type="radio" name="categories" value="All" checked data-v-b782ead9><input id="CSS" type="radio" name="categories" value="CSS" data-v-b782ead9><input id="JavaScript" type="radio" name="categories" value="JavaScript" data-v-b782ead9><input id="jQuery" type="radio" name="categories" value="jQuery" data-v-b782ead9><input id="WordPress" type="radio" name="categories" value="WordPress" data-v-b782ead9><input id="Slider" type="radio" name="categories" value="Slider" data-v-b782ead9><input id="fullPage.js" type="radio" name="categories" value="fullPage.js" data-v-b782ead9>', 7), Lo = { class: "filters" }, Mo = /* @__PURE__ */ ee(() => /* @__PURE__ */ O("div", { class: "dropdown" }, [
+  /* @__PURE__ */ O("label", { for: "All" }, "All")
+], -1)), Uo = { class: "dropdown" }, Bo = {
+  key: 0,
+  class: "dropdown-menu"
+}, qo = /* @__PURE__ */ ee(() => /* @__PURE__ */ O("li", null, "Vet2011", -1)), Ho = /* @__PURE__ */ ee(() => /* @__PURE__ */ O("li", null, "Vet2012", -1)), Go = [
+  qo,
+  Ho
+], Ko = /* @__PURE__ */ ee(() => /* @__PURE__ */ O("div", null, [
+  /* @__PURE__ */ O("label", { for: "JavaScript" }, "Topic"),
+  /* @__PURE__ */ O("ol", null, [
+    /* @__PURE__ */ O("li", null, "Physiology")
+  ])
+], -1)), Wo = /* @__PURE__ */ ee(() => /* @__PURE__ */ O("div", null, [
+  /* @__PURE__ */ O("label", { for: "jQuery" }, "Animals"),
+  /* @__PURE__ */ O("ol", null, [
+    /* @__PURE__ */ O("li", null, "Horse")
+  ])
+], -1)), Qo = /* @__PURE__ */ Z({
+  __name: "CrucibleFilter",
+  setup(e) {
+    const t = H(!1), n = () => {
+      console.log("toggleDropdown"), t.value = !t.value, console.log(t.value);
+    };
+    return (o, r) => (T(), x(se, null, [
+      Io,
+      O("div", Vo, [
+        jo,
+        O("div", Lo, [
+          Mo,
+          O("div", Uo, [
+            O("label", {
+              for: "CSS",
+              onClick: n
+            }, "Course"),
+            t.value ? (T(), x("ol", Bo, Go)) : ft("", !0)
+          ]),
+          Ko,
+          Wo
+        ])
+      ])
+    ], 64));
+  }
+}), At = /* @__PURE__ */ Le(Qo, [["__scopeId", "data-v-b782ead9"]]), zo = { id: "app" }, Fo = /* @__PURE__ */ Z({
+  __name: "App",
+  setup(e) {
+    return (t, n) => {
+      const o = Ke("CrucibleSearch"), r = Ke("RouterView");
+      return T(), x("div", zo, [
+        we(o),
+        we(At),
+        we(r)
+      ]);
+    };
+  }
+}), Jo = [
+  { path: "/", component: Fo },
+  { path: "/search", component: De }
+], Yo = bo({
+  history: An("/"),
+  routes: Jo
+>>>>>>> Stashed changes
 });
 function Ct() {
   const e = q("$router");
