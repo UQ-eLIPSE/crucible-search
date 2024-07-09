@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <CrucibleSearch />
     <CrucibleFilter />
+    <CrucibleSearch />
     <RouterView />
   </div>
 </template>
