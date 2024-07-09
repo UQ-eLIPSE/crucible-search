@@ -1,27 +1,27 @@
 <template>
-  <div class="crucible-filter-container">
-    <div class="crucible-filters">
-      <div class="crucible-filter-dropdown">
-        <label for="All" @click="resetFilter">All</label>
-      </div>
-      <div
-        v-for="(items, key) in category"
-        :key="key"
-        class="crucible-filter-dropdown"
-      >
-        <label @click="toggleDropdown(key)">{{ key }}</label>
-        <ol v-show="showDropdown[key]" class="crucible-filter-dropdown-menu">
-          <li
-            v-for="(item, index) in items"
-            :key="index"
-            @click="getFilterTag(item)"
-          >
-            {{ item }}
-          </li>
-        </ol>
-      </div>
+  <!-- <div class="crucible-filter-container"> -->
+  <div class="crucible-filters">
+    <div class="crucible-filter-dropdown">
+      <label for="All" @click="resetFilter">All</label>
+    </div>
+    <div
+      v-for="(items, key) in category"
+      :key="key"
+      class="crucible-filter-dropdown"
+    >
+      <label @click="toggleDropdown(key)">{{ key }}</label>
+      <ol v-show="showDropdown[key]" class="crucible-filter-dropdown-menu">
+        <li
+          v-for="(item, index) in items"
+          :key="index"
+          @click="getFilterTag(item)"
+        >
+          {{ item }}
+        </li>
+      </ol>
     </div>
   </div>
+  <!-- </div> -->
 </template>
 
 <script setup lang="ts">
@@ -38,7 +38,7 @@ const category = taxonomyTags.reduce(
     if (!acc[key]) {
       acc[key] = [];
     }
-    acc[key].push(value);
+    acc[key].push(value.replace("_", " "));
     return acc;
   },
   {} as Record<string, string[]>,
@@ -79,6 +79,7 @@ li {
   margin-top: 0.5rem;
   padding: 0.5rem;
   border-radius: 0.5rem;
+  background-color: rgb(215, 229, 242);
 }
 
 li:hover {
@@ -86,16 +87,39 @@ li:hover {
   cursor: pointer;
 }
 
-.crucible-filter-container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
 .crucible-filters {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   text-align: center;
   margin-bottom: 2rem;
+  padding: 0 1rem;
+}
+
+@media (min-width: 480px) {
+  .crucible-filters {
+    flex-direction: row;
+    padding: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .crucible-filters {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 992px) {
+  .crucible-filters {
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .crucible-filters {
+    max-width: 1200px;
+  }
 }
 
 .crucible-filters * {
@@ -113,7 +137,7 @@ li:hover {
 }
 
 .crucible-filters label:hover {
-  background: green;
+  background: rgb(19, 144, 190);
   color: white;
 }
 
