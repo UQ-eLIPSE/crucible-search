@@ -18,7 +18,7 @@ describe("CrucibleSearch.vue", () => {
   vi.mock("@/components/DataAccessLayer", () => ({
     findTags: vi.fn((query) =>
       Promise.resolve(
-        ["TAG1", "TAG2", "horse"].filter((tag) =>
+        ["TAG1", "TAG2", "horse", "Saltatory_conduction"].filter((tag) =>
           tag.toLowerCase().includes(query.toLowerCase()),
         ),
       ),
@@ -63,5 +63,10 @@ describe("CrucibleSearch.vue", () => {
     await inputSearch("horse");
     const liStyle = window.getComputedStyle(wrapper.findAll("li")[0].element);
     expect(liStyle.textTransform).toBe("capitalize");
+  });
+
+  it("should replace all underscores with spaces for search queries", async () => {
+    await inputSearch("saltatory");
+    expect(wrapper.findAll("li")[0].text()).toBe("Saltatory conduction");
   });
 });
