@@ -1,35 +1,37 @@
 <template>
-  <div class="crucible-filters">
-    <div
-      v-for="(items, key) in category"
-      :key="key"
-      class="crucible-filter-dropdown"
-    >
-      <h4 @click="toggleDropdown(key)">{{ key }}</h4>
-      <ul v-show="showDropdown[key]" class="crucible-filter-dropdown-menu">
-        <li
-          v-for="(item, index) in items"
-          :key="index"
-          @click="getFilterTag(key, item)"
-        >
-          {{ item }}
-        </li>
-      </ul>
+  <div class="crucible-filter-panel">
+    <div class="crucible-filters">
+      <div
+        v-for="(items, key) in category"
+        :key="key"
+        class="crucible-filter-dropdown"
+      >
+        <p @click="toggleDropdown(key)">{{ key }}</p>
+        <ul v-show="showDropdown[key]" class="crucible-filter-dropdown-menu">
+          <li
+            v-for="(item, index) in items"
+            :key="index"
+            @click="getFilterTag(key, item)"
+          >
+            {{ item }}
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
-  <div class="crucible-filter-collection">
-    <span
-      v-for="(item, key) in filterTagArray"
-      :key="key"
-      @click="filterTagArray.splice(key, 1)"
-    >
-      {{ item.split(":")[1].replace("_", " ") }}
-    </span>
-    <div v-if="filterTagArray.length === 0" class="crucible-filter-dropdown">
-      <span>All</span>
+    <div class="crucible-filter-collection">
+      <span
+        v-for="(item, key) in filterTagArray"
+        :key="key"
+        @click="filterTagArray.splice(key, 1)"
+      >
+        {{ item.split(":")[1].replace("_", " ") }}
+      </span>
+      <div v-if="filterTagArray.length === 0" class="crucible-filter-dropdown">
+        <span>All</span>
+      </div>
+      <button class="filter-btn" @click="applyFilter">Apply</button>
+      <button class="filter-btn" @click="resetFilter">Empty</button>
     </div>
-    <button class="filter-btn" @click="applyFilter">Apply</button>
-    <button class="filter-btn" @click="resetFilter">Empty</button>
   </div>
 </template>
 
@@ -70,13 +72,12 @@ const getFilterTag = (key: string, tag: string) => {
   if (!filterTagArray.value.includes(`${key}:${tag.replace(" ", "_")}`)) {
     filterTagArray.value.push(`${key}:${tag.replace(" ", "_")}`);
   }
-  console.log(filterTagArray.value);
 };
 const resetFilter = () => {
   showDropdown.value = {};
   filterTagArray.value = [];
-  console.log("Resetting the filter"); //Todo: add API call to reset the filter
 };
+
 const applyFilter = () => {
   console.log("Applying the filter", filterTagArray); //Todo: add API call to apply the filter
 };
@@ -85,6 +86,13 @@ const applyFilter = () => {
 * {
   margin: 0;
   padding: 0;
+}
+.crucible-filter-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
 }
 
 .crucible-filters ul {
@@ -99,6 +107,7 @@ const applyFilter = () => {
   border-radius: 0.5rem;
   background-color: rgb(215, 229, 242);
   font-size: small;
+  color: #49075e;
 }
 
 .crucible-filters li:hover {
@@ -108,7 +117,7 @@ const applyFilter = () => {
 
 .crucible-filters {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   text-align: center;
   margin-bottom: 2rem;
@@ -129,35 +138,14 @@ const applyFilter = () => {
   font-size: small;
 }
 
-.crucible-filters * {
-  display: inline-block;
-}
-@media (min-width: 480px) {
+@media (max-width: 412px) {
   .crucible-filters {
-    flex-direction: row;
+    flex-direction: column;
     padding: 0;
   }
 }
 
-@media (min-width: 768px) {
-  .crucible-filters {
-    max-width: 720px;
-    margin: 0 auto;
-  }
-}
-
-@media (min-width: 992px) {
-  .crucible-filters {
-    max-width: 960px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .crucible-filters {
-    max-width: 1200px;
-  }
-}
-.crucible-filters h4 {
+.crucible-filters p {
   padding: 0.5rem 1rem;
   margin-bottom: 0.25rem;
   border-radius: 2rem;
@@ -165,6 +153,7 @@ const applyFilter = () => {
   line-height: normal;
   cursor: pointer;
   transition: all 0.1s;
+  color: white;
 }
 
 .crucible-filters label:hover {

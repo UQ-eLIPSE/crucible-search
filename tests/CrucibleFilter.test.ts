@@ -13,7 +13,7 @@ describe("CrucibleFilter", () => {
     expect(wrapper.vm).toBeTruthy();
   });
   it("After click the category(Taxonomy), should render a drop down with list of filter Tags", async () => {
-    const label = wrapper.find(".crucible-filter-dropdown h4");
+    const label = wrapper.find(".crucible-filter-dropdown p");
     expect(wrapper.find("crucible-filter-dropdown-menu").exists()).toBe(false);
     label.trigger("click");
     await wrapper.vm.$nextTick();
@@ -21,7 +21,7 @@ describe("CrucibleFilter", () => {
   });
   it("should open the proper dropdown when click on the crosponding category", async () => {
     expect(wrapper.find("crucible-filter-dropdown-menu").exists()).toBe(false);
-    const labels = wrapper.findAll(".crucible-filter-dropdown h4");
+    const labels = wrapper.findAll(".crucible-filter-dropdown p");
 
     const index = 2;
     const label = labels[index];
