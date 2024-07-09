@@ -1,27 +1,36 @@
 <template>
-  <!-- <div class="crucible-filter-container"> -->
   <div class="crucible-filters">
-    <div class="crucible-filter-dropdown">
-      <label for="All" @click="resetFilter">All</label>
-    </div>
     <div
       v-for="(items, key) in category"
       :key="key"
       class="crucible-filter-dropdown"
     >
-      <label @click="toggleDropdown(key)">{{ key }}</label>
-      <ol v-show="showDropdown[key]" class="crucible-filter-dropdown-menu">
+      <h4 @click="toggleDropdown(key)">{{ key }}</h4>
+      <ul v-show="showDropdown[key]" class="crucible-filter-dropdown-menu">
         <li
           v-for="(item, index) in items"
           :key="index"
-          @click="getFilterTag(item)"
+          @click="getFilterTag(key, item)"
         >
           {{ item }}
         </li>
-      </ol>
+      </ul>
     </div>
   </div>
-  <!-- </div> -->
+  <div class="crucible-filter-collection">
+    <span
+      v-for="(item, key) in filterTagArray"
+      :key="key"
+      @click="filterTagArray.splice(key, 1)"
+    >
+      {{ item.split(":")[1].replace("_", " ") }}
+    </span>
+    <div v-if="filterTagArray.length === 0" class="crucible-filter-dropdown">
+      <span>All</span>
+    </div>
+    <button class="filter-btn" @click="applyFilter">Apply</button>
+    <button class="filter-btn" @click="resetFilter">Empty</button>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -30,6 +39,7 @@ import { ref } from "vue";
 import { taxonomyTags } from "@/resources";
 
 const showDropdown = ref({} as Record<string, boolean>);
+const filterTagArray = ref([] as string[]);
 
 // Convert to Taxonomy Category Object array
 const category = taxonomyTags.reduce(
@@ -55,12 +65,20 @@ const toggleDropdown = (key: string) => {
 };
 
 // Filter tags send to back end to filter resource
-const getFilterTag = (tag: string) => {
-  console.log(tag); //Todo: add API call to filter the results
+const getFilterTag = (key: string, tag: string) => {
+  showDropdown.value[key] = !showDropdown.value[key];
+  if (!filterTagArray.value.includes(`${key}:${tag.replace(" ", "_")}`)) {
+    filterTagArray.value.push(`${key}:${tag.replace(" ", "_")}`);
+  }
+  console.log(filterTagArray.value);
 };
 const resetFilter = () => {
   showDropdown.value = {};
+  filterTagArray.value = [];
   console.log("Resetting the filter"); //Todo: add API call to reset the filter
+};
+const applyFilter = () => {
+  console.log("Applying the filter", filterTagArray); //Todo: add API call to apply the filter
 };
 </script>
 <style scoped>
@@ -69,20 +87,21 @@ const resetFilter = () => {
   padding: 0;
 }
 
-ol {
+.crucible-filters ul {
   list-style: none;
 }
 
-li {
+.crucible-filters li {
   display: flex;
   flex-direction: column;
   margin-top: 0.5rem;
   padding: 0.5rem;
   border-radius: 0.5rem;
   background-color: rgb(215, 229, 242);
+  font-size: small;
 }
 
-li:hover {
+.crucible-filters li:hover {
   background: #cbcaca;
   cursor: pointer;
 }
@@ -95,7 +114,24 @@ li:hover {
   margin-bottom: 2rem;
   padding: 0 1rem;
 }
+.crucible-filter-collection {
+  display: flex;
+  justify-content: center;
+  align-items: last baseline;
+  margin-top: 1rem;
+}
+.crucible-filter-collection span {
+  padding: 0.5rem 1rem;
+  margin-right: 0.5rem;
+  border-radius: 2rem;
+  background: rgb(19, 144, 190);
+  color: white;
+  font-size: small;
+}
 
+.crucible-filters * {
+  display: inline-block;
+}
 @media (min-width: 480px) {
   .crucible-filters {
     flex-direction: row;
@@ -121,12 +157,7 @@ li:hover {
     max-width: 1200px;
   }
 }
-
-.crucible-filters * {
-  display: inline-block;
-}
-
-.crucible-filters label {
+.crucible-filters h4 {
   padding: 0.5rem 1rem;
   margin-bottom: 0.25rem;
   border-radius: 2rem;
@@ -145,5 +176,16 @@ li:hover {
 .crucible-filter-dropdown-menu {
   display: flex;
   flex-direction: column;
+}
+.filter-btn {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.3em 0.6em;
+  font-size: 0.8em;
+  font-weight: 500;
+  font-family: inherit;
+  transition: border-color 0.25s;
+  margin-left: 0.5rem;
+  background-color: rgb(64, 255, 47);
 }
 </style>
