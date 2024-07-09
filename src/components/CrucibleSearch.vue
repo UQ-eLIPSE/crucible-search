@@ -41,12 +41,20 @@ const isSearchTerm = (char: string) =>
   // for the highlighting of the <strong> elements for the dropdown menu
   searchTerm.value.toLowerCase().includes(char.toLowerCase());
 
+/** Replaces all underscores with spaces */
+const formatTag = (tag: string) => tag.replace(/_/g, " ");
+
+/** Replaces all spaces with underscores */
+const unformatTag = (tag: string) => tag.replace(/ /g, "_");
+
 const filterResults = async () => {
   if (searchTerm.value) {
     // fuzzy searched
     filteredTags.value = (
       await findTags(searchTerm.value, searchTagsApi)
     ).slice(0, maxSearchResults);
+
+    filteredTags.value = filteredTags.value.map(formatTag);
 
     dropdownVisible.value = true;
   } else {
@@ -61,7 +69,10 @@ const selectTag = (tag: string) => {
     ? filteredTags.value[0] // default to the first tag if not in the dropdown list
     : tag;
   dropdownVisible.value = false;
-  router.push({ path: "/search", query: { tag: searchTerm.value } });
+  router.push({
+    path: "/search",
+    query: { tag: unformatTag(searchTerm.value) },
+  });
 };
 
 const handleFocus = () => {
