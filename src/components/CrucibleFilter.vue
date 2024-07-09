@@ -29,6 +29,9 @@ import { ref } from "vue";
 //ToDo: inject the taxonomyTags from the Crucible Main platform
 import { taxonomyTags } from "@/resources";
 
+const showDropdown = ref({} as Record<string, boolean>);
+
+// Convert to Taxonomy Category Object array
 const category = taxonomyTags.reduce(
   (acc, tag) => {
     const [key, value] = tag.split(":");
@@ -41,7 +44,7 @@ const category = taxonomyTags.reduce(
   {} as Record<string, string[]>,
 );
 
-const showDropdown = ref({} as Record<string, boolean>);
+// function to toggle drop down
 const toggleDropdown = (key: string) => {
   showDropdown.value[key] = !showDropdown.value[key];
   Object.keys(showDropdown.value).forEach((k) => {
@@ -50,6 +53,8 @@ const toggleDropdown = (key: string) => {
     }
   });
 };
+
+// Filter tags send to back end to filter resource
 const getFilterTag = (tag: string) => {
   console.log(tag); //Todo: add API call to filter the results
 };
