@@ -29,9 +29,9 @@
       <div v-if="filterTagArray.length === 0" class="crucible-filter-dropdown">
         <span>All</span>
       </div>
-      <button class="filter-btn" @click="applyFilter">Apply</button>
-      <button class="filter-btn" @click="resetFilter">Empty</button>
     </div>
+    <button class="filter-btn" @click="applyFilter">Apply</button>
+    <button class="filter-btn" @click="resetFilter">Empty</button>
   </div>
 </template>
 
@@ -89,10 +89,10 @@ const applyFilter = () => {
 }
 .crucible-filter-panel {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
-  align-items: center;
-  margin-top: 1rem;
+  align-items: baseline;
+  padding: 0;
 }
 
 .crucible-filters ul {
@@ -102,12 +102,12 @@ const applyFilter = () => {
 .crucible-filters li {
   display: flex;
   flex-direction: column;
-  margin-top: 0.5rem;
-  padding: 0.5rem;
   border-radius: 0.5rem;
-  background-color: rgb(215, 229, 242);
+  background-color: rgb(173, 176, 179);
   font-size: small;
-  color: #49075e;
+  color: whitesmoke;
+  text-wrap: wrap;
+  max-width: 4rem;
 }
 
 .crucible-filters li:hover {
@@ -118,24 +118,9 @@ const applyFilter = () => {
 .crucible-filters {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-around;
   text-align: center;
-  margin-bottom: 2rem;
-  padding: 0 1rem;
-}
-.crucible-filter-collection {
-  display: flex;
-  justify-content: center;
-  align-items: last baseline;
-  margin-top: 1rem;
-}
-.crucible-filter-collection span {
-  padding: 0.5rem 1rem;
-  margin-right: 0.5rem;
-  border-radius: 2rem;
-  background: rgb(19, 144, 190);
-  color: white;
-  font-size: small;
+  min-width: 20rem;
 }
 
 @media (max-width: 412px) {
@@ -146,17 +131,16 @@ const applyFilter = () => {
 }
 
 .crucible-filters p {
-  padding: 0.5rem 1rem;
-  margin-bottom: 0.25rem;
+  margin: 0.25rem;
   border-radius: 2rem;
   min-width: 50px;
   line-height: normal;
   cursor: pointer;
   transition: all 0.1s;
-  color: white;
+  color: rgb(199, 199, 199);
 }
 
-.crucible-filters label:hover {
+.crucible-filters p:hover {
   background: rgb(19, 144, 190);
   color: white;
 }
@@ -165,6 +149,22 @@ const applyFilter = () => {
 .crucible-filter-dropdown-menu {
   display: flex;
   flex-direction: column;
+}
+.crucible-filter-collection {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: last baseline;
+  min-width: 5rem;
+}
+.crucible-filter-collection span {
+  margin: 1px;
+  margin-right: 0.5rem;
+  border-radius: 0.2rem;
+  background: rgb(19, 144, 190);
+  color: white;
+  font-size: small;
+  max-width: 4rem;
 }
 .filter-btn {
   border-radius: 8px;
@@ -175,6 +175,7 @@ const applyFilter = () => {
   font-family: inherit;
   transition: border-color 0.25s;
   margin-left: 0.5rem;
-  background-color: rgb(64, 255, 47);
+  background-color: rgb(255, 217, 0);
+  color: #49075e;
 }
 </style>

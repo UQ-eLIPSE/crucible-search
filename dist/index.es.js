@@ -1945,7 +1945,7 @@ const wo = [
   for (const [o, s] of t)
     n[o] = s;
   return n;
-}, xe = /* @__PURE__ */ je(Do, [["__scopeId", "data-v-8413d12c"]]), Io = (e) => (qt("data-v-af2f4df3"), e = e(), Ht(), e), Vo = { class: "crucible-filter-panel" }, jo = { class: "crucible-filters" }, Lo = ["onClick"], Mo = { class: "crucible-filter-dropdown-menu" }, Uo = ["onClick"], Bo = { class: "crucible-filter-collection" }, qo = ["onClick"], Ho = {
+}, xe = /* @__PURE__ */ je(Do, [["__scopeId", "data-v-8413d12c"]]), Io = (e) => (qt("data-v-1a723e93"), e = e(), Ht(), e), Vo = { class: "crucible-filter-panel" }, jo = { class: "crucible-filters" }, Lo = ["onClick"], Mo = { class: "crucible-filter-dropdown-menu" }, Uo = ["onClick"], Bo = { class: "crucible-filter-collection" }, qo = ["onClick"], Ho = {
   key: 0,
   class: "crucible-filter-dropdown"
 }, Go = /* @__PURE__ */ Io(() => /* @__PURE__ */ I("span", null, "All", -1)), Ko = [
@@ -1994,19 +1994,19 @@ const wo = [
           key: c,
           onClick: (i) => n.value.splice(c, 1)
         }, Q(r.split(":")[1].replace("_", " ")), 9, qo))), 128)),
-        n.value.length === 0 ? ($(), A("div", Ho, Ko)) : dt("", !0),
-        I("button", {
-          class: "filter-btn",
-          onClick: h
-        }, "Apply"),
-        I("button", {
-          class: "filter-btn",
-          onClick: u
-        }, "Empty")
-      ])
+        n.value.length === 0 ? ($(), A("div", Ho, Ko)) : dt("", !0)
+      ]),
+      I("button", {
+        class: "filter-btn",
+        onClick: h
+      }, "Apply"),
+      I("button", {
+        class: "filter-btn",
+        onClick: u
+      }, "Empty")
     ]));
   }
-}), At = /* @__PURE__ */ je(Wo, [["__scopeId", "data-v-af2f4df3"]]), zo = { id: "app" }, Fo = /* @__PURE__ */ ne({
+}), At = /* @__PURE__ */ je(Wo, [["__scopeId", "data-v-1a723e93"]]), zo = { id: "app" }, Fo = /* @__PURE__ */ ne({
   __name: "App",
   setup(e) {
     return (t, n) => {
