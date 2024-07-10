@@ -1,4 +1,4 @@
-import { staticResources, tags } from "@/resources";
+import { staticResources, tags, taxonomyTags } from "@/resources";
 import { ResourceInSearch } from "@/types";
 
 const fetchAllData = async (tag: string, getApisFromHost: string) => {
@@ -48,3 +48,16 @@ export const findTags = async (
     return [];
   }
 };
+
+export const taxonomyGroups = taxonomyTags.reduce(
+  (acc, tag) => {
+    const [taxonomy, tagValue] = Object.keys(tag)[0].split(":");
+    const resourceSize = Object.values(tag)[0];
+    if (!acc[taxonomy]) {
+      acc[taxonomy] = [];
+    }
+    acc[taxonomy].push({ [tagValue.replace("_", " ")]: resourceSize });
+    return acc;
+  },
+  {} as Record<string, object[]>,
+);

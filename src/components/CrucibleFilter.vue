@@ -2,10 +2,12 @@
   <div class="crucible-filter-container">
     <div v-if="showFilter" class="crucible-filter-panel">
       <div>
-        <button class="filter-btn" @click="applyFilter">Apply</button>
-        <button class="filter-btn" @click="resetFilter">Clear</button>
+        <FilterButton action-type="apply" @click="applyFilter" />
+        <FilterButton action-type="clear" @click="resetFilter" />
       </div>
       <hr />
+
+      <!-- Displaying selected filter tags -->
       <div class="crucible-filter-collection">
         <span
           v-for="(item, key) in filterTagArray"
@@ -15,9 +17,11 @@
           &#9746; {{ item.split(":")[1].replace("_", " ") }}
         </span>
       </div>
+
+      <!-- Selecting Filter tags from the Collection list -->
       <div class="crucible-filters">
         <div
-          v-for="(items, key) in category"
+          v-for="(items, key) in taxonomyGroups"
           :key="key"
           class="crucible-filter-dropdown"
         >
@@ -29,16 +33,22 @@
             <li
               v-for="(item, index) in items"
               :key="index"
-              :class="itemNames.includes(item) ? 'selected-filter-tag' : ''"
-              @click="getFilterTag(key, item)"
+              :class="
+                itemNames.includes(Object.keys(item)[0])
+                  ? 'selected-filter-tag'
+                  : ''
+              "
+              @click="getFilterTag(key, Object.keys(item)[0])"
             >
-              {{ item }}
+              {{ Object.keys(item)[0] }}
+              <span>({{ Object.values(item)[0] }})</span>
             </li>
           </ul>
         </div>
       </div>
     </div>
 
+    <!-- Controlling Filter panel visibility -->
     <button
       :class="
         showFilter
@@ -55,25 +65,15 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import CollapseBtn from "./CollapseBtn.vue";
+import FilterButton from "./FilterButton.vue";
 //ToDo: inject the taxonomyTags from the Crucible Main platform
-import { taxonomyTags } from "@/resources";
+import { taxonomyGroups } from "./DataAccessLayer";
 
 const showFilter = ref<boolean>(false);
 const showDropdown = ref({} as Record<string, boolean>);
 const filterTagArray = ref([] as string[]);
 
-// Convert to Taxonomy Category Object array
-const category = taxonomyTags.reduce(
-  (acc, tag) => {
-    const [key, value] = tag.split(":");
-    if (!acc[key]) {
-      acc[key] = [];
-    }
-    acc[key].push(value.replace("_", " "));
-    return acc;
-  },
-  {} as Record<string, string[]>,
-);
+// Convert to Taxonomy Object array with {taxonomy:{tag:resourceSize}}
 
 // function to toggle drop down
 const toggleDropdown = (key: string) => {
@@ -151,24 +151,7 @@ const applyFilter = () => {
   max-width: fit-content;
   margin-right: 0;
 }
-.filter-btn {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.3em 0.6em;
-  font-size: 0.8em;
-  font-weight: 600;
-  font-family: inherit;
-  transition: border-color 0.25s;
-  margin-top: 5px;
-  margin-left: 0.5rem;
-  background-color: transparent;
-  color: #49075e;
-  cursor: pointer;
-  border-color: #49075e;
-}
-.filter-btn:hover {
-  border-color: #9b0bc7;
-}
+
 hr {
   border: none;
   height: 1px;
