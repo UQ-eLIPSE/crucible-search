@@ -1,7 +1,7 @@
 <template>
   <div class="crucible-filter-container">
     <div v-if="showFilter" class="crucible-filter-panel">
-      <div>
+      <div class="crucible-filter-action">
         <FilterButton action-type="apply" @click="applyFilter" />
         <FilterButton action-type="clear" @click="resetFilter" />
       </div>
@@ -14,7 +14,8 @@
           :key="key"
           @click="filterTagArray.splice(key, 1), getItemNames"
         >
-          &#9746; {{ item.split(":")[1].replace("_", " ") }}
+          &#9746; <strong>{{ item.split(":")[0] }}</strong>
+          {{ item.split(":")[1].replace("_", " ") }}
         </span>
       </div>
 
@@ -106,6 +107,7 @@ const applyFilter = () => {
   margin: 0;
   padding: 0;
 }
+
 .crucible-filter-container {
   position: absolute;
   right: 0;
@@ -115,6 +117,7 @@ const applyFilter = () => {
   background-color: whitesmoke;
   z-index: 1;
 }
+
 .crucible-filter-control {
   min-height: fit-content;
   max-height: 100px;
@@ -142,6 +145,15 @@ const applyFilter = () => {
   cursor: pointer;
 }
 
+.crucible-filter-action {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  width: 80%;
+}
+
 .crucible-filter-panel {
   display: flex;
   flex-direction: column;
@@ -159,6 +171,7 @@ hr {
   margin: 1rem 0;
   width: 100%;
 }
+
 .crucible-filter-collection {
   display: flex;
   flex-direction: row;
@@ -168,13 +181,16 @@ hr {
   margin-bottom: 0.5rem;
   max-width: 20rem;
 }
+
 .crucible-filter-collection span {
   margin: 1px;
   margin-right: 0.5rem;
   border-radius: 0.2rem;
   cursor: pointer;
   color: #49075e;
+  background-color: white;
 }
+
 .crucible-filters {
   display: flex;
   flex-direction: column;
@@ -189,6 +205,7 @@ hr {
     padding: 0;
   }
 }
+
 .crucible-filters h4 {
   display: flex;
   justify-content: space-around;
@@ -206,6 +223,7 @@ hr {
   background: #cbcaca;
   color: #49075e;
 }
+
 .crucible-filters ul {
   display: flex;
   justify-content: center;
