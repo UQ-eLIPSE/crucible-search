@@ -1965,7 +1965,7 @@ const ko = [
       )
     }, Mo, 2));
   }
-}), Uo = /* @__PURE__ */ ue(Bo, [["__scopeId", "data-v-9d7c2026"]]), Ho = (e) => (dt("data-v-e54a9ee9"), e = e(), ht(), e), qo = { class: "crucible-filter-container" }, Go = {
+}), Uo = /* @__PURE__ */ ue(Bo, [["__scopeId", "data-v-9d7c2026"]]), Ho = (e) => (dt("data-v-bbfed99a"), e = e(), ht(), e), qo = { class: "crucible-filter-container" }, Go = {
   key: 0,
   class: "crucible-filter-panel"
 }, Ko = /* @__PURE__ */ Ho(() => /* @__PURE__ */ T("hr", null, null, -1)), zo = { class: "crucible-filter-collection" }, Wo = ["onClick"], Fo = { class: "crucible-filters" }, Qo = ["onClick"], Yo = { class: "crucible-filter-dropdown-menu" }, Jo = ["onClick"], Xo = /* @__PURE__ */ J({
@@ -2039,7 +2039,7 @@ const ko = [
       })
     ]));
   }
-}), Dt = /* @__PURE__ */ ue(Xo, [["__scopeId", "data-v-e54a9ee9"]]), Zo = { id: "app" }, er = { class: "main" }, tr = /* @__PURE__ */ J({
+}), Dt = /* @__PURE__ */ ue(Xo, [["__scopeId", "data-v-bbfed99a"]]), Zo = { id: "app" }, er = { class: "main" }, tr = /* @__PURE__ */ J({
   __name: "App",
   setup(e) {
     return (t, n) => {
