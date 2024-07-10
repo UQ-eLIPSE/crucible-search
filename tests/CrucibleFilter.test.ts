@@ -7,6 +7,8 @@ describe("CrucibleFilter", () => {
 
   beforeEach(() => {
     wrapper = mount(CrucibleFilter);
+    wrapper.find(".crucible-filter-control").trigger("click");
+    wrapper.vm.$nextTick();
   });
 
   it("should be a Vue component", () => {
