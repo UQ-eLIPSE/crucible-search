@@ -1,3 +1,29 @@
+<!--
+Component: CollapseBtn.vue
+
+Description:
+This Vue component renders a collapsible button using an SVG arrow icon. The arrow rotates 180 degrees to indicate the collapse state.
+
+Usage:
+1. Use the <CollapseBtn /> tag in your template.
+2. Bind the `showDropdown` prop to control the rotation of the arrow based on the collapse state.
+
+Example:
+<CollapseBtn :showDropdown="isDropdownShown" />
+
+Props:
+- showDropdown: Boolean (required)
+
+Styling:
+The component uses scoped CSS for basic styling and can be customized via external CSS as needed.
+
+Dependencies:
+- Vue 3
+
+Notes:
+- This component is developed in the Composition API.
+
+-->
 <template>
   <svg
     xmlns="http://www.w3.org/2000/svg"

@@ -40,20 +40,14 @@
     </div>
 
     <button
-      class="crucible-filter-control svg-background"
+      :class="
+        showFilter
+          ? 'crucible-filter-control svg-background'
+          : 'crucible-filter-control'
+      "
       @click="showFilter = !showFilter"
     >
-      <!-- <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="1em"
-        height="1em"
-        viewBox="0 0 16 16"
-      >
-        <path
-          fill="currentColor"
-          d="M8 0C3.582 0 0 1.119 0 2.5V4l6 6v5c0 .552.895 1 2 1s2-.448 2-1v-5l6-6V2.5C16 1.119 12.418 0 8 0M1.475 2.169c.374-.213.9-.416 1.52-.586C4.369 1.207 6.147 1 8 1s3.631.207 5.005.583c.62.17 1.146.372 1.52.586c.247.141.38.26.442.331c-.062.071-.195.19-.442.331c-.374.213-.9.416-1.52.586C11.631 3.793 9.853 4 8 4s-3.631-.207-5.005-.583c-.62-.17-1.146-.372-1.52-.586a1.741 1.741 0 0 1-.442-.331c.062-.071.195-.19.442-.331"
-        />
-      </svg> -->
+      <span v-if="!showFilter">Filters</span>
     </button>
   </div>
 </template>
@@ -64,10 +58,10 @@ import CollapseBtn from "./CollapseBtn.vue";
 //ToDo: inject the taxonomyTags from the Crucible Main platform
 import { taxonomyTags } from "@/resources";
 
-const showFilter = ref<boolean>(true);
+const showFilter = ref<boolean>(false);
 const showDropdown = ref({} as Record<string, boolean>);
 const filterTagArray = ref([] as string[]);
-// const itemNames = ref([] as string[]);
+
 // Convert to Taxonomy Category Object array
 const category = taxonomyTags.reduce(
   (acc, tag) => {
@@ -116,112 +110,46 @@ const applyFilter = () => {
   position: absolute;
   right: 0;
   display: flex;
-  align-items: top; /* Adjust alignment as needed */
+  align-items: top;
   gap: 0;
-
+  background-color: whitesmoke;
   z-index: 1;
 }
 .crucible-filter-control {
-  height: 20px;
+  min-height: fit-content;
+  max-height: 100px;
   border: none;
   padding: 0.3em 0.6em;
   text-align: center;
-  background-color: #e6e4e4;
-  color: #49075e;
-  font-weight: 600;
+  color: whitesmoke;
+  font-size: large;
+  font-weight: 400;
   text-align: center;
+  background-color: #49075e;
+  border-radius: 20px 0px 0px 20px;
 }
+
+.svg-background {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16"><path fill="white" d="M8 0C3.582 0 0 1.119 0 2.5V4l6 6v5c0 .552.895 1 2 1s2-.448 2-1v-5l6-6V2.5C16 1.119 12.418 0 8 0M1.475 2.169c.374-.213.9-.416 1.52-.586C4.369 1.207 6.147 1 8 1s3.631.207 5.005.583c.62.17 1.146.372 1.52.586c.247.141.38.26.442.331c-.062.071-.195.19-.442.331c-.374.213-.9.416-1.52.586C11.631 3.793 9.853 4 8 4s-3.631-.207-5.005-.583c-.62-.17-1.146-.372-1.52-.586a1.741 1.741 0 0 1-.442-.331c.062-.071.195-.19.442-.331"/></svg>');
+  background-size: 1em 1em;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.crucible-filter-control:hover {
+  opacity: 0.8;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
 .crucible-filter-panel {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 0.3rem;
-  background-color: #e6e4e4;
   max-width: fit-content;
   margin-right: 0;
-}
-
-hr {
-  border: none;
-  height: 1px;
-  background-color: #333;
-  margin: 1rem 0;
-  width: 100%;
-}
-
-.crucible-filters ul {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  list-style: none;
-}
-
-.crucible-filters li {
-  color: #49075e;
-  text-wrap: wrap;
-  max-width: 10rem;
-  margin: 3px;
-  font-weight: 500;
-}
-
-.crucible-filters li:hover {
-  cursor: pointer;
-}
-
-.crucible-filters {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  text-align: center;
-  min-width: 20rem;
-}
-
-@media (max-width: 412px) {
-  .crucible-filters {
-    flex-direction: column;
-    padding: 0;
-  }
-}
-
-.crucible-filters h4 {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  margin: 0.25rem;
-  border-radius: 2rem;
-  line-height: normal;
-  cursor: pointer;
-  transition: all 0.1s;
-  border: 1px solid #49075e;
-  color: #49075e;
-}
-
-.crucible-filters h4:hover {
-  background: #cbcaca;
-  color: #49075e;
-}
-
-.crucible-filter-dropdown,
-.crucible-filter-dropdown-menu {
-  display: flex;
-  flex-direction: column;
-}
-.crucible-filter-collection {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: last baseline;
-  margin-bottom: 0.5rem;
-  max-width: 20rem;
-}
-.crucible-filter-collection span {
-  margin: 1px;
-  margin-right: 0.5rem;
-  border-radius: 0.2rem;
-  cursor: pointer;
-  color: #49075e;
 }
 .filter-btn {
   border-radius: 8px;
@@ -241,15 +169,88 @@ hr {
 .filter-btn:hover {
   border-color: #9b0bc7;
 }
+hr {
+  border: none;
+  height: 1px;
+  background-color: #333;
+  margin: 1rem 0;
+  width: 100%;
+}
+.crucible-filter-collection {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: last baseline;
+  margin-bottom: 0.5rem;
+  max-width: 20rem;
+}
+.crucible-filter-collection span {
+  margin: 1px;
+  margin-right: 0.5rem;
+  border-radius: 0.2rem;
+  cursor: pointer;
+  color: #49075e;
+}
+.crucible-filters {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  text-align: center;
+  min-width: 20rem;
+}
+
+@media (max-width: 412px) {
+  .crucible-filters {
+    flex-direction: column;
+    padding: 0;
+  }
+}
+.crucible-filters h4 {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 0.25rem;
+  border-radius: 2rem;
+  line-height: normal;
+  cursor: pointer;
+  transition: all 0.1s;
+  border: 1px solid #49075e;
+  color: #49075e;
+}
+
+.crucible-filters h4:hover {
+  background: #cbcaca;
+  color: #49075e;
+}
+.crucible-filters ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+}
+
+.crucible-filters li {
+  color: #49075e;
+  text-wrap: wrap;
+  max-width: 10rem;
+  margin: 3px;
+  font-weight: 500;
+}
+
+.crucible-filters li:hover {
+  cursor: pointer;
+}
+
 .crucible-filters .selected-filter-tag {
   color: #333;
   cursor: default !important;
   border-radius: 0.5rem;
 }
-.svg-background {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16"><path fill="currentColor" d="M8 0C3.582 0 0 1.119 0 2.5V4l6 6v5c0 .552.895 1 2 1s2-.448 2-1v-5l6-6V2.5C16 1.119 12.418 0 8 0M1.475 2.169c.374-.213.9-.416 1.52-.586C4.369 1.207 6.147 1 8 1s3.631.207 5.005.583c.62.17 1.146.372 1.52.586c.247.141.38.26.442.331c-.062.071-.195.19-.442.331c-.374.213-.9.416-1.52.586C11.631 3.793 9.853 4 8 4s-3.631-.207-5.005-.583c-.62-.17-1.146-.372-1.52-.586a1.741 1.741 0 0 1-.442-.331c.062-.071.195-.19.442-.331"/></svg>');
-  background-size: 1em 1em;
-  background-repeat: no-repeat;
-  background-position: center;
+
+.crucible-filter-dropdown,
+.crucible-filter-dropdown-menu {
+  display: flex;
+  flex-direction: column;
 }
 </style>
