@@ -27,19 +27,18 @@ const buttonText = computed(() => buttonTextMap[actionType] || "Default");
 <style>
 .filter-btn {
   border-radius: 8px;
-
   padding: 0.2rem !important;
   font-size: 1rem;
   font-weight: 600;
   font-family: inherit;
-  transition: background-color 0.25s;
-  background-color: transparent;
+  transition: background-color 0.25s !important;
+  background-color: transparent !important;
   color: #49075e;
   cursor: pointer;
 }
 
 .filter-btn:hover {
-  background-color: #49075e;
-  color: white;
+  background-color: #49075e !important;
+  color: white !important;
 }
 </style>
