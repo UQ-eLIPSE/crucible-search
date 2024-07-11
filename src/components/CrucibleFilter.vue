@@ -30,21 +30,24 @@
             <span> {{ key }}</span>
             <CollapseBtn :show-dropdown="showDropdown[key]" />
           </h4>
-          <ul v-show="showDropdown[key]" class="crucible-filter-dropdown-menu">
-            <li
+          <div
+            v-show="showDropdown[key]"
+            class="row crucible-filter-dropdown-menu"
+          >
+            <div
               v-for="(item, index) in items"
               :key="index"
               :class="
                 itemNames.includes(Object.keys(item)[0])
-                  ? 'selected-filter-tag'
-                  : ''
+                  ? 'selected-filter-tag column'
+                  : 'column'
               "
               @click="getFilterTag(key, Object.keys(item)[0])"
             >
               {{ Object.keys(item)[0] }}
               <span>({{ Object.values(item)[0] }})</span>
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -52,14 +55,12 @@
     <!-- Controlling Filter panel visibility -->
     <button
       :class="
-        showFilter
-          ? 'crucible-filter-control svg-background'
-          : 'crucible-filter-control'
+        !showFilter
+          ? 'crucible-filter-control crucible-filter-control-light svg-background-dark'
+          : 'crucible-filter-control svg-background-light'
       "
       @click="showFilter = !showFilter"
-    >
-      <span v-if="!showFilter">Filters</span>
-    </button>
+    ></button>
   </div>
 </template>
 
@@ -116,24 +117,34 @@ const applyFilter = () => {
   gap: 0;
   background-color: whitesmoke;
   z-index: 1;
+  border-radius: 20px 0px 0px 20px;
 }
 
 .crucible-filter-control {
-  min-height: fit-content;
-  max-height: 100px;
-  border: none;
+  width: fit-content;
+  height: 100px;
   padding: 0.3em 0.6em;
   text-align: center;
   color: whitesmoke;
   font-size: large;
   font-weight: 400;
-  text-align: center;
   background-color: #49075e;
   border-radius: 20px 0px 0px 20px;
 }
 
-.svg-background {
+.crucible-filter-control-light {
+  background-color: transparent;
+}
+
+.svg-background-light {
   background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16"><path fill="white" d="M8 0C3.582 0 0 1.119 0 2.5V4l6 6v5c0 .552.895 1 2 1s2-.448 2-1v-5l6-6V2.5C16 1.119 12.418 0 8 0M1.475 2.169c.374-.213.9-.416 1.52-.586C4.369 1.207 6.147 1 8 1s3.631.207 5.005.583c.62.17 1.146.372 1.52.586c.247.141.38.26.442.331c-.062.071-.195.19-.442.331c-.374.213-.9.416-1.52.586C11.631 3.793 9.853 4 8 4s-3.631-.207-5.005-.583c-.62-.17-1.146-.372-1.52-.586a1.741 1.741 0 0 1-.442-.331c.062-.071.195-.19.442-.331"/></svg>');
+  background-size: 1em 1em;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.svg-background-dark {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16"><path fill="purple" d="M8 0C3.582 0 0 1.119 0 2.5V4l6 6v5c0 .552.895 1 2 1s2-.448 2-1v-5l6-6V2.5C16 1.119 12.418 0 8 0M1.475 2.169c.374-.213.9-.416 1.52-.586C4.369 1.207 6.147 1 8 1s3.631.207 5.005.583c.62.17 1.146.372 1.52.586c.247.141.38.26.442.331c-.062.071-.195.19-.442.331c-.374.213-.9.416-1.52.586C11.631 3.793 9.853 4 8 4s-3.631-.207-5.005-.583c-.62-.17-1.146-.372-1.52-.586a1.741 1.741 0 0 1-.442-.331c.062-.071.195-.19.442-.331"/></svg>');
   background-size: 1em 1em;
   background-repeat: no-repeat;
   background-position: center;
@@ -224,14 +235,14 @@ hr {
   color: #49075e;
 }
 
-.crucible-filters ul {
+.crucible-filters .row {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  list-style: none;
 }
 
-.crucible-filters li {
+.crucible-filters .column {
   color: #49075e;
   text-wrap: wrap;
   max-width: 10rem;
