@@ -1,78 +1,100 @@
 <template>
-  <div class="crucible-filter-panel">
-    <div class="crucible-filters">
-      <div
-        v-for="(items, key) in category"
-        :key="key"
-        class="crucible-filter-dropdown"
-      >
-        <p @click="toggleDropdown(key)">{{ key }}</p>
-        <ul v-show="showDropdown[key]" class="crucible-filter-dropdown-menu">
-          <li
-            v-for="(item, index) in items"
-            :key="index"
-            @click="getFilterTag(key, item)"
+  <div class="crucible-filter-container">
+    <div v-if="showFilter" class="crucible-filter-panel">
+      <div class="crucible-filter-action">
+        <FilterButton action-type="apply" @click="applyFilter" />
+        <FilterButton action-type="clear" @click="resetFilter" />
+      </div>
+      <hr />
+
+      <!-- Displaying selected filter tags -->
+      <div class="crucible-filter-collection">
+        <span
+          v-for="(item, key) in filterTagArray"
+          :key="key"
+          @click="filterTagArray.splice(key, 1), getItemNames"
+        >
+          &#9746; <strong>{{ item.split(":")[0] }}</strong>
+          {{ item.split(":")[1].replace("_", " ") }}
+        </span>
+      </div>
+
+      <!-- Selecting Filter tags from the Collection list -->
+      <div class="crucible-filters">
+        <div
+          v-for="(items, key) in taxonomyGroups"
+          :key="key"
+          class="crucible-filter-dropdown"
+        >
+          <h4 @click="toggleDropdown(key)">
+            <span> {{ key }}</span>
+            <CollapseBtn :show-dropdown="showDropdown[key]" />
+          </h4>
+          <div
+            v-show="showDropdown[key]"
+            class="row crucible-filter-dropdown-menu"
           >
-            {{ item }}
-          </li>
-        </ul>
+            <div
+              v-for="(item, index) in items"
+              :key="index"
+              :class="
+                itemNames.includes(Object.keys(item)[0])
+                  ? 'selected-filter-tag column'
+                  : 'column'
+              "
+              @click="getFilterTag(key, Object.keys(item)[0])"
+            >
+              {{ Object.keys(item)[0] }}
+              <span>({{ Object.values(item)[0] }})</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="crucible-filter-collection">
-      <span
-        v-for="(item, key) in filterTagArray"
-        :key="key"
-        @click="filterTagArray.splice(key, 1)"
-      >
-        {{ item.split(":")[1].replace("_", " ") }}
-      </span>
-      <div v-if="filterTagArray.length === 0" class="crucible-filter-dropdown">
-        <span>All</span>
-      </div>
-    </div>
-    <button class="filter-btn" @click="applyFilter">Apply</button>
-    <button class="filter-btn" @click="resetFilter">Empty</button>
+
+    <!-- Controlling Filter panel visibility -->
+    <button
+      :class="
+        !showFilter
+          ? 'crucible-filter-control crucible-filter-control-light svg-background-dark'
+          : 'crucible-filter-control svg-background-light'
+      "
+      @click="showFilter = !showFilter"
+    ></button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import CollapseBtn from "./CollapseBtn.vue";
+import FilterButton from "./FilterButton.vue";
 //ToDo: inject the taxonomyTags from the Crucible Main platform
-import { taxonomyTags } from "@/resources";
+import { taxonomyGroups } from "./DataAccessLayer";
 
+const showFilter = ref<boolean>(false);
 const showDropdown = ref({} as Record<string, boolean>);
 const filterTagArray = ref([] as string[]);
 
-// Convert to Taxonomy Category Object array
-const category = taxonomyTags.reduce(
-  (acc, tag) => {
-    const [key, value] = tag.split(":");
-    if (!acc[key]) {
-      acc[key] = [];
-    }
-    acc[key].push(value.replace("_", " "));
-    return acc;
-  },
-  {} as Record<string, string[]>,
-);
+// Convert to Taxonomy Object array with {taxonomy:{tag:resourceSize}}
 
 // function to toggle drop down
 const toggleDropdown = (key: string) => {
   showDropdown.value[key] = !showDropdown.value[key];
-  Object.keys(showDropdown.value).forEach((k) => {
-    if (k !== key) {
-      showDropdown.value[k] = false;
-    }
-  });
 };
 
 // Filter tags send to back end to filter resource
 const getFilterTag = (key: string, tag: string) => {
-  showDropdown.value[key] = !showDropdown.value[key];
-  if (!filterTagArray.value.includes(`${key}:${tag.replace(" ", "_")}`)) {
-    filterTagArray.value.push(`${key}:${tag.replace(" ", "_")}`);
+  const formattedTag = `${key}:${tag.replace(" ", "_")}`;
+  if (!filterTagArray.value.includes(formattedTag)) {
+    filterTagArray.value.push(formattedTag);
   }
 };
+const getItemNames = () => {};
+const itemNames = computed(() => {
+  return filterTagArray.value.map((item) =>
+    item.split(":")[1].replace("_", " "),
+  );
+});
 const resetFilter = () => {
   showDropdown.value = {};
   filterTagArray.value = [];
@@ -87,37 +109,103 @@ const applyFilter = () => {
   margin: 0;
   padding: 0;
 }
+
+.crucible-filter-container {
+  position: absolute;
+  right: 0;
+  display: flex;
+  align-items: top;
+  gap: 0;
+  background-color: whitesmoke;
+  z-index: 1;
+  border-radius: 20px 0px 0px 20px;
+}
+
+.crucible-filter-control {
+  width: fit-content;
+  height: 100px;
+  padding: 0.3em 0.6em;
+  text-align: center;
+  color: whitesmoke;
+  font-size: large;
+  font-weight: 400;
+  background-color: #49075e;
+  border-radius: 20px 0px 0px 20px;
+}
+
+.crucible-filter-control-light {
+  background-color: transparent;
+}
+
+.svg-background-light {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16"><path fill="white" d="M8 0C3.582 0 0 1.119 0 2.5V4l6 6v5c0 .552.895 1 2 1s2-.448 2-1v-5l6-6V2.5C16 1.119 12.418 0 8 0M1.475 2.169c.374-.213.9-.416 1.52-.586C4.369 1.207 6.147 1 8 1s3.631.207 5.005.583c.62.17 1.146.372 1.52.586c.247.141.38.26.442.331c-.062.071-.195.19-.442.331c-.374.213-.9.416-1.52.586C11.631 3.793 9.853 4 8 4s-3.631-.207-5.005-.583c-.62-.17-1.146-.372-1.52-.586a1.741 1.741 0 0 1-.442-.331c.062-.071.195-.19.442-.331"/></svg>');
+  background-size: 1em 1em;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.svg-background-dark {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16"><path fill="purple" d="M8 0C3.582 0 0 1.119 0 2.5V4l6 6v5c0 .552.895 1 2 1s2-.448 2-1v-5l6-6V2.5C16 1.119 12.418 0 8 0M1.475 2.169c.374-.213.9-.416 1.52-.586C4.369 1.207 6.147 1 8 1s3.631.207 5.005.583c.62.17 1.146.372 1.52.586c.247.141.38.26.442.331c-.062.071-.195.19-.442.331c-.374.213-.9.416-1.52.586C11.631 3.793 9.853 4 8 4s-3.631-.207-5.005-.583c-.62-.17-1.146-.372-1.52-.586a1.741 1.741 0 0 1-.442-.331c.062-.071.195-.19.442-.331"/></svg>');
+  background-size: 1em 1em;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.crucible-filter-control:hover {
+  opacity: 0.8;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.crucible-filter-action {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  width: 80%;
+}
+
 .crucible-filter-panel {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: baseline;
-  padding: 0;
-}
-
-.crucible-filters ul {
-  list-style: none;
-}
-
-.crucible-filters li {
-  display: flex;
   flex-direction: column;
-  border-radius: 0.5rem;
-  background-color: rgb(173, 176, 179);
-  font-size: small;
-  color: whitesmoke;
-  text-wrap: wrap;
-  max-width: 4rem;
+  justify-content: center;
+  align-items: center;
+  padding: 0.3rem;
+  max-width: fit-content;
+  margin-right: 0;
 }
 
-.crucible-filters li:hover {
-  background: #cbcaca;
+hr {
+  border: none;
+  height: 1px;
+  background-color: #333;
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.crucible-filter-collection {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: last baseline;
+  margin-bottom: 0.5rem;
+  max-width: 20rem;
+}
+
+.crucible-filter-collection span {
+  margin: 1px;
+  margin-right: 0.5rem;
+  border-radius: 0.2rem;
   cursor: pointer;
+  color: #49075e;
+  background-color: white;
 }
 
 .crucible-filters {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-around;
   text-align: center;
   min-width: 20rem;
@@ -130,52 +218,52 @@ const applyFilter = () => {
   }
 }
 
-.crucible-filters p {
+.crucible-filters h4 {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
   margin: 0.25rem;
   border-radius: 2rem;
-  min-width: 50px;
   line-height: normal;
   cursor: pointer;
   transition: all 0.1s;
-  color: rgb(199, 199, 199);
+  border: 1px solid #49075e;
+  color: #49075e;
 }
 
-.crucible-filters p:hover {
-  background: rgb(19, 144, 190);
-  color: white;
+.crucible-filters h4:hover {
+  background: #cbcaca;
+  color: #49075e;
+}
+
+.crucible-filters .row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.crucible-filters .column {
+  color: #49075e;
+  text-wrap: wrap;
+  max-width: 10rem;
+  margin: 3px;
+  font-weight: 500;
+}
+
+.crucible-filters li:hover {
+  cursor: pointer;
+}
+
+.crucible-filters .selected-filter-tag {
+  color: #333;
+  cursor: default !important;
+  border-radius: 0.5rem;
 }
 
 .crucible-filter-dropdown,
 .crucible-filter-dropdown-menu {
   display: flex;
   flex-direction: column;
-}
-.crucible-filter-collection {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: last baseline;
-  min-width: 5rem;
-}
-.crucible-filter-collection span {
-  margin: 1px;
-  margin-right: 0.5rem;
-  border-radius: 0.2rem;
-  background: rgb(19, 144, 190);
-  color: white;
-  font-size: small;
-  max-width: 4rem;
-}
-.filter-btn {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.3em 0.6em;
-  font-size: 0.8em;
-  font-weight: 500;
-  font-family: inherit;
-  transition: border-color 0.25s;
-  margin-left: 0.5rem;
-  background-color: rgb(255, 217, 0);
-  color: #49075e;
 }
 </style>
