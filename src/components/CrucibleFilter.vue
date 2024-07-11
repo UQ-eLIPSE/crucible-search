@@ -84,8 +84,9 @@ const toggleDropdown = (key: string) => {
 
 // Filter tags send to back end to filter resource
 const getFilterTag = (key: string, tag: string) => {
-  if (!filterTagArray.value.includes(`${key}:${tag.replace(" ", "_")}`)) {
-    filterTagArray.value.push(`${key}:${tag.replace(" ", "_")}`);
+  const formattedTag = `${key}:${tag.replace(" ", "_")}`;
+  if (!filterTagArray.value.includes(formattedTag)) {
+    filterTagArray.value.push(formattedTag);
   }
 };
 const getItemNames = () => {};
