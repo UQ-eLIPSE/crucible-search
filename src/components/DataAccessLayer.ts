@@ -1,5 +1,6 @@
 import { staticResources, tags, taxonomyTags } from "@/resources";
 import { ResourceInSearch } from "@/types";
+import { FilterSetTags } from "@/types";
 
 const fetchAllData = async (tag: string, getApisFromHost: string) => {
   try {
@@ -43,6 +44,20 @@ export const findTags = async (
 
     const uniqueTagsCollection = new Set<string>(tagsCollection);
     return Array.from(uniqueTagsCollection);
+  } catch (err) {
+    console.error("An error occurred while fetching tags", err);
+    return [];
+  }
+};
+
+export const getFilterSetTags = async (
+  filterSetApi: string,
+): Promise<FilterSetTags> => {
+  try {
+    const tagsCollectionResponse = await fetch(filterSetApi);
+    const tagsCollection = await tagsCollectionResponse.json();
+    console.log("tagsCollection", tagsCollectionResponse);
+    return tagsCollection as FilterSetTags;
   } catch (err) {
     console.error("An error occurred while fetching tags", err);
     return [];
