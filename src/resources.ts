@@ -37,4 +37,4 @@ export const taxonomyTags = [
   { "system:Respiratory_System": 15 },
   { "system:Exercise": 20 },
   { "animal:Horse": 10 },
-];
+] as Record<string, number>[];

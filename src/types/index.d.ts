@@ -4,6 +4,7 @@ export type PluginOptions = {
   getApi?: string;
   tagsApi?: string;
   filterSetApi?: string;
+  filterDataApi?: string;
 };
 
 export type ResourceInSearch = {
@@ -13,15 +14,12 @@ export type ResourceInSearch = {
   url: string;
 };
 
-export type FilterSetTags = {
-  string: number;
-}[];
-
 declare module "@vue/runtime-core" {
   interface ComponentCustomProperties {
     $router: string;
     $getApi: string;
     $tagsApi: string;
     $filterSetApi: string;
+    $filterDataApi: string;
   }
 }

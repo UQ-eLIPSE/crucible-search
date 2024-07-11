@@ -1,6 +1,5 @@
 import { staticResources, tags, taxonomyTags } from "@/resources";
 import { ResourceInSearch } from "@/types";
-import { FilterSetTags } from "@/types";
 
 const fetchAllData = async (tag: string, getApisFromHost: string) => {
   try {
@@ -50,29 +49,42 @@ export const findTags = async (
   }
 };
 
-export const getFilterSetTags = async (
+export const getFilterSetTagsFromApi = async (
   filterSetApi: string,
-): Promise<FilterSetTags> => {
+): Promise<Record<string, number>[]> => {
   try {
     const tagsCollectionResponse = await fetch(filterSetApi);
     const tagsCollection = await tagsCollectionResponse.json();
-    console.log("tagsCollection", tagsCollectionResponse);
-    return tagsCollection as FilterSetTags;
+    return tagsCollection;
   } catch (err) {
-    console.error("An error occurred while fetching tags", err);
+    alert(
+      "An error occurred while fetching tags" + err + "fallback to static tags",
+    );
     return [];
   }
 };
 
-export const taxonomyGroups = taxonomyTags.reduce(
-  (acc, tag) => {
-    const [taxonomy, tagValue] = Object.keys(tag)[0].split(":");
-    const resourceSize = Object.values(tag)[0];
-    if (!acc[taxonomy]) {
-      acc[taxonomy] = [];
-    }
-    acc[taxonomy].push({ [tagValue.replace("_", " ")]: resourceSize });
-    return acc;
-  },
-  {} as Record<string, object[]>,
-);
+export const getFilterSetTags = async (filterSetApi: string) => {
+  const tagsCollection = await getFilterSetTagsFromApi(filterSetApi);
+  return taxonomyGroups(tagsCollection);
+};
+
+export const taxonomyGroups = (taxonomyTags: Record<string, number>[]) => {
+  if (!taxonomyTags) {
+    return {};
+  }
+  return taxonomyTags.reduce(
+    (acc, tag) => {
+      const [taxonomy, tagValue] = Object.keys(tag)[0].split(":");
+      const resourceSize = Object.values(tag)[0];
+      if (!acc[taxonomy]) {
+        acc[taxonomy] = [];
+      }
+      acc[taxonomy].push({ [tagValue.replace("_", " ")]: resourceSize });
+      return acc;
+    },
+    {} as Record<string, object[]>,
+  );
+};
+
+export const staticFilterSetTags = taxonomyGroups(taxonomyTags);

@@ -71,19 +71,23 @@ import { ref, computed, inject, onMounted } from "vue";
 import CollapseBtn from "./CollapseBtn.vue";
 import FilterButton from "./FilterButton.vue";
 //ToDo: inject the taxonomyTags from the Crucible Main platform
-import { taxonomyGroups } from "./DataAccessLayer";
+import { staticFilterSetTags } from "./DataAccessLayer";
 import { getFilterSetTags } from "./DataAccessLayer";
-import { FilterSetTags } from "@/types";
 
 console.log("Taxonomy Groups", getFilterSetTags);
 
 const filterSetApi =
   (inject("$filterSetApi") as string) ||
   "http://localhost:8080/api/resource/getFilterSet";
+
+const filterDataApi =
+  (inject("$filterDataApi") as string) ||
+  "http://localhost:8080/api/resource/getFilterData";
+
 const showFilter = ref<boolean>(false);
 const showDropdown = ref({} as Record<string, boolean>);
 const filterTagArray = ref([] as string[]);
-const filterSetTags = ref<FilterSetTags | {}>({});
+const filterSetTags = ref<Record<string, object[]>>({});
 
 // Convert to Taxonomy Object array with {taxonomy:{tag:resourceSize}}
 
@@ -111,13 +115,16 @@ const resetFilter = () => {
 };
 
 const applyFilter = () => {
+  console.log(filterDataApi);
   console.log("Applying the filter", filterTagArray); //Todo: add API call to apply the filter
 };
 
 onMounted(async () => {
-  // getFilterSetTags(filterSetApi);
+  const filterSetFromApi = await getFilterSetTags(filterSetApi);
   filterSetTags.value =
-    (await getFilterSetTags(filterSetApi)) || taxonomyGroups;
+    Object.keys(filterSetFromApi).length > 0
+      ? filterSetFromApi
+      : staticFilterSetTags;
 });
 </script>
 <style scoped>
