@@ -73,7 +73,6 @@ import FilterButton from "./FilterButton.vue";
 //ToDo: inject the taxonomyTags from the Crucible Main platform
 import { staticFilterSetTags } from "./DataAccessLayer";
 import { getFilterSetTags } from "./DataAccessLayer";
-const emit = defineEmits(["updateFilterTagArray"]);
 
 const filterSetApi =
   (inject("$filterSetApi") as string) ||
@@ -87,8 +86,6 @@ const showFilter = ref<boolean>(false);
 const showDropdown = ref({} as Record<string, boolean>);
 const filterTagArray = ref([] as string[]);
 const filterSetTags = ref<Record<string, object[]>>({});
-
-// Convert to Taxonomy Object array with {taxonomy:{tag:resourceSize}}
 
 // function to toggle drop down
 const toggleDropdown = (key: string) => {
@@ -120,9 +117,8 @@ const resetFilter = () => {
 
 const applyFilter = () => {
   console.log(filterDataApi);
-  console.log("Applying the filter", filterTagArray); //Todo: add API call to apply the filter or using like <CrucibleFilter @update-filter-tag-array="handleFilterRef" />?
+  console.log("Applying the filter", filterTagArray); //Todo: add API call to apply the filter
 };
-emit("updateFilterTagArray", filterTagArray);
 
 onMounted(async () => {
   const filterSetFromApi = await getFilterSetTags(filterSetApi);
