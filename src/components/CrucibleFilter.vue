@@ -79,10 +79,6 @@ const filterSetApi =
   (inject("$filterSetApi") as string) ||
   "http://localhost:8080/api/resource/getFilterSet";
 
-const filterDataApi =
-  (inject("$filterDataApi") as string) ||
-  "http://localhost:8080/api/resource/getFilterData";
-
 const showFilter = ref<boolean>(false);
 const showDropdown = ref({} as Record<string, boolean>);
 const filterTagArray = ref([] as string[]);
@@ -117,10 +113,8 @@ const resetFilter = () => {
 };
 
 const applyFilter = () => {
-  console.log(filterDataApi);
-  console.log("Applying the filter", filterTagArray); //Todo: add API call to apply the filter or using like <CrucibleFilter @update-filter-tag-array="handleFilterRef" />?
+  emit("updateFilterTagArray", filterTagArray);
 };
-emit("updateFilterTagArray", filterTagArray);
 
 onMounted(async () => {
   const filterSetFromApi = await getFilterSetTags(filterSetApi);

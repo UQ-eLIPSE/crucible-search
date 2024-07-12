@@ -4,7 +4,6 @@ export type PluginOptions = {
   getApi?: string;
   tagsApi?: string;
   filterSetApi?: string;
-  filterDataApi?: string;
 };
 
 export type ResourceInSearch = {
@@ -20,6 +19,5 @@ declare module "@vue/runtime-core" {
     $getApi: string;
     $tagsApi: string;
     $filterSetApi: string;
-    $filterDataApi: string;
   }
 }

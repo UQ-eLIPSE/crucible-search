@@ -6,7 +6,7 @@ import CollapseBtn from "./components/CollapseBtn.vue";
 import { PluginOptions } from "./types";
 
 export function createSearchPlugin(app: App, options: PluginOptions) {
-  const { router, getApi, tagsApi, filterSetApi, filterDataApi } = options;
+  const { router, getApi, tagsApi, filterSetApi } = options;
 
   // Register plugin components
   app.component("CrucibleSearch", CrucibleSearch);
@@ -17,7 +17,6 @@ export function createSearchPlugin(app: App, options: PluginOptions) {
   app.provide("$getApi", getApi);
   app.provide("$tagsApi", tagsApi);
   app.provide("$tagsApi", filterSetApi);
-  app.provide("$filterDataApi", filterDataApi);
 
   // Add plugin routes to the existing router
   router.addRoute({ path: "/search", component: DisplayResult });
