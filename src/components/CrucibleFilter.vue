@@ -73,7 +73,7 @@ import FilterButton from "./FilterButton.vue";
 //ToDo: inject the taxonomyTags from the Crucible Main platform
 import { staticFilterSetTags } from "./DataAccessLayer";
 import { getFilterSetTags } from "./DataAccessLayer";
-
+const emit = defineEmits(["updateFilterTagArray"]);
 console.log("Taxonomy Groups", getFilterSetTags);
 
 const filterSetApi =
@@ -101,6 +101,11 @@ const getFilterTag = (key: string, tag: string) => {
   const formattedTag = `${key}:${tag.replace(" ", "_")}`;
   if (!filterTagArray.value.includes(formattedTag)) {
     filterTagArray.value.push(formattedTag);
+  } else {
+    // deleted existing tag
+    filterTagArray.value = filterTagArray.value.filter(
+      (item) => item !== formattedTag,
+    );
   }
 };
 const getItemNames = () => {};
@@ -116,8 +121,9 @@ const resetFilter = () => {
 
 const applyFilter = () => {
   console.log(filterDataApi);
-  console.log("Applying the filter", filterTagArray); //Todo: add API call to apply the filter
+  console.log("Applying the filter", filterTagArray); //Todo: add API call to apply the filter or using like <CrucibleFilter @update-filter-tag-array="handleFilterRef" />?
 };
+emit("updateFilterTagArray", filterTagArray);
 
 onMounted(async () => {
   const filterSetFromApi = await getFilterSetTags(filterSetApi);

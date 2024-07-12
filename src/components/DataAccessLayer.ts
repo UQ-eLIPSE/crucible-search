@@ -48,7 +48,7 @@ export const findTags = async (
     return [];
   }
 };
-
+//Api call to get the FilterSetTags(Taxonomy tags only) from Server
 export const getFilterSetTagsFromApi = async (
   filterSetApi: string,
 ): Promise<Record<string, number>[]> => {
@@ -64,11 +64,13 @@ export const getFilterSetTagsFromApi = async (
   }
 };
 
+// Convert result from getFilterSetTagsFromApi to FilterSetTags
 export const getFilterSetTags = async (filterSetApi: string) => {
   const tagsCollection = await getFilterSetTagsFromApi(filterSetApi);
   return taxonomyGroups(tagsCollection);
 };
 
+// Convert the [{"Taxonomy: tag": resourcesSize}] into FilterSetTags: [{taxonomy: {tag: resourceSize}}]
 export const taxonomyGroups = (taxonomyTags: Record<string, number>[]) => {
   if (!taxonomyTags) {
     return {};
@@ -87,4 +89,5 @@ export const taxonomyGroups = (taxonomyTags: Record<string, number>[]) => {
   );
 };
 
+// In Case API not available
 export const staticFilterSetTags = taxonomyGroups(taxonomyTags);
