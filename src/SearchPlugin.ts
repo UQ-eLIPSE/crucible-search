@@ -16,7 +16,7 @@ export function createSearchPlugin(app: App, options: PluginOptions) {
   app.provide("$router", router);
   app.provide("$getApi", getApi);
   app.provide("$tagsApi", tagsApi);
-  app.provide("$tagsApi", filterSetApi);
+  app.provide("$filterSetApi", filterSetApi);
 
   // Add plugin routes to the existing router
   router.addRoute({ path: "/search", component: DisplayResult });
