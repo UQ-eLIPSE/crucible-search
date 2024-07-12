@@ -12,17 +12,19 @@
         <span
           v-for="(item, key) in filterTagArray"
           :key="key"
-          @click="filterTagArray.splice(key, 1), getItemNames"
+          @click="filterTagArray.splice(key, 1)"
         >
           &#9746; <strong>{{ item.split(":")[0] }}</strong>
-          {{ item.split(":")[1].replace("_", " ") }}
+          <span class="capital-first"
+            >{{ item.split(":")[1].replace("_", " ") }}
+          </span>
         </span>
       </div>
 
       <!-- Selecting Filter tags from the Collection list -->
       <div class="crucible-filters">
         <div
-          v-for="(items, key) in taxonomyGroups"
+          v-for="(items, key) in filterSetTags"
           :key="key"
           class="crucible-filter-dropdown"
         >
@@ -65,17 +67,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, inject, onMounted } from "vue";
 import CollapseBtn from "./CollapseBtn.vue";
 import FilterButton from "./FilterButton.vue";
 //ToDo: inject the taxonomyTags from the Crucible Main platform
-import { taxonomyGroups } from "./DataAccessLayer";
+import { staticFilterSetTags } from "./DataAccessLayer";
+import { getFilterSetTags } from "./DataAccessLayer";
+const emit = defineEmits(["updateFilterTagArray"]);
+
+const filterSetApi =
+  (inject("$filterSetApi") as string) ||
+  "http://localhost:8080/api/resource/getFilterSet";
 
 const showFilter = ref<boolean>(false);
 const showDropdown = ref({} as Record<string, boolean>);
 const filterTagArray = ref([] as string[]);
-
-// Convert to Taxonomy Object array with {taxonomy:{tag:resourceSize}}
+const filterSetTags = ref<Record<string, object[]>>({});
 
 // function to toggle drop down
 const toggleDropdown = (key: string) => {
@@ -87,9 +94,14 @@ const getFilterTag = (key: string, tag: string) => {
   const formattedTag = `${key}:${tag.replace(" ", "_")}`;
   if (!filterTagArray.value.includes(formattedTag)) {
     filterTagArray.value.push(formattedTag);
+  } else {
+    // deleted existing tag
+    filterTagArray.value = filterTagArray.value.filter(
+      (item) => item !== formattedTag,
+    );
   }
 };
-const getItemNames = () => {};
+
 const itemNames = computed(() => {
   return filterTagArray.value.map((item) =>
     item.split(":")[1].replace("_", " "),
@@ -101,8 +113,16 @@ const resetFilter = () => {
 };
 
 const applyFilter = () => {
-  console.log("Applying the filter", filterTagArray); //Todo: add API call to apply the filter
+  emit("updateFilterTagArray", filterTagArray);
 };
+
+onMounted(async () => {
+  const filterSetFromApi = await getFilterSetTags(filterSetApi);
+  filterSetTags.value =
+    Object.keys(filterSetFromApi).length > 0
+      ? filterSetFromApi
+      : staticFilterSetTags;
+});
 </script>
 <style scoped>
 * {
@@ -265,5 +285,9 @@ hr {
 .crucible-filter-dropdown-menu {
   display: flex;
   flex-direction: column;
+}
+
+.capital-first {
+  text-transform: capitalize;
 }
 </style>

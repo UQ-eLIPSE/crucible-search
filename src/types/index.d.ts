@@ -3,6 +3,7 @@ export type PluginOptions = {
   router: Router;
   getApi?: string;
   tagsApi?: string;
+  filterSetApi?: string;
 };
 
 export type ResourceInSearch = {
@@ -17,5 +18,6 @@ declare module "@vue/runtime-core" {
     $router: string;
     $getApi: string;
     $tagsApi: string;
+    $filterSetApi: string;
   }
 }
