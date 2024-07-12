@@ -12,7 +12,7 @@
         <span
           v-for="(item, key) in filterTagArray"
           :key="key"
-          @click="filterTagArray.splice(key, 1), getItemNames"
+          @click="filterTagArray.splice(key, 1)"
         >
           &#9746; <strong>{{ item.split(":")[0] }}</strong>
           <span class="capital-first"
@@ -74,7 +74,6 @@ import FilterButton from "./FilterButton.vue";
 import { staticFilterSetTags } from "./DataAccessLayer";
 import { getFilterSetTags } from "./DataAccessLayer";
 const emit = defineEmits(["updateFilterTagArray"]);
-console.log("Taxonomy Groups", getFilterSetTags);
 
 const filterSetApi =
   (inject("$filterSetApi") as string) ||
@@ -108,7 +107,7 @@ const getFilterTag = (key: string, tag: string) => {
     );
   }
 };
-const getItemNames = () => {};
+
 const itemNames = computed(() => {
   return filterTagArray.value.map((item) =>
     item.split(":")[1].replace("_", " "),
