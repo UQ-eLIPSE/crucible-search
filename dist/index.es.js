@@ -1902,12 +1902,14 @@ const No = [
   } catch (t) {
     return alert(
       "An error occurred while fetching tags" + t + "fallback to static tags"
-    ), [];
+    ), {};
   }
 }, Io = async (e) => {
-  const t = await Do(e);
-  return Vt(t);
-}, Vt = (e) => e ? Array.from(e).reduce(
+  const t = await Do(e), n = Object.keys(t).map((o) => ({
+    [o]: t[o]
+  }));
+  return Vt(n);
+}, Vt = (e) => e ? e.reduce(
   (t, n) => {
     const [o, r] = Object.keys(n)[0].split(":"), c = Object.values(n)[0];
     return t[o] || (t[o] = []), t[o].push({ [r.replace("_", " ")]: c }), t;

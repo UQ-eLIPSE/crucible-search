@@ -51,7 +51,7 @@ export const findTags = async (
 //Api call to get the FilterSetTags(Taxonomy tags only) from Server
 export const getFilterSetTagsFromApi = async (
   filterSetApi: string,
-): Promise<Record<string, number>[]> => {
+): Promise<Record<string, number>> => {
   try {
     const tagsCollectionResponse = await fetch(filterSetApi);
     const tagsCollection = await tagsCollectionResponse.json();
@@ -60,25 +60,31 @@ export const getFilterSetTagsFromApi = async (
     alert(
       "An error occurred while fetching tags" + err + "fallback to static tags",
     );
-    return [];
+    return {};
   }
 };
 
 // Convert result from getFilterSetTagsFromApi to FilterSetTags
 export const getFilterSetTags = async (filterSetApi: string) => {
-  const tagsCollection = await getFilterSetTagsFromApi(filterSetApi);
-  return taxonomyGroups(tagsCollection);
+  const tagsCollection: { [key: string]: number } =
+    await getFilterSetTagsFromApi(filterSetApi);
+  const tagList = Object.keys(tagsCollection).map((key: string) => ({
+    [key]: tagsCollection[key],
+  }));
+  return taxonomyGroups(tagList);
 };
 
 // Convert the [{"Taxonomy: tag": resourcesSize}] into FilterSetTags: [{taxonomy: {tag: resourceSize}}]
-export const taxonomyGroups = (taxonomyTags: Record<string, number>[]) => {
-  if (!taxonomyTags) {
+export const taxonomyGroups = (taxonomyTagList: Record<string, number>[]) => {
+  if (!taxonomyTagList) {
     return {};
   }
-  return Array.from(taxonomyTags).reduce(
+
+  return taxonomyTagList.reduce(
     (acc, tag) => {
       const [taxonomy, tagValue] = Object.keys(tag)[0].split(":");
       const resourceSize = Object.values(tag)[0];
+
       if (!acc[taxonomy]) {
         acc[taxonomy] = [];
       }
