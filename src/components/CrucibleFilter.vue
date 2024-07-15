@@ -249,6 +249,7 @@ hr {
   transition: all 0.1s;
   border: 1px solid #49075e;
   color: #49075e;
+  text-transform: capitalize;
 }
 
 .crucible-filters h4:hover {
@@ -271,7 +272,7 @@ hr {
   font-weight: 500;
 }
 
-.crucible-filters li:hover {
+.crucible-filters .column:hover {
   cursor: pointer;
 }
 
