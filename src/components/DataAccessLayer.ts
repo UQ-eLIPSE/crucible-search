@@ -75,7 +75,7 @@ export const taxonomyGroups = (taxonomyTags: Record<string, number>[]) => {
   if (!taxonomyTags) {
     return {};
   }
-  return taxonomyTags.reduce(
+  return Array.from(taxonomyTags).reduce(
     (acc, tag) => {
       const [taxonomy, tagValue] = Object.keys(tag)[0].split(":");
       const resourceSize = Object.values(tag)[0];
