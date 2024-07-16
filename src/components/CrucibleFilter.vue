@@ -28,14 +28,14 @@
           :key="key"
           class="crucible-filter-dropdown"
         >
-          <h4 @click="toggleDropdown(key)">
+          <h4
+            :class="showDropdown[key] ? 'selected-background' : ''"
+            @click="toggleDropdown(key)"
+          >
             <span> {{ key }}</span>
             <CollapseBtn :show-dropdown="showDropdown[key]" />
           </h4>
-          <div
-            v-show="showDropdown[key]"
-            class="row crucible-filter-dropdown-menu"
-          >
+          <div v-show="showDropdown[key]" class="crucible-filter-dropdown-menu">
             <div
               v-for="(item, index) in items"
               :key="index"
@@ -248,26 +248,21 @@ hr {
 
 .crucible-filters h4 {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   margin: 0.25rem;
+  padding: 0 0.5rem 0 0.5rem;
   border-radius: 2rem;
   line-height: normal;
   cursor: pointer;
   transition: all 0.1s;
-  background-color: rgb(236, 211, 250);
-  color: #49075e;
+  border: 1px solid #353535;
   text-transform: capitalize;
-}
-
-.crucible-filters h4:hover {
-  background: #cbcaca;
-  color: #49075e;
 }
 
 .crucible-filters .column {
   display: flex;
-  color: #201a20;
+  color: #49075e;
   text-wrap: wrap;
   margin: 3px;
   font-weight: 500;
@@ -289,10 +284,14 @@ hr {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  width: 100%;
+  width: 90%;
   justify-content: space-between;
+  padding: 0 0.5rem 0 0.5rem;
 }
-
+.selected-background {
+  background-color: #ffffff;
+  color: #49075e;
+}
 .crucible-filter-dropdown-menu label {
   flex-grow: 1;
   margin-left: 2px;
