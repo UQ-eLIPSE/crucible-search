@@ -33,6 +33,8 @@ export const tags = ["VET2011"];
 export const taxonomyTags = [
   { "course:VETS2011": 10 },
   { "course:VETS2012": 10 },
+  { "course:VETS3012": 10 },
+  { "course:VETS4012": 10 },
   { "subject:Physiology": 20 },
   { "system:Respiratory_System": 15 },
   { "system:Exercise": 20 },

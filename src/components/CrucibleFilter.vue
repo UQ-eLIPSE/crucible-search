@@ -7,7 +7,7 @@
       </div>
       <hr />
 
-      <!-- Displaying selected filter tags -->
+      <!-- Selected Tags Section: Displaying selected filter tags -->
       <div class="crucible-filter-collection">
         <span
           v-for="(item, key) in filterTagArray"
@@ -21,7 +21,7 @@
         </span>
       </div>
 
-      <!-- Selecting Filter tags from the Collection list -->
+      <!--Filter Options Section: Selecting Filter tags from the Collection list -->
       <div class="crucible-filters">
         <div
           v-for="(items, key) in filterSetTags"
@@ -44,10 +44,19 @@
                   ? 'selected-filter-tag column'
                   : 'column'
               "
-              @click="getFilterTag(key, Object.keys(item)[0])"
             >
-              {{ Object.keys(item)[0] }}
-              <span>({{ Object.values(item)[0] }})</span>
+              <input
+                :id="`tag` + key + index.toString()"
+                type="checkbox"
+                :value="Object.keys(item)[0]"
+                @click="getFilterTag(key, Object.keys(item)[0])"
+              />
+              <label :for="`tag` + key + index.toString()">
+                <span>
+                  {{ Object.keys(item)[0] }}
+                </span>
+                <span> ({{ Object.values(item)[0] }}) </span>
+              </label>
             </div>
           </div>
         </div>
@@ -70,7 +79,6 @@
 import { ref, computed, inject, onMounted } from "vue";
 import CollapseBtn from "./CollapseBtn.vue";
 import FilterButton from "./FilterButton.vue";
-//ToDo: inject the taxonomyTags from the Crucible Main platform
 import { staticFilterSetTags } from "./DataAccessLayer";
 import { getFilterSetTags } from "./DataAccessLayer";
 const emit = defineEmits(["updateFilterTagArray"]);
@@ -208,7 +216,7 @@ hr {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-between;
   align-items: last baseline;
   margin-bottom: 0.5rem;
   max-width: 20rem;
@@ -247,7 +255,7 @@ hr {
   line-height: normal;
   cursor: pointer;
   transition: all 0.1s;
-  border: 1px solid #49075e;
+  background-color: rgb(236, 211, 250);
   color: #49075e;
   text-transform: capitalize;
 }
@@ -257,20 +265,14 @@ hr {
   color: #49075e;
 }
 
-.crucible-filters .row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-}
-
 .crucible-filters .column {
-  color: #49075e;
+  display: flex;
+  color: #201a20;
   text-wrap: wrap;
-  max-width: 10rem;
   margin: 3px;
   font-weight: 500;
   text-transform: capitalize;
+  text-align: justify;
 }
 
 .crucible-filters .column:hover {
@@ -278,15 +280,27 @@ hr {
 }
 
 .crucible-filters .selected-filter-tag {
-  color: #333;
+  color: #666666;
   cursor: default !important;
   border-radius: 0.5rem;
 }
 
-.crucible-filter-dropdown,
 .crucible-filter-dropdown-menu {
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.crucible-filter-dropdown-menu label {
+  flex-grow: 1;
+  margin-left: 2px;
+  display: flex;
+  justify-content: space-between;
+}
+.column label span {
+  display: inline-block;
 }
 
 .capital-first {
