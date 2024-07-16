@@ -270,6 +270,7 @@ hr {
   max-width: 10rem;
   margin: 3px;
   font-weight: 500;
+  text-transform: capitalize;
 }
 
 .crucible-filters .column:hover {
