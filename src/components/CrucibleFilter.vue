@@ -46,12 +46,12 @@
               "
             >
               <input
-                :id="`tag&{key}&{index.toString()}`"
+                :id="`tag-${key}-${index.toString()}`"
                 type="checkbox"
                 :value="Object.keys(item)[0]"
                 @click="getFilterTag(key, Object.keys(item)[0])"
               />
-              <label :for="`tag&{key}&{index.toString()}`">
+              <label :for="`tag-${key}-${index.toString()}`">
                 <span>
                   {{ Object.keys(item)[0] }}
                 </span>

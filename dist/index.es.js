@@ -2004,10 +2004,10 @@ const No = [
       onClick: d[0] || (d[0] = (u) => n("click", c.actionType))
     }, M(i.value), 1));
   }
-}), Wo = (e) => (ht("data-v-eefe5a08"), e = e(), pt(), e), Qo = { class: "crucible-filter-container" }, Yo = {
+}), Wo = (e) => (ht("data-v-b30e3c38"), e = e(), pt(), e), Qo = { class: "crucible-filter-container" }, Yo = {
   key: 0,
   class: "crucible-filter-panel"
-}, Jo = { class: "crucible-filter-action" }, Xo = /* @__PURE__ */ Wo(() => /* @__PURE__ */ O("hr", null, null, -1)), Zo = { class: "crucible-filter-collection" }, er = ["onClick"], tr = { class: "capital-first" }, nr = { class: "crucible-filters" }, or = ["onClick"], rr = { class: "crucible-filter-dropdown-menu" }, sr = ["value", "onClick"], ar = { for: "tag&{key}&{index.toString()}" }, ir = /* @__PURE__ */ z({
+}, Jo = { class: "crucible-filter-action" }, Xo = /* @__PURE__ */ Wo(() => /* @__PURE__ */ O("hr", null, null, -1)), Zo = { class: "crucible-filter-collection" }, er = ["onClick"], tr = { class: "capital-first" }, nr = { class: "crucible-filters" }, or = ["onClick"], rr = { class: "crucible-filter-dropdown-menu" }, sr = ["id", "value", "onClick"], ar = ["for"], ir = /* @__PURE__ */ z({
   __name: "CrucibleFilter",
   emits: ["updateFilterTagArray"],
   setup(e, { emit: t }) {
@@ -2073,15 +2073,17 @@ const No = [
                 )
               }, [
                 O("input", {
-                  id: "tag&{key}&{index.toString()}",
+                  id: `tag-${b}-${w.toString()}`,
                   type: "checkbox",
                   value: Object.keys(E)[0],
                   onClick: (N) => h(b, Object.keys(E)[0])
                 }, null, 8, sr),
-                O("label", ar, [
+                O("label", {
+                  for: `tag-${b}-${w.toString()}`
+                }, [
                   O("span", null, M(Object.keys(E)[0]), 1),
                   O("span", null, " (" + M(Object.values(E)[0]) + ") ", 1)
-                ])
+                ], 8, ar)
               ], 2))), 128))
             ], 512), [
               [Qt, i.value[b]]
@@ -2097,7 +2099,7 @@ const No = [
       }, null, 2)
     ]));
   }
-}), Lt = /* @__PURE__ */ fe(ir, [["__scopeId", "data-v-eefe5a08"]]), cr = { id: "app" }, lr = { class: "main" }, ur = /* @__PURE__ */ z({
+}), Lt = /* @__PURE__ */ fe(ir, [["__scopeId", "data-v-b30e3c38"]]), cr = { id: "app" }, lr = { class: "main" }, ur = /* @__PURE__ */ z({
   __name: "App",
   setup(e) {
     return (t, n) => {
