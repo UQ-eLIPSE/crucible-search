@@ -7,7 +7,7 @@
       </div>
       <hr />
 
-      <!-- Displaying selected filter tags -->
+      <!-- Selected Tags Section: Displaying selected filter tags -->
       <div class="crucible-filter-collection">
         <span
           v-for="(item, key) in filterTagArray"
@@ -21,21 +21,21 @@
         </span>
       </div>
 
-      <!-- Selecting Filter tags from the Collection list -->
+      <!--Filter Options Section: Selecting Filter tags from the Collection list -->
       <div class="crucible-filters">
         <div
           v-for="(items, key) in filterSetTags"
           :key="key"
           class="crucible-filter-dropdown"
         >
-          <h4 @click="toggleDropdown(key)">
+          <h4
+            :class="showDropdown[key] ? 'selected-background' : ''"
+            @click="toggleDropdown(key)"
+          >
             <span> {{ key }}</span>
             <CollapseBtn :show-dropdown="showDropdown[key]" />
           </h4>
-          <div
-            v-show="showDropdown[key]"
-            class="row crucible-filter-dropdown-menu"
-          >
+          <div v-show="showDropdown[key]" class="crucible-filter-dropdown-menu">
             <div
               v-for="(item, index) in items"
               :key="index"
@@ -44,10 +44,19 @@
                   ? 'selected-filter-tag column'
                   : 'column'
               "
-              @click="getFilterTag(key, Object.keys(item)[0])"
             >
-              {{ Object.keys(item)[0] }}
-              <span>({{ Object.values(item)[0] }})</span>
+              <input
+                :id="`tag&{key}&{index.toString()}`"
+                type="checkbox"
+                :value="Object.keys(item)[0]"
+                @click="getFilterTag(key, Object.keys(item)[0])"
+              />
+              <label :for="`tag&{key}&{index.toString()}`">
+                <span>
+                  {{ Object.keys(item)[0] }}
+                </span>
+                <span> ({{ Object.values(item)[0] }}) </span>
+              </label>
             </div>
           </div>
         </div>
@@ -70,7 +79,6 @@
 import { ref, computed, inject, onMounted } from "vue";
 import CollapseBtn from "./CollapseBtn.vue";
 import FilterButton from "./FilterButton.vue";
-//ToDo: inject the taxonomyTags from the Crucible Main platform
 import { staticFilterSetTags } from "./DataAccessLayer";
 import { getFilterSetTags } from "./DataAccessLayer";
 const emit = defineEmits(["updateFilterTagArray"]);
@@ -91,13 +99,13 @@ const toggleDropdown = (key: string) => {
 
 // Filter tags send to back end to filter resource
 const getFilterTag = (key: string, tag: string) => {
-  const formattedTag = `${key}:${tag.replace(" ", "_")}`;
-  if (!filterTagArray.value.includes(formattedTag)) {
-    filterTagArray.value.push(formattedTag);
+  const taxonomyTag = `${key}:${tag.replace(" ", "_")}`;
+  if (!filterTagArray.value.includes(taxonomyTag)) {
+    filterTagArray.value.push(taxonomyTag);
   } else {
     // deleted existing tag
     filterTagArray.value = filterTagArray.value.filter(
-      (item) => item !== formattedTag,
+      (item) => item !== taxonomyTag,
     );
   }
 };
@@ -208,7 +216,7 @@ hr {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-between;
   align-items: last baseline;
   margin-bottom: 0.5rem;
   max-width: 20rem;
@@ -240,37 +248,26 @@ hr {
 
 .crucible-filters h4 {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   margin: 0.25rem;
+  padding: 0 0.5rem 0 0.5rem;
   border-radius: 2rem;
   line-height: normal;
   cursor: pointer;
   transition: all 0.1s;
-  border: 1px solid #49075e;
-  color: #49075e;
+  border: 1px solid #353535;
   text-transform: capitalize;
-}
-
-.crucible-filters h4:hover {
-  background: #cbcaca;
-  color: #49075e;
-}
-
-.crucible-filters .row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
 }
 
 .crucible-filters .column {
+  display: flex;
   color: #49075e;
   text-wrap: wrap;
-  max-width: 10rem;
   margin: 3px;
   font-weight: 500;
   text-transform: capitalize;
+  text-align: justify;
 }
 
 .crucible-filters .column:hover {
@@ -278,15 +275,31 @@ hr {
 }
 
 .crucible-filters .selected-filter-tag {
-  color: #333;
+  color: #666666;
   cursor: default !important;
   border-radius: 0.5rem;
 }
 
-.crucible-filter-dropdown,
 .crucible-filter-dropdown-menu {
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
+  width: 90%;
+  justify-content: space-between;
+  padding: 0 0.5rem 0 0.5rem;
+}
+.selected-background {
+  background-color: #ffffff;
+  color: #49075e;
+}
+.crucible-filter-dropdown-menu label {
+  flex-grow: 1;
+  margin-left: 2px;
+  display: flex;
+  justify-content: space-between;
+}
+.column label span {
+  display: inline-block;
 }
 
 .capital-first {

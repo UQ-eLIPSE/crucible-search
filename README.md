@@ -1,8 +1,8 @@
 # Crucible Search
 
-This is a project for creating crucible search that will be used as part of the Crucible Repository.
+This is a project for creating crucible Search / Filter that will be used as part of the Crucible Repository.
 
-Node version requirement: 20.11
+Node version requirement: 20.x
 
 ## Install Project as a package
 
@@ -11,13 +11,20 @@ Node version requirement: 20.11
 - Import plugin:
 
   1. find `main.ts` in plugin host project and add:
-     `import { createSearchPlugin } from "crucible-search"`,
+     `import { createSearchFilterPlugin } from "crucible-search"`,
      `import "crucible-search/dist/styles.css"`,
 
-     `createSearchPlugin(app, {dataLink: await Api.Resource.getQuestions() });`
+     `createSearchPlugin(app, {
+ router: router-in-host-project
+ getApi: Api-for-query-searchresult,
+ tagsApi: Api-for-get-all-tags,
+ filterSetApi: Api-for-get-taxonomyTags,
+ });`
 
   2. in the component, implement the following directly:
      <CrucibleSearch />
+     <CrucibleFilter />
+     <CollapseBtn :showDropdown="isDropdownShown" />
 
 ### Build Project as a package
 

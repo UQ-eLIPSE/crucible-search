@@ -48,7 +48,7 @@ describe("CrucibleFilter", () => {
     const index = 1;
     const category = categories[index];
     category.trigger("click");
-    const tag = wrapper.find(".crucible-filter-dropdown-menu div");
+    const tag = wrapper.find(".crucible-filter-dropdown-menu input");
     tag.trigger("click");
     await wrapper.vm.$nextTick();
     const selectedTags = wrapper.find(".crucible-filter-collection span span");
@@ -62,7 +62,7 @@ describe("CrucibleFilter", () => {
     const index = 1;
     const category = categories[index];
     category.trigger("click");
-    const tag = wrapper.find(".crucible-filter-dropdown-menu div");
+    const tag = wrapper.find(".crucible-filter-dropdown-menu input");
     tag.trigger("click");
     await wrapper.vm.$nextTick();
     expect(wrapper.find(".selected-filter-tag").exists()).toBe(true);

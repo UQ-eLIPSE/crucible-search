@@ -20,8 +20,8 @@ export default defineConfig({
   },
   build: buildAsLibrary && {
     lib: {
-      entry: "./src/SearchPlugin.ts",
-      name: "CrucibleSearchPlugin",
+      entry: "./src/SearchFilterPlugin.ts",
+      name: "CrucibleSearchFilterPlugin",
       fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {

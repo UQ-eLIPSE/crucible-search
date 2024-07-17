@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { mount, VueWrapper } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import CollapseBtn from "@/components/CollapseBtn.vue";
-import { before } from "node:test";
 
 describe("CollapseBtn.vue", () => {
   it("renders correctly", () => {
