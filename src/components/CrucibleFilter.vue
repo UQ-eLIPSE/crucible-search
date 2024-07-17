@@ -141,6 +141,7 @@ onMounted(async () => {
 .crucible-filter-container {
   position: absolute;
   right: 0;
+  top: 0;
   display: flex;
   align-items: top;
   gap: 0;
@@ -288,16 +289,19 @@ hr {
   justify-content: space-between;
   padding: 0 0.5rem 0 0.5rem;
 }
+
 .selected-background {
   background-color: #ffffff;
   color: #49075e;
 }
+
 .crucible-filter-dropdown-menu label {
   flex-grow: 1;
   margin-left: 2px;
   display: flex;
   justify-content: space-between;
 }
+
 .column label span {
   display: inline-block;
 }
