@@ -46,12 +46,12 @@
               "
             >
               <input
-                :id="`tag` + key + index.toString()"
+                :id="`tag&{key}&{index.toString()}`"
                 type="checkbox"
                 :value="Object.keys(item)[0]"
                 @click="getFilterTag(key, Object.keys(item)[0])"
               />
-              <label :for="`tag` + key + index.toString()">
+              <label :for="`tag&{key}&{index.toString()}`">
                 <span>
                   {{ Object.keys(item)[0] }}
                 </span>
@@ -99,13 +99,13 @@ const toggleDropdown = (key: string) => {
 
 // Filter tags send to back end to filter resource
 const getFilterTag = (key: string, tag: string) => {
-  const formattedTag = `${key}:${tag.replace(" ", "_")}`;
-  if (!filterTagArray.value.includes(formattedTag)) {
-    filterTagArray.value.push(formattedTag);
+  const taxonomyTag = `${key}:${tag.replace(" ", "_")}`;
+  if (!filterTagArray.value.includes(taxonomyTag)) {
+    filterTagArray.value.push(taxonomyTag);
   } else {
     // deleted existing tag
     filterTagArray.value = filterTagArray.value.filter(
-      (item) => item !== formattedTag,
+      (item) => item !== taxonomyTag,
     );
   }
 };

@@ -1,11 +1,11 @@
 import { describe, it, expect } from "vitest";
 import { mount } from "@vue/test-utils";
 import App from "@/App.vue";
-import { createSearchPlugin } from "@/SearchPlugin.ts";
+import { createSearchFilterPlugin } from "@/SearchFilterPlugin.ts";
 import { projectRoutes } from "@/router/projectRoutes";
 
 const mockPlugin = (app: any) => {
-  createSearchPlugin(app, { router: projectRoutes });
+  createSearchFilterPlugin(app, { router: projectRoutes });
 };
 
 describe("App.vue", () => {

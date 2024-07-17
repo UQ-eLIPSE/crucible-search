@@ -2004,10 +2004,10 @@ const No = [
       onClick: d[0] || (d[0] = (u) => n("click", c.actionType))
     }, M(i.value), 1));
   }
-}), Wo = (e) => (ht("data-v-8fdb144e"), e = e(), pt(), e), Qo = { class: "crucible-filter-container" }, Yo = {
+}), Wo = (e) => (ht("data-v-eefe5a08"), e = e(), pt(), e), Qo = { class: "crucible-filter-container" }, Yo = {
   key: 0,
   class: "crucible-filter-panel"
-}, Jo = { class: "crucible-filter-action" }, Xo = /* @__PURE__ */ Wo(() => /* @__PURE__ */ O("hr", null, null, -1)), Zo = { class: "crucible-filter-collection" }, er = ["onClick"], tr = { class: "capital-first" }, nr = { class: "crucible-filters" }, or = ["onClick"], rr = { class: "crucible-filter-dropdown-menu" }, sr = ["id", "value", "onClick"], ar = ["for"], ir = /* @__PURE__ */ z({
+}, Jo = { class: "crucible-filter-action" }, Xo = /* @__PURE__ */ Wo(() => /* @__PURE__ */ O("hr", null, null, -1)), Zo = { class: "crucible-filter-collection" }, er = ["onClick"], tr = { class: "capital-first" }, nr = { class: "crucible-filters" }, or = ["onClick"], rr = { class: "crucible-filter-dropdown-menu" }, sr = ["value", "onClick"], ar = { for: "tag&{key}&{index.toString()}" }, ir = /* @__PURE__ */ z({
   __name: "CrucibleFilter",
   emits: ["updateFilterTagArray"],
   setup(e, { emit: t }) {
@@ -2073,17 +2073,15 @@ const No = [
                 )
               }, [
                 O("input", {
-                  id: "tag" + b + w.toString(),
+                  id: "tag&{key}&{index.toString()}",
                   type: "checkbox",
                   value: Object.keys(E)[0],
                   onClick: (N) => h(b, Object.keys(E)[0])
                 }, null, 8, sr),
-                O("label", {
-                  for: "tag" + b + w.toString()
-                }, [
+                O("label", ar, [
                   O("span", null, M(Object.keys(E)[0]), 1),
                   O("span", null, " (" + M(Object.values(E)[0]) + ") ", 1)
-                ], 8, ar)
+                ])
               ], 2))), 128))
             ], 512), [
               [Qt, i.value[b]]
@@ -2099,7 +2097,7 @@ const No = [
       }, null, 2)
     ]));
   }
-}), Lt = /* @__PURE__ */ fe(ir, [["__scopeId", "data-v-8fdb144e"]]), cr = { id: "app" }, lr = { class: "main" }, ur = /* @__PURE__ */ z({
+}), Lt = /* @__PURE__ */ fe(ir, [["__scopeId", "data-v-eefe5a08"]]), cr = { id: "app" }, lr = { class: "main" }, ur = /* @__PURE__ */ z({
   __name: "App",
   setup(e) {
     return (t, n) => {
@@ -2184,12 +2182,12 @@ const pr = { class: "search-container" }, gr = { key: 0 }, vr = ["onClick"], mr 
 }), _r = /* @__PURE__ */ fe(yr, [["__scopeId", "data-v-5cb7fe60"]]);
 function br(e, t) {
   const { router: n, getApi: o, tagsApi: r, filterSetApi: i } = t;
-  e.component("CrucibleSearch", _r), e.component("DisplayResult", Ie), e.component("CrucibleFilter", Lt), e.component("CollapseBtn", jt), e.provide("$router", n), e.provide("$getApi", o), e.provide("$tagsApi", r), e.provide("$filterSetApi", i), n.addRoute({ path: "/search", component: Ie });
+  e.component("CrucibleSearch", _r), e.component("DisplayResult", Ie), e.component("CrucibleFilter", Lt), e.component("CollapseBtn", jt), e.provide("$router", n || null), e.provide("$getApi", o || null), e.provide("$tagsApi", r || null), e.provide("$filterSetApi", i || null), n.addRoute({ path: "/search", component: Ie });
 }
 export {
   jt as CollapseBtn,
   Lt as CrucibleFilter,
   _r as CrucibleSearch,
   Ie as DisplayResult,
-  br as createSearchPlugin
+  br as createSearchFilterPlugin
 };
