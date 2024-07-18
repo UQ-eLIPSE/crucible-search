@@ -70,10 +70,7 @@
           ? 'crucible-filter-control crucible-filter-control-light svg-background-dark'
           : 'crucible-filter-control svg-background-light'
       "
-      @click="
-        showFilter = !showFilter;
-        emit('checkTaxonomyExists', isTaxonomyExists);
-      "
+      @click="showFilter = !showFilter"
     ></button>
   </div>
 </template>
@@ -99,6 +96,7 @@ const isTaxonomyExists = ref(false);
 // function to toggle drop down
 const toggleDropdown = (key: string) => {
   showDropdown.value[key] = !showDropdown.value[key];
+  console.log(isTaxonomyExists.value);
 };
 
 // Filter tags send to back end to filter resource
@@ -133,6 +131,7 @@ onMounted(async () => {
   const isFilterSet = Object.keys(filterSetFromApi).length > 0;
   filterSetTags.value = isFilterSet ? filterSetFromApi : staticFilterSetTags;
   isTaxonomyExists.value = isFilterSet;
+  emit("checkTaxonomyExists", isTaxonomyExists);
 });
 </script>
 <style scoped>
@@ -163,6 +162,7 @@ onMounted(async () => {
   font-weight: 400;
   background-color: #49075e;
   border-radius: 20px 0px 0px 20px;
+  min-height: 100px;
 }
 
 .crucible-filter-control-light {
