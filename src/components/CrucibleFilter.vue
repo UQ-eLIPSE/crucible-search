@@ -81,7 +81,7 @@ import CollapseBtn from "./CollapseBtn.vue";
 import FilterButton from "./FilterButton.vue";
 import { staticFilterSetTags } from "./DataAccessLayer";
 import { getFilterSetTags } from "./DataAccessLayer";
-const emit = defineEmits(["updateFilterTagArray"]);
+const emit = defineEmits(["updateFilterTagArray", "checkTaxonomyExists"]);
 
 const filterSetApi =
   (inject("$filterSetApi") as string) ||
@@ -91,10 +91,12 @@ const showFilter = ref<boolean>(false);
 const showDropdown = ref({} as Record<string, boolean>);
 const filterTagArray = ref([] as string[]);
 const filterSetTags = ref<Record<string, object[]>>({});
+const isTaxonomyExists = ref(false);
 
 // function to toggle drop down
 const toggleDropdown = (key: string) => {
   showDropdown.value[key] = !showDropdown.value[key];
+  console.log(isTaxonomyExists.value);
 };
 
 // Filter tags send to back end to filter resource
@@ -126,10 +128,10 @@ const applyFilter = () => {
 
 onMounted(async () => {
   const filterSetFromApi = await getFilterSetTags(filterSetApi);
-  filterSetTags.value =
-    Object.keys(filterSetFromApi).length > 0
-      ? filterSetFromApi
-      : staticFilterSetTags;
+  const isFilterSet = Object.keys(filterSetFromApi).length > 0;
+  filterSetTags.value = isFilterSet ? filterSetFromApi : staticFilterSetTags;
+  isTaxonomyExists.value = isFilterSet;
+  emit("checkTaxonomyExists", isTaxonomyExists);
 });
 </script>
 <style scoped>
@@ -141,6 +143,7 @@ onMounted(async () => {
 .crucible-filter-container {
   position: absolute;
   right: 0;
+  top: 0;
   display: flex;
   align-items: top;
   gap: 0;
@@ -151,7 +154,7 @@ onMounted(async () => {
 
 .crucible-filter-control {
   width: fit-content;
-  height: 100px;
+  height: 100%;
   padding: 0.3em 0.6em;
   text-align: center;
   color: whitesmoke;
@@ -159,6 +162,7 @@ onMounted(async () => {
   font-weight: 400;
   background-color: #49075e;
   border-radius: 20px 0px 0px 20px;
+  min-height: 100px;
 }
 
 .crucible-filter-control-light {
@@ -197,7 +201,7 @@ onMounted(async () => {
 .crucible-filter-panel {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   padding: 0.3rem;
   max-width: fit-content;
@@ -288,16 +292,19 @@ hr {
   justify-content: space-between;
   padding: 0 0.5rem 0 0.5rem;
 }
+
 .selected-background {
   background-color: #ffffff;
   color: #49075e;
 }
+
 .crucible-filter-dropdown-menu label {
   flex-grow: 1;
   margin-left: 2px;
   display: flex;
   justify-content: space-between;
 }
+
 .column label span {
   display: inline-block;
 }
