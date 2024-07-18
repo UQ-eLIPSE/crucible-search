@@ -70,7 +70,10 @@
           ? 'crucible-filter-control crucible-filter-control-light svg-background-dark'
           : 'crucible-filter-control svg-background-light'
       "
-      @click="showFilter = !showFilter"
+      @click="
+        showFilter = !showFilter;
+        emit('checkTaxonomyExists', isTaxonomyExists);
+      "
     ></button>
   </div>
 </template>
@@ -81,7 +84,7 @@ import CollapseBtn from "./CollapseBtn.vue";
 import FilterButton from "./FilterButton.vue";
 import { staticFilterSetTags } from "./DataAccessLayer";
 import { getFilterSetTags } from "./DataAccessLayer";
-const emit = defineEmits(["updateFilterTagArray"]);
+const emit = defineEmits(["updateFilterTagArray", "checkTaxonomyExists"]);
 
 const filterSetApi =
   (inject("$filterSetApi") as string) ||
@@ -91,6 +94,7 @@ const showFilter = ref<boolean>(false);
 const showDropdown = ref({} as Record<string, boolean>);
 const filterTagArray = ref([] as string[]);
 const filterSetTags = ref<Record<string, object[]>>({});
+const isTaxonomyExists = ref(false);
 
 // function to toggle drop down
 const toggleDropdown = (key: string) => {
@@ -126,10 +130,9 @@ const applyFilter = () => {
 
 onMounted(async () => {
   const filterSetFromApi = await getFilterSetTags(filterSetApi);
-  filterSetTags.value =
-    Object.keys(filterSetFromApi).length > 0
-      ? filterSetFromApi
-      : staticFilterSetTags;
+  const isFilterSet = Object.keys(filterSetFromApi).length > 0;
+  filterSetTags.value = isFilterSet ? filterSetFromApi : staticFilterSetTags;
+  isTaxonomyExists.value = isFilterSet;
 });
 </script>
 <style scoped>
@@ -152,7 +155,7 @@ onMounted(async () => {
 
 .crucible-filter-control {
   width: fit-content;
-  height: 100px;
+  height: 100%;
   padding: 0.3em 0.6em;
   text-align: center;
   color: whitesmoke;
@@ -198,7 +201,7 @@ onMounted(async () => {
 .crucible-filter-panel {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   padding: 0.3rem;
   max-width: fit-content;

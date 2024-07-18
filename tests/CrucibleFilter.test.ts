@@ -1,24 +1,26 @@
 import { VueWrapper, mount } from "@vue/test-utils";
 import CrucibleFilter from "../src/components/CrucibleFilter.vue";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 import { getFilterSetTags } from "../src/components/DataAccessLayer";
-
-vi.mock("@/components/DataAccessLayer", () => ({
-  getFilterSetTags: vi.fn(() =>
-    Promise.resolve([
-      { course: { VET2011: 0, VET2012: 0 } },
-      { subject: { Physiology: 0 } },
-    ]),
-  ),
-}));
 
 describe("CrucibleFilter", () => {
   let wrapper: VueWrapper;
 
   beforeEach(() => {
+    vi.mock("@/components/DataAccessLayer", () => ({
+      getFilterSetTags: vi.fn(() =>
+        Promise.resolve([
+          { course: { VET2011: 0, VET2012: 0 } },
+          { subject: { Physiology: 0 } },
+        ]),
+      ),
+    }));
     wrapper = mount(CrucibleFilter);
     wrapper.find(".crucible-filter-control").trigger("click");
     wrapper.vm.$nextTick();
+  });
+  afterEach(() => {
+    vi.clearAllMocks();
   });
   it("should fetch the filter tag set,when land the component", () => {
     expect(getFilterSetTags).toHaveBeenCalled();
