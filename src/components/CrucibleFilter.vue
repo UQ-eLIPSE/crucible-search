@@ -9,6 +9,7 @@
 
       <!-- Selected Tags Section: Displaying selected filter tags -->
       <div class="crucible-filter-collection">
+        <h5>Selected:</h5>
         <span
           v-for="(item, key) in filterTagArray"
           :key="key"
@@ -49,6 +50,7 @@
                 :id="`tag-${key}-${index.toString()}`"
                 type="checkbox"
                 :value="Object.keys(item)[0]"
+                :checked="itemNames.includes(Object.keys(item)[0])"
                 @click="getFilterTag(key, Object.keys(item)[0])"
               />
               <label :for="`tag-${key}-${index.toString()}`">
