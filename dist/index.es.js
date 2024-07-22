@@ -2004,10 +2004,10 @@ const Oo = [
       onClick: d[0] || (d[0] = (u) => n("click", c.actionType))
     }, M(i.value), 1));
   }
-}), Lt = (e) => (ht("data-v-ed4d0275"), e = e(), pt(), e), Qo = { class: "crucible-filter-container" }, Yo = {
+}), Lt = (e) => (ht("data-v-d572f7f9"), e = e(), pt(), e), Qo = { class: "crucible-filter-container" }, Yo = {
   key: 0,
   class: "crucible-filter-panel"
-}, Jo = { class: "crucible-filter-action" }, Xo = /* @__PURE__ */ Lt(() => /* @__PURE__ */ O("hr", null, null, -1)), Zo = { class: "crucible-filter-collection" }, er = /* @__PURE__ */ Lt(() => /* @__PURE__ */ O("h5", null, "Selected: ", -1)), tr = ["onClick"], nr = { class: "capital-first" }, or = { class: "crucible-filters" }, rr = ["onClick"], sr = { class: "crucible-filter-dropdown-menu" }, ar = ["id", "value", "onClick", "checked"], ir = ["for"], cr = /* @__PURE__ */ z({
+}, Jo = { class: "crucible-filter-action" }, Xo = /* @__PURE__ */ Lt(() => /* @__PURE__ */ O("hr", null, null, -1)), Zo = { class: "crucible-filter-collection" }, er = /* @__PURE__ */ Lt(() => /* @__PURE__ */ O("h5", null, "Selected:", -1)), tr = ["onClick"], nr = { class: "capital-first" }, or = { class: "crucible-filters" }, rr = ["onClick"], sr = { class: "crucible-filter-dropdown-menu" }, ar = ["id", "value", "checked", "onClick"], ir = ["for"], cr = /* @__PURE__ */ z({
   __name: "CrucibleFilter",
   emits: ["updateFilterTagArray", "checkTaxonomyExists"],
   setup(e, { emit: t }) {
@@ -2077,8 +2077,8 @@ const Oo = [
                   id: `tag-${y}-${N.toString()}`,
                   type: "checkbox",
                   value: Object.keys(E)[0],
-                  onClick: (D) => s(y, Object.keys(E)[0]),
-                  checked: f.value.includes(Object.keys(E)[0])
+                  checked: f.value.includes(Object.keys(E)[0]),
+                  onClick: (D) => s(y, Object.keys(E)[0])
                 }, null, 8, ar),
                 O("label", {
                   for: `tag-${y}-${N.toString()}`
@@ -2101,7 +2101,7 @@ const Oo = [
       }, null, 2)
     ]));
   }
-}), Mt = /* @__PURE__ */ fe(cr, [["__scopeId", "data-v-ed4d0275"]]), lr = { id: "app" }, ur = { class: "main" }, fr = /* @__PURE__ */ z({
+}), Mt = /* @__PURE__ */ fe(cr, [["__scopeId", "data-v-d572f7f9"]]), lr = { id: "app" }, ur = { class: "main" }, fr = /* @__PURE__ */ z({
   __name: "App",
   setup(e) {
     return (t, n) => {

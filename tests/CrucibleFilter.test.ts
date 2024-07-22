@@ -45,7 +45,7 @@ describe("CrucibleFilter", () => {
     const { showDropdown } = wrapper.vm;
     expect(showDropdown[categories[index].text()]).toBe(true);
   });
-  it("should show selected Tag in the Selected Tag Section, when click on the Tag", async () => {
+  it("should show selected Tag in the Selected Tag Section, when click on the Tag. The selected option should be checked", async () => {
     const categories = wrapper.findAll(".crucible-filter-dropdown h4");
     const index = 1;
     const category = categories[index];
@@ -56,10 +56,13 @@ describe("CrucibleFilter", () => {
     const selectedTags = wrapper.find(".crucible-filter-collection span span");
     expect(wrapper.find(".crucible-filter-collection").exists()).toBe(true);
     expect(selectedTags.exists()).toBe(true);
+    expect(
+      (wrapper.find(".column input").element as HTMLInputElement).checked,
+    ).toBe(true);
     expect(selectedTags.text()).toContain("VET2011");
   });
 
-  it("should remove the selected Tag from the Selected Tag Section, when click on the Tag again", async () => {
+  it("should remove the selected Tag from the Selected Tag Section, when click on the Tag again and option becomes unchecked", async () => {
     const categories = wrapper.findAll(".crucible-filter-dropdown h4");
     const index = 1;
     const category = categories[index];
@@ -68,8 +71,12 @@ describe("CrucibleFilter", () => {
     tag.trigger("click");
     await wrapper.vm.$nextTick();
     expect(wrapper.find(".selected-filter-tag").exists()).toBe(true);
+
     tag.trigger("click");
     await wrapper.vm.$nextTick();
     expect(wrapper.find(".selected-filter-tag").exists()).toBe(false);
+    expect(
+      (wrapper.find(".column input").element as HTMLInputElement).checked,
+    ).toBe(false);
   });
 });
