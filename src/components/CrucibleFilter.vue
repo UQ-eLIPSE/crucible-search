@@ -8,8 +8,8 @@
       <hr />
 
       <!-- Selected Tags Section: Displaying selected filter tags -->
+      <h5>Selected:</h5>
       <div class="crucible-filter-collection">
-        <h5>Selected:</h5>
         <span
           v-for="(item, key) in filterTagArray"
           :key="key"
@@ -214,7 +214,7 @@ hr {
   border: none;
   height: 1px;
   background-color: #333;
-  margin: 1rem 0;
+  margin: 1rem 0 0.2rem 0;
   width: 100%;
 }
 
