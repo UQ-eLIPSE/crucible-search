@@ -1929,9 +1929,7 @@ const $o = [
 }, Ho = /* @__PURE__ */ z({
   __name: "DisplayResult",
   setup(e) {
-    const t = F("$getApi") ?? "http://localhost:8080/api/resource/getResultByQueryTag";
-    console.info("Retrieving data from:", t);
-    const n = V([
+    const t = F("$getApi") ?? "http://localhost:8080/api/resource/getResultByQueryTag", n = V([
       { _id: "", label: "", tags: [""], url: "" }
     ]), o = Ut(), r = V(""), i = V(5);
     je(async () => {
@@ -1973,7 +1971,7 @@ const $o = [
   for (const [o, r] of t)
     n[o] = r;
   return n;
-}, Ie = /* @__PURE__ */ fe(Ho, [["__scopeId", "data-v-6e35e747"]]), Vt = (e) => (ht("data-v-b97c2a53"), e = e(), pt(), e), Go = /* @__PURE__ */ Vt(() => /* @__PURE__ */ $("path", { d: "M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" }, null, -1)), Ko = /* @__PURE__ */ Vt(() => /* @__PURE__ */ $("path", {
+}, Ie = /* @__PURE__ */ fe(Ho, [["__scopeId", "data-v-071ed10d"]]), Vt = (e) => (ht("data-v-b97c2a53"), e = e(), pt(), e), Go = /* @__PURE__ */ Vt(() => /* @__PURE__ */ $("path", { d: "M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" }, null, -1)), Ko = /* @__PURE__ */ Vt(() => /* @__PURE__ */ $("path", {
   fill: "none",
   d: "M0 0h24v24H0V0z"
 }, null, -1)), zo = [
@@ -2139,20 +2137,20 @@ const vr = { class: "search-container" }, gr = { key: 0 }, mr = ["onClick"], yr 
   __name: "CrucibleSearch",
   props: {
     level: {
-      Number,
+      type: Number,
       default: 5
     }
   },
   setup(e) {
-    const t = Ut(), n = V(""), o = V([]), r = V(!1), i = V(null), u = F("$tagsApi") || "http://localhost:8080/api/resource/alltags", d = e, c = (_) => (
+    const t = Ut(), n = V(""), o = V([]), r = V(!1), i = V(null), u = F("$tagsApi") || "http://localhost:8080/api/resource/alltags", { level: d } = e, c = (_) => (
       // for the highlighting of the <strong> elements for the dropdown menu
       n.value.toLowerCase().includes(_.toLowerCase())
     ), h = (_) => _.replace(/_/g, " "), s = (_) => _.replace(/ /g, "_"), f = async () => {
       n.value ? (o.value = (await Do(n.value, u)).slice(0, yr), o.value = o.value.map(h), r.value = !0) : (o.value = [], r.value = !1);
     }, a = (_) => {
-      n.value = o.value.includes(_) ? _ : o.value[0], r.value = !1, console.log("level", d.level), t.push({
+      n.value = o.value.includes(_) ? _ : o.value[0], r.value = !1, t.push({
         path: "/search",
-        query: { tag: s(n.value), level: Number(d.level) }
+        query: { tag: s(n.value), level: Number(d) }
       });
     }, p = () => {
       o.value.length && n.value && (r.value = !0);
@@ -2196,7 +2194,7 @@ const vr = { class: "search-container" }, gr = { key: 0 }, mr = ["onClick"], yr 
       ], 512)
     ]));
   }
-}), Er = /* @__PURE__ */ fe(_r, [["__scopeId", "data-v-8810bedb"]]);
+}), Er = /* @__PURE__ */ fe(_r, [["__scopeId", "data-v-03b16485"]]);
 function wr(e, t) {
   const { router: n, getApi: o, tagsApi: r, filterSetApi: i } = t;
   e.component("CrucibleSearch", Er), e.component("DisplayResult", Ie), e.component("CrucibleFilter", Mt), e.component("CollapseBtn", jt), e.provide("$router", n || null), e.provide("$getApi", o || null), e.provide("$tagsApi", r || null), e.provide("$filterSetApi", i || null), n.addRoute({ path: "/search", component: Ie });

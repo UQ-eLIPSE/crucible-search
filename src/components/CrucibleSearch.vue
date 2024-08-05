@@ -37,9 +37,9 @@ const searchTagsApi =
   "http://localhost:8080/api/resource/alltags";
 const maxSearchResults = 10;
 
-const level = defineProps({
+const { level } = defineProps({
   level: {
-    Number,
+    type: Number,
     default: 5,
   },
 });
@@ -76,10 +76,9 @@ const selectTag = (tag: string) => {
     ? filteredTags.value[0] // default to the first tag if not in the dropdown list
     : tag;
   dropdownVisible.value = false;
-  console.log("level", level.level);
   router.push({
     path: "/search",
-    query: { tag: unformatTag(searchTerm.value), level: Number(level.level) },
+    query: { tag: unformatTag(searchTerm.value), level: Number(level) },
   });
 };
 

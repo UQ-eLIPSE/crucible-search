@@ -26,7 +26,7 @@ import { inject } from "vue";
 const getApisFromHost =
   (inject("$getApi") as string) ??
   "http://localhost:8080/api/resource/getResultByQueryTag";
-console.info("Retrieving data from:", getApisFromHost);
+
 const searchResults = ref<ResourceInSearch[]>([
   { _id: "", label: "", tags: [""], url: "" },
 ]);
