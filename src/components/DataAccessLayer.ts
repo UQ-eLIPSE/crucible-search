@@ -1,10 +1,17 @@
 import { staticResources, tags, taxonomyTags } from "@/resources";
 import { ResourceInSearch } from "@/types";
 
-const fetchAllData = async (tag: string, getApisFromHost: string) => {
+const fetchAllData = async (
+  tag: string,
+  level: number,
+  getApisFromHost: string,
+) => {
   try {
     const apiData = await fetch(
-      getApisFromHost + "?" + new URLSearchParams({ tag }),
+      `${getApisFromHost}?${new URLSearchParams({
+        level: level.toString(),
+        tag,
+      })}`,
     );
     return await apiData.json();
   } catch (err) {
@@ -15,11 +22,12 @@ const fetchAllData = async (tag: string, getApisFromHost: string) => {
 
 export const findData = async (
   inputValue: string,
+  level: number,
   getApisFromHost: string,
 ): Promise<ResourceInSearch[]> => {
   try {
     const resources =
-      (await fetchAllData(inputValue, getApisFromHost)) ||
+      (await fetchAllData(inputValue, level, getApisFromHost)) ||
       staticResources.filter((resource: ResourceInSearch) =>
         resource.tags.join(",").includes(inputValue),
       );

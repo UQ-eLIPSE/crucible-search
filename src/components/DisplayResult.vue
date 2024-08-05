@@ -36,17 +36,23 @@ import { useRouter } from "@/router/injectRoute";
 
 const route = useRouter();
 const tag = ref("");
+const level = ref(10);
 
 onMounted(async () => {
   if (route) {
     tag.value = route.currentRoute.value.query.tag as string;
-    await fetchData(tag.value);
+    level.value = Number(route.currentRoute.value.query.level);
+    await fetchData(tag.value, level.value);
   } else {
     tag.value = "undefined";
   }
 });
-const fetchData = async (tag: string) => {
-  const results = await findData(tag as string, getApisFromHost);
+const fetchData = async (tag: string, level: number) => {
+  const results = await findData(
+    tag as string,
+    level as number,
+    getApisFromHost,
+  );
 
   if (results) searchResults.value = results;
 };
@@ -54,7 +60,7 @@ watch(route.currentRoute, async (newRoute, oldRoute) => {
   const newTag = (newRoute.query.tag as string) || "";
   const oldTag = (oldRoute.query.tag as string) || "";
   if (newTag !== oldTag) {
-    await fetchData(newTag);
+    await fetchData(newTag, level.value);
   }
 });
 </script>

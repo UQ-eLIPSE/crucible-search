@@ -37,6 +37,13 @@ const searchTagsApi =
   "http://localhost:8080/api/resource/alltags";
 const maxSearchResults = 10;
 
+const level = defineProps({
+  level: {
+    Number,
+    default: 10,
+  },
+});
+
 const isSearchTerm = (char: string) =>
   // for the highlighting of the <strong> elements for the dropdown menu
   searchTerm.value.toLowerCase().includes(char.toLowerCase());
@@ -71,7 +78,7 @@ const selectTag = (tag: string) => {
   dropdownVisible.value = false;
   router.push({
     path: "/search",
-    query: { tag: unformatTag(searchTerm.value) },
+    query: { tag: unformatTag(searchTerm.value), level: Number(level.level) },
   });
 };
 
@@ -125,6 +132,7 @@ input {
   font-size: 1rem;
   width: 100%;
 }
+
 .search-suggestion {
   position: absolute;
   color: lightgray;
