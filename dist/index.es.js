@@ -2150,7 +2150,7 @@ const vr = { class: "search-container" }, gr = { key: 0 }, mr = ["onClick"], yr 
     ), h = (_) => _.replace(/_/g, " "), s = (_) => _.replace(/ /g, "_"), f = async () => {
       n.value ? (o.value = (await Do(n.value, u)).slice(0, yr), o.value = o.value.map(h), r.value = !0) : (o.value = [], r.value = !1);
     }, a = (_) => {
-      n.value = o.value.includes(_) ? _ : o.value[0], r.value = !1, t.push({
+      n.value = o.value.includes(_) ? _ : o.value[0], r.value = !1, console.log("level", d.level), t.push({
         path: "/search",
         query: { tag: s(n.value), level: Number(d.level) }
       });
@@ -2196,7 +2196,7 @@ const vr = { class: "search-container" }, gr = { key: 0 }, mr = ["onClick"], yr 
       ], 512)
     ]));
   }
-}), Er = /* @__PURE__ */ fe(_r, [["__scopeId", "data-v-4b5313c3"]]);
+}), Er = /* @__PURE__ */ fe(_r, [["__scopeId", "data-v-512d6201"]]);
 function wr(e, t) {
   const { router: n, getApi: o, tagsApi: r, filterSetApi: i } = t;
   e.component("CrucibleSearch", Er), e.component("DisplayResult", Ie), e.component("CrucibleFilter", Mt), e.component("CollapseBtn", jt), e.provide("$router", n || null), e.provide("$getApi", o || null), e.provide("$tagsApi", r || null), e.provide("$filterSetApi", i || null), n.addRoute({ path: "/search", component: Ie });
