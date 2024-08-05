@@ -40,7 +40,7 @@ const maxSearchResults = 10;
 const level = defineProps({
   level: {
     Number,
-    default: 10,
+    default: 5,
   },
 });
 

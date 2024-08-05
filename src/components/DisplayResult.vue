@@ -36,7 +36,7 @@ import { useRouter } from "@/router/injectRoute";
 
 const route = useRouter();
 const tag = ref("");
-const level = ref(10);
+const level = ref(5);
 
 onMounted(async () => {
   if (route) {

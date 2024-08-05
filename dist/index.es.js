@@ -1933,7 +1933,7 @@ const $o = [
     console.info("Retrieving data from:", t);
     const n = V([
       { _id: "", label: "", tags: [""], url: "" }
-    ]), o = Ut(), r = V(""), i = V(10);
+    ]), o = Ut(), r = V(""), i = V(5);
     je(async () => {
       o ? (r.value = o.currentRoute.value.query.tag, i.value = Number(o.currentRoute.value.query.level), await u(r.value, i.value)) : r.value = "undefined";
     });
@@ -1973,7 +1973,7 @@ const $o = [
   for (const [o, r] of t)
     n[o] = r;
   return n;
-}, Ie = /* @__PURE__ */ fe(Ho, [["__scopeId", "data-v-414ffadd"]]), Vt = (e) => (ht("data-v-b97c2a53"), e = e(), pt(), e), Go = /* @__PURE__ */ Vt(() => /* @__PURE__ */ $("path", { d: "M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" }, null, -1)), Ko = /* @__PURE__ */ Vt(() => /* @__PURE__ */ $("path", {
+}, Ie = /* @__PURE__ */ fe(Ho, [["__scopeId", "data-v-6e35e747"]]), Vt = (e) => (ht("data-v-b97c2a53"), e = e(), pt(), e), Go = /* @__PURE__ */ Vt(() => /* @__PURE__ */ $("path", { d: "M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" }, null, -1)), Ko = /* @__PURE__ */ Vt(() => /* @__PURE__ */ $("path", {
   fill: "none",
   d: "M0 0h24v24H0V0z"
 }, null, -1)), zo = [
@@ -2140,7 +2140,7 @@ const vr = { class: "search-container" }, gr = { key: 0 }, mr = ["onClick"], yr 
   props: {
     level: {
       Number,
-      default: 10
+      default: 5
     }
   },
   setup(e) {
@@ -2196,7 +2196,7 @@ const vr = { class: "search-container" }, gr = { key: 0 }, mr = ["onClick"], yr 
       ], 512)
     ]));
   }
-}), Er = /* @__PURE__ */ fe(_r, [["__scopeId", "data-v-e6ec4263"]]);
+}), Er = /* @__PURE__ */ fe(_r, [["__scopeId", "data-v-8810bedb"]]);
 function wr(e, t) {
   const { router: n, getApi: o, tagsApi: r, filterSetApi: i } = t;
   e.component("CrucibleSearch", Er), e.component("DisplayResult", Ie), e.component("CrucibleFilter", Mt), e.component("CollapseBtn", jt), e.provide("$router", n || null), e.provide("$getApi", o || null), e.provide("$tagsApi", r || null), e.provide("$filterSetApi", i || null), n.addRoute({ path: "/search", component: Ie });
