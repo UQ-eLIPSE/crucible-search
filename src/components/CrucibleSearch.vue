@@ -25,7 +25,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "@/router/injectRoute";
 import { findTags } from "./DataAccessLayer";
-import { inject } from "vue";
+import { inject, toRefs } from "vue";
 
 const router = useRouter();
 const searchTerm = ref("");
@@ -37,12 +37,14 @@ const searchTagsApi =
   "http://localhost:8080/api/resource/alltags";
 const maxSearchResults = 10;
 
-const { level } = defineProps({
+const props = defineProps({
   level: {
     type: Number,
     default: 5,
   },
 });
+
+const { level } = toRefs(props);
 
 const isSearchTerm = (char: string) =>
   // for the highlighting of the <strong> elements for the dropdown menu
@@ -78,7 +80,7 @@ const selectTag = (tag: string) => {
   dropdownVisible.value = false;
   router.push({
     path: "/search",
-    query: { tag: unformatTag(searchTerm.value), level: Number(level) },
+    query: { tag: unformatTag(searchTerm.value), level: Number(level.value) },
   });
 };
 
