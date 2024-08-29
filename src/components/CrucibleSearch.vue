@@ -161,7 +161,7 @@ li {
   padding: 10px;
   cursor: pointer;
   transition: background-color 0.3s;
-  color: 0.3s;
+  color: black;
   text-transform: capitalize;
 }
 
