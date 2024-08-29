@@ -2194,7 +2194,7 @@ const gr = { class: "search-container" }, mr = { key: 0 }, yr = ["onClick"], _r 
       ], 512)
     ]));
   }
-}), br = /* @__PURE__ */ fe(Er, [["__scopeId", "data-v-be9b233e"]]);
+}), br = /* @__PURE__ */ fe(Er, [["__scopeId", "data-v-6881941e"]]);
 function kr(e, t) {
   const { router: n, getApi: o, tagsApi: r, filterSetApi: i } = t;
   e.component("CrucibleSearch", br), e.component("DisplayResult", Ie), e.component("CrucibleFilter", Mt), e.component("CollapseBtn", jt), e.provide("$router", n || null), e.provide("$getApi", o || null), e.provide("$tagsApi", r || null), e.provide("$filterSetApi", i || null), n.addRoute({ path: "/search", component: Ie });
