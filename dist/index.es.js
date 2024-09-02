@@ -1949,24 +1949,23 @@ const Ao = [
         a.value = "undefined";
     });
     const d = async (i, h, s) => {
-      if (i)
-        switch (s) {
-          case "tag":
-            o.value = await Io(
-              i,
-              h,
-              t
-            );
-            break;
-          case "title":
-            o.value = await Vt(
-              i,
-              n
-            );
-            break;
-          default:
-            o.value = [];
-        }
+      switch (s) {
+        case "tag":
+          o.value = await Io(
+            i,
+            h,
+            t
+          );
+          break;
+        case "title":
+          o.value = await Vt(
+            i,
+            n
+          );
+          break;
+        default:
+          o.value = [];
+      }
     };
     return je(r.currentRoute, async (i, h) => {
       const s = i.query.searchResult || "", u = h.query.searchResult || "";
@@ -1996,7 +1995,7 @@ const Ao = [
   for (const [o, r] of t)
     n[o] = r;
   return n;
-}, Ve = /* @__PURE__ */ he(Ko, [["__scopeId", "data-v-cbdea2e0"]]), Lt = (e) => (pt("data-v-b97c2a53"), e = e(), vt(), e), zo = /* @__PURE__ */ Lt(() => /* @__PURE__ */ O("path", { d: "M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" }, null, -1)), Wo = /* @__PURE__ */ Lt(() => /* @__PURE__ */ O("path", {
+}, Ve = /* @__PURE__ */ he(Ko, [["__scopeId", "data-v-171e3b52"]]), Lt = (e) => (pt("data-v-b97c2a53"), e = e(), vt(), e), zo = /* @__PURE__ */ Lt(() => /* @__PURE__ */ O("path", { d: "M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" }, null, -1)), Wo = /* @__PURE__ */ Lt(() => /* @__PURE__ */ O("path", {
   fill: "none",
   d: "M0 0h24v24H0V0z"
 }, null, -1)), Qo = [
