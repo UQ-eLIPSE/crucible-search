@@ -56,6 +56,22 @@ export const findTags = async (
     return [];
   }
 };
+
+export const getFilteredResourcesByTitle = async (
+  inputValue: string,
+  searchFilterApi: string,
+) => {
+  try {
+    const params = new URLSearchParams({
+      searchTerm: inputValue,
+    });
+    const tagsCollectionResponse = await fetch(`${searchFilterApi}?${params}`);
+    return await tagsCollectionResponse.json();
+  } catch (err) {
+    console.error("An error occurred while getting filtered resources", err);
+  }
+};
+
 //Api call to get the FilterSetTags(Taxonomy tags only) from Server
 export const getFilterSetTagsFromApi = async (
   filterSetApi: string,

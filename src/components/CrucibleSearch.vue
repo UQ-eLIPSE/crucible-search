@@ -9,8 +9,8 @@
         @focus="handleFocus"
         @keydown="handleKeyDown"
       />
-      <ul v-if="filteredTags.length && searchTerm && dropdownVisible">
-        <li v-for="tag in filteredTags" :key="tag" @click="selectTag(tag)">
+      <ul v-if="filteredResults.length && searchTerm && dropdownVisible">
+        <li v-for="tag in filteredResults" :key="tag" @click="selectTag(tag)">
           <template v-for="(char, index) in tag.split('')">
             <span v-if="!isSearchTerm(char)" :key="index">{{ char }}</span>
             <strong v-else :key="`strong-${index}`">{{ char }}</strong>
@@ -24,17 +24,23 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "@/router/injectRoute";
-import { findTags } from "./DataAccessLayer";
+import { findTags, getFilteredResourcesByTitle } from "./DataAccessLayer";
 import { inject, toRefs } from "vue";
 
 const router = useRouter();
 const searchTerm = ref("");
 const filteredTags = ref<string[]>([]);
+const filteredTitles = ref<string[]>([]);
+const filteredResults = ref<string[]>([]);
 const dropdownVisible = ref(false);
 const searchBoxRef = ref<HTMLElement | null>(null);
 const searchTagsApi =
   (inject("$tagsApi") as string) ||
   "http://localhost:8080/api/resource/alltags";
+
+const searchFilterApi =
+  (inject("$filterResourcesApi") as string) ||
+  "http://localhost:8080/api/resource/filterResources";
 const maxSearchResults = 10;
 
 const props = defineProps({
@@ -63,17 +69,31 @@ const filterResults = async () => {
       await findTags(searchTerm.value, searchTagsApi)
     ).slice(0, maxSearchResults);
 
+    const filteredResources = await getFilteredResourcesByTitle(
+      searchTerm.value,
+      searchFilterApi,
+    );
     filteredTags.value = filteredTags.value.map(formatTag);
+
+    filteredTitles.value = filteredResources.map(
+      (resource: { item: { label: string } }) => resource.item.label,
+    );
+
+    // remove duplicates
+    filteredResults.value = Array.from(
+      new Set([...filteredTags.value, ...filteredTitles.value]),
+    ).slice(0, maxSearchResults);
 
     dropdownVisible.value = true;
   } else {
     filteredTags.value = [];
+    filteredTitles.value = [];
     dropdownVisible.value = false;
   }
 };
 
+// TODO: Change selectTag to account for title as well.
 const selectTag = (tag: string) => {
-  // TODO: add tests for this
   searchTerm.value = !filteredTags.value.includes(tag)
     ? filteredTags.value[0] // default to the first tag if not in the dropdown list
     : tag;

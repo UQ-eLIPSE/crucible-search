@@ -48,6 +48,8 @@ onMounted(async () => {
   }
 });
 const fetchData = async (tag: string, level: number) => {
+  // TODO: also getFilteredResourcesByTitle here.
+
   const results = await findData(
     tag as string,
     level as number,
