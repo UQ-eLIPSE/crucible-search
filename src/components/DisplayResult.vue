@@ -53,7 +53,7 @@ onMounted(async () => {
   }
 });
 const fetchData = async (searchResult: string, level: number, type: string) => {
-  if (!searchResult) return;
+  // if (!searchResult) return;
 
   switch (type) {
     case "tag":
