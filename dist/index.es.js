@@ -1980,7 +1980,7 @@ const Ao = [
   for (const [o, r] of t)
     n[o] = r;
   return n;
-}, Ve = /* @__PURE__ */ fe(zo, [["__scopeId", "data-v-071ed10d"]]), Lt = (e) => (vt("data-v-b97c2a53"), e = e(), gt(), e), Wo = /* @__PURE__ */ Lt(() => /* @__PURE__ */ O("path", { d: "M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" }, null, -1)), Qo = /* @__PURE__ */ Lt(() => /* @__PURE__ */ O("path", {
+}, Ve = /* @__PURE__ */ fe(zo, [["__scopeId", "data-v-33547b95"]]), Lt = (e) => (vt("data-v-b97c2a53"), e = e(), gt(), e), Wo = /* @__PURE__ */ Lt(() => /* @__PURE__ */ O("path", { d: "M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" }, null, -1)), Qo = /* @__PURE__ */ Lt(() => /* @__PURE__ */ O("path", {
   fill: "none",
   d: "M0 0h24v24H0V0z"
 }, null, -1)), Yo = [
@@ -2215,7 +2215,7 @@ const yr = { class: "search-container" }, _r = { key: 0 }, Er = ["onClick"], dt 
       ], 512)
     ]));
   }
-}), wr = /* @__PURE__ */ fe(br, [["__scopeId", "data-v-0cfb859b"]]);
+}), wr = /* @__PURE__ */ fe(br, [["__scopeId", "data-v-6e8e4762"]]);
 function kr(e, t) {
   const { router: n, getApi: o, tagsApi: r, filterSetApi: c } = t;
   e.component("CrucibleSearch", wr), e.component("DisplayResult", Ve), e.component("CrucibleFilter", Bt), e.component("CollapseBtn", Mt), e.provide("$router", n || null), e.provide("$getApi", o || null), e.provide("$tagsApi", r || null), e.provide("$filterSetApi", c || null), n.addRoute({ path: "/search", component: Ve });

@@ -92,8 +92,8 @@ const filterResults = async () => {
   }
 };
 
+// TODO: Change selectTag to account for title as well.
 const selectTag = (tag: string) => {
-  // TODO: add tests for this
   searchTerm.value = !filteredTags.value.includes(tag)
     ? filteredTags.value[0] // default to the first tag if not in the dropdown list
     : tag;
