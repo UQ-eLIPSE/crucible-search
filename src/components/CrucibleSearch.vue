@@ -10,8 +10,12 @@
         @keydown="handleKeyDown"
       />
       <ul v-if="filteredResults.length && searchTerm && dropdownVisible">
-        <li v-for="tag in filteredResults" :key="tag" @click="selectTag(tag)">
-          <template v-for="(char, index) in tag.split('')">
+        <li
+          v-for="(result, idx) in filteredResults"
+          :key="`${result.value}-${idx}`"
+          @click="setSearchResult(result)"
+        >
+          <template v-for="(char, index) in result.value.split('')">
             <span v-if="!isSearchTerm(char)" :key="index">{{ char }}</span>
             <strong v-else :key="`strong-${index}`">{{ char }}</strong>
           </template>
@@ -26,12 +30,13 @@ import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "@/router/injectRoute";
 import { findTags, getFilteredResourcesByTitle } from "./DataAccessLayer";
 import { inject, toRefs } from "vue";
+import { DropdownResults } from "@/types";
 
 const router = useRouter();
 const searchTerm = ref("");
-const filteredTags = ref<string[]>([]);
-const filteredTitles = ref<string[]>([]);
-const filteredResults = ref<string[]>([]);
+const filteredTags = ref<DropdownResults[]>([]);
+const filteredTitles = ref<DropdownResults[]>([]);
+const filteredResults = ref<DropdownResults[]>([]);
 const dropdownVisible = ref(false);
 const searchBoxRef = ref<HTMLElement | null>(null);
 const searchTagsApi =
@@ -65,24 +70,25 @@ const unformatTag = (tag: string) => tag.replace(/ /g, "_");
 const filterResults = async () => {
   if (searchTerm.value) {
     // fuzzy searched
-    filteredTags.value = (
-      await findTags(searchTerm.value, searchTagsApi)
-    ).slice(0, maxSearchResults);
+    filteredTags.value = (await findTags(searchTerm.value, searchTagsApi))
+      .map(formatTag)
+      .map((tag) => ({ value: tag, type: "tag" }));
 
     const filteredResources = await getFilteredResourcesByTitle(
       searchTerm.value,
       searchFilterApi,
     );
-    filteredTags.value = filteredTags.value.map(formatTag);
 
     filteredTitles.value = filteredResources.map(
-      (resource: { item: { label: string } }) => resource.item.label,
+      (resource: { label: string }) => {
+        return { value: resource.label, type: "title" };
+      },
     );
 
-    // remove duplicates
-    filteredResults.value = Array.from(
-      new Set([...filteredTags.value, ...filteredTitles.value]),
-    ).slice(0, maxSearchResults);
+    filteredResults.value = [
+      ...filteredTags.value,
+      ...filteredTitles.value,
+    ].slice(0, maxSearchResults);
 
     dropdownVisible.value = true;
   } else {
@@ -92,15 +98,28 @@ const filterResults = async () => {
   }
 };
 
-// TODO: Change selectTag to account for title as well.
-const selectTag = (tag: string) => {
-  searchTerm.value = !filteredTags.value.includes(tag)
-    ? filteredTags.value[0] // default to the first tag if not in the dropdown list
-    : tag;
+const setSearchResult = (searchResult: DropdownResults) => {
+  searchTerm.value = !filteredResults.value
+    .map((result) => result.value)
+    .includes(searchResult.value)
+    ? filteredResults.value[0].value
+    : searchResult.value;
+
+  console.log("sedarch result:", searchResult);
+  console.log("search term value:", searchTerm.value);
+
   dropdownVisible.value = false;
+
   router.push({
     path: "/search",
-    query: { tag: unformatTag(searchTerm.value), level: Number(level.value) },
+    query: {
+      searchResult:
+        searchResult.type === "tag"
+          ? unformatTag(searchTerm.value)
+          : searchTerm.value,
+      level: Number(level.value),
+      type: searchResult.type,
+    },
   });
 };
 
@@ -112,11 +131,13 @@ const handleFocus = () => {
 
 const handleKeyDown = (event: KeyboardEvent) => {
   if (event.key === "Enter") {
-    selectTag(searchTerm.value);
+    filteredResults.value.find((result) => result.value === searchTerm.value)
+      ? setSearchResult({ value: searchTerm.value, type: "tag" })
+      : setSearchResult(filteredResults.value[0]);
     searchTerm.value = "";
   } else if (event.key === "Tab") {
     event.preventDefault(); // Prevent the default tab key behavior
-    searchTerm.value = filteredTags.value[0] ?? searchTerm.value;
+    searchTerm.value = filteredTags.value[0].value ?? searchTerm.value;
   }
 };
 

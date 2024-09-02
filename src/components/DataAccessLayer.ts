@@ -1,7 +1,7 @@
 import { staticResources, tags, taxonomyTags } from "@/resources";
 import { ResourceInSearch } from "@/types";
 
-const fetchAllData = async (
+const fetchAllTagsData = async (
   tag: string,
   level: number,
   getApisFromHost: string,
@@ -20,14 +20,14 @@ const fetchAllData = async (
   }
 };
 
-export const findData = async (
+export const findTagsData = async (
   inputValue: string,
   level: number,
   getApisFromHost: string,
 ): Promise<ResourceInSearch[]> => {
   try {
     const resources =
-      (await fetchAllData(inputValue, level, getApisFromHost)) ||
+      (await fetchAllTagsData(inputValue, level, getApisFromHost)) ||
       staticResources.filter((resource: ResourceInSearch) =>
         resource.tags.join(",").includes(inputValue),
       );

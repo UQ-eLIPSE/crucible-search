@@ -13,6 +13,12 @@ export type ResourceInSearch = {
   url: string;
 };
 
+export type DropdownResults = {
+  // for search bar
+  value: string;
+  type: "tag" | "title";
+};
+
 declare module "@vue/runtime-core" {
   interface ComponentCustomProperties {
     $router: string;
