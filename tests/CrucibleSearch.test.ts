@@ -23,6 +23,7 @@ describe("CrucibleSearch.vue", () => {
         ),
       ),
     ),
+    getFilteredResourcesByTitle: vi.fn((query) => Promise.resolve([])),
   }));
 
   beforeEach(() => {
