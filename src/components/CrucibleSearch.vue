@@ -105,9 +105,6 @@ const setSearchResult = (searchResult: DropdownResults) => {
     ? filteredResults.value[0].value
     : searchResult.value;
 
-  console.log("sedarch result:", searchResult);
-  console.log("search term value:", searchTerm.value);
-
   dropdownVisible.value = false;
 
   router.push({
