@@ -2,7 +2,6 @@ import { DOMWrapper, VueWrapper, mount } from "@vue/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import CrucibleSearch from "@/components/CrucibleSearch.vue";
 import { nextTick } from "vue";
-import { flushPromises } from "@vue/test-utils";
 
 describe("CrucibleSearch.vue", () => {
   let wrapper: VueWrapper;
