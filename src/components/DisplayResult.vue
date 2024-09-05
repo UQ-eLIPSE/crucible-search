@@ -20,12 +20,16 @@
 </template>
 
 <script setup lang="ts">
-import { findData } from "./DataAccessLayer";
+import { findTagsData, getFilteredResourcesByTitle } from "./DataAccessLayer";
 import { ResourceInSearch } from "@/types";
 import { inject } from "vue";
 const getApisFromHost =
   (inject("$getApi") as string) ??
   "http://localhost:8080/api/resource/getResultByQueryTag";
+
+const searchFilterApi =
+  (inject("$filterResourcesApi") as string) ||
+  "http://localhost:8080/api/resource/filterResources";
 
 const searchResults = ref<ResourceInSearch[]>([
   { _id: "", label: "", tags: [""], url: "" },
@@ -35,34 +39,45 @@ import { ref, onMounted, watch } from "vue";
 import { useRouter } from "@/router/injectRoute";
 
 const route = useRouter();
-const tag = ref("");
+const searchResult = ref("");
 const level = ref(5);
 
 onMounted(async () => {
   if (route) {
-    tag.value = route.currentRoute.value.query.tag as string;
-    level.value = Number(route.currentRoute.value.query.level);
-    await fetchData(tag.value, level.value);
+    const query = route.currentRoute.value.query;
+    searchResult.value = query.searchResult as string;
+    level.value = Number(query.level);
+    await fetchData(searchResult.value, level.value, query.type as string);
   } else {
-    tag.value = "undefined";
+    searchResult.value = "undefined";
   }
 });
-const fetchData = async (tag: string, level: number) => {
-  // TODO: also getFilteredResourcesByTitle here.
+const fetchData = async (searchResult: string, level: number, type: string) => {
+  if (!searchResult) return;
 
-  const results = await findData(
-    tag as string,
-    level as number,
-    getApisFromHost,
-  );
-
-  if (results) searchResults.value = results;
+  switch (type) {
+    case "tag":
+      searchResults.value = await findTagsData(
+        searchResult,
+        level,
+        getApisFromHost,
+      );
+      break;
+    case "title":
+      searchResults.value = await getFilteredResourcesByTitle(
+        searchResult,
+        searchFilterApi,
+      );
+      break;
+    default:
+      searchResults.value = [];
+  }
 };
 watch(route.currentRoute, async (newRoute, oldRoute) => {
-  const newTag = (newRoute.query.tag as string) || "";
-  const oldTag = (oldRoute.query.tag as string) || "";
-  if (newTag !== oldTag) {
-    await fetchData(newTag, level.value);
+  const newSearchTerm = (newRoute.query.searchResult as string) || "";
+  const oldSearchTerm = (oldRoute.query.searchResult as string) || "";
+  if (newSearchTerm !== oldSearchTerm) {
+    await fetchData(newSearchTerm, level.value, newRoute.query.type as string);
   }
 });
 </script>

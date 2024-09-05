@@ -2,12 +2,11 @@ import { mount } from "@vue/test-utils";
 import { describe, expect, vi, it } from "vitest";
 import { flushPromises } from "@vue/test-utils";
 import DisplayResult from "@/components/DisplayResult.vue";
-import { createRouter, createWebHistory } from "vue-router";
 import { createApp } from "vue";
 
 describe("DisplayResult.vue", () => {
   vi.mock("@/components/DataAccessLayer", () => ({
-    findData: vi.fn().mockResolvedValue([
+    findTagsData: vi.fn().mockResolvedValue([
       {
         _id: "1",
         label: "test label 1",
@@ -25,10 +24,20 @@ describe("DisplayResult.vue", () => {
   it("displays the correct result", async () => {
     const app = createApp({});
 
-    const mockRouter = createRouter({
-      history: createWebHistory(),
-      routes: [],
-    });
+    const mockRouter = {
+      push: vi.fn(),
+      currentRoute: {
+        value: {
+          query: {
+            tag: "test_tag",
+            searchResult: "test_tag",
+            type: "tag",
+            level: 5,
+          },
+        },
+      },
+    };
+
     const mockRouteQuery = {
       query: {
         tag: "test_tag",
