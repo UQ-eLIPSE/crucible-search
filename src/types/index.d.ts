@@ -4,6 +4,7 @@ export type PluginOptions = {
   getApi?: string;
   tagsApi?: string;
   filterSetApi?: string;
+  filterResourcesApi?: string;
 };
 
 export type ResourceInSearch = {
