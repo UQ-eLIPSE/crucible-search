@@ -45,7 +45,8 @@ const searchTagsApi =
 
 const searchFilterApi =
   (inject("$filterResourcesApi") as string) ||
-  "http://localhost:8080/api/resource/filterResources";
+  "http://localhost:8080/api/resource/filterResourcs";
+console.log("SEARCH FILTER API", searchFilterApi);
 const maxSearchResults = 10;
 
 const props = defineProps({
