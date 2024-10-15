@@ -98,7 +98,6 @@ const isTaxonomyExists = ref(false);
 // function to toggle drop down
 const toggleDropdown = (key: string) => {
   showDropdown.value[key] = !showDropdown.value[key];
-  console.log(isTaxonomyExists.value);
 };
 
 // Filter tags send to back end to filter resource
