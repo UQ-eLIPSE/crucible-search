@@ -121,6 +121,7 @@ const itemNames = computed(() => {
 const resetFilter = () => {
   showDropdown.value = {};
   filterTagArray.value = [];
+  location.reload(); //clear filter reload content
 };
 
 const applyFilter = () => {

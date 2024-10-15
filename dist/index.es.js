@@ -2034,7 +2034,7 @@ const Ao = [
       onClick: d[0] || (d[0] = (c) => n("click", i.actionType))
     }, F(a.value), 1));
   }
-}), Ut = (e) => (pt("data-v-9c6f911c"), e = e(), vt(), e), Jo = { class: "crucible-filter-container" }, Xo = {
+}), Ut = (e) => (pt("data-v-109acf0c"), e = e(), vt(), e), Jo = { class: "crucible-filter-container" }, Xo = {
   key: 0,
   class: "crucible-filter-panel"
 }, Zo = { class: "crucible-filter-action" }, er = /* @__PURE__ */ Ut(() => /* @__PURE__ */ O("hr", null, null, -1)), tr = /* @__PURE__ */ Ut(() => /* @__PURE__ */ O("h5", null, "Selected:", -1)), nr = { class: "crucible-filter-collection" }, or = ["onClick"], rr = { class: "capital-first" }, sr = { class: "crucible-filters" }, ar = ["onClick"], ir = { class: "crucible-filter-dropdown-menu" }, cr = ["id", "value", "checked", "onClick"], lr = ["for"], ur = /* @__PURE__ */ W({
@@ -2051,7 +2051,7 @@ const Ao = [
     }, u = U(() => i.value.map(
       (m) => m.split(":")[1].replace("_", " ")
     )), l = () => {
-      a.value = {}, i.value = [];
+      a.value = {}, i.value = [], location.reload();
     }, p = () => {
       n("updateFilterTagArray", i);
     };
@@ -2131,7 +2131,7 @@ const Ao = [
       }, null, 2)
     ]));
   }
-}), Bt = /* @__PURE__ */ he(ur, [["__scopeId", "data-v-9c6f911c"]]), fr = { id: "app" }, dr = { class: "main" }, hr = /* @__PURE__ */ W({
+}), Bt = /* @__PURE__ */ he(ur, [["__scopeId", "data-v-109acf0c"]]), fr = { id: "app" }, dr = { class: "main" }, hr = /* @__PURE__ */ W({
   __name: "App",
   setup(e) {
     return (t, n) => {
